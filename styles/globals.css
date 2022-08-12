@@ -5,3 +5,24 @@
 .combobox-full> [role=combobox]{
     width: 100%;
 }
+
+.mantine-Input-rightSection [role=combobox] {
+    position: relative;
+    right: 16px; 
+}
+
+.mantine-Input-rightSection .mantine-Select-wrapper {
+    width: 70px; 
+}
+
+.mantine-Input-rightSection .mantine-Select-input {
+    background-color: #F5F5F5;
+    border-bottom-left-radius: 0px;
+    border-top-left-radius: 0px;
+}
+
+/* .mantine-Select-wrapper .mantine-Select-rightSection {
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    background-color: #F5F5F5;
+} */

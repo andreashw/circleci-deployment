@@ -11,7 +11,7 @@ export function YearRange({
 }) {
     return (
         <>
-            <label className='w-[110px] max-width-[35%] text-[14px]'>{label}</label>
+            <label className='w-28 max-width-[45%] text-[14px]'>{label}</label>
             <Select
                 placeholder="Select Year"
                 rightSection={<IconChevronDown size={14} />}
@@ -20,7 +20,7 @@ export function YearRange({
                     label: y.toString()
                 }))}
             />
-            <span className='px-1'>-</span>
+            <span className='px-4'>-</span>
             <Select
                 placeholder="Select Year"
                 rightSection={<IconChevronDown size={14} />}

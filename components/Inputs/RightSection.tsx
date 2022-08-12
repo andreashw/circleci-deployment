@@ -5,7 +5,7 @@ export function RightSection({
 }) {
     return (
         <>
-            <Text  color="dimmed" size={'sm'} sx={{ cursor: 'help' }}>
+            <Text color="dimmed" size={'sm'} style={{}} >
                 <Center>
                     {label}
                 </Center>

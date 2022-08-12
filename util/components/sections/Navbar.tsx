@@ -1,57 +1,54 @@
 import { Button, Navbar, Text } from "@mantine/core";
 import {
   IconNotes,
-  IconCalendarStats,
-  IconGauge,
-  IconPresentationAnalytics,
-  IconFileAnalytics,
-  IconAdjustments,
-  IconLock,
   IconCar,
-  IconUser
+  IconTool,
+  IconUser,
+  IconGauge,
+  IconCalendarStats
 } from '@tabler/icons';
-import Link from "next/link";
-import { useRouter } from "next/router";
+import  LinksGroup from "@components/NavbarLinksGroup/NavbarLinksGroup";
+import { ISidebar } from "@contracts/navigation";
+import Automobile from "icons/Automobile";
+import Power from "icons/Power";
 
 export default function NavbarComponent(props:any) {
-  const router = useRouter();
-  const databaseMenus = [
-    {
-      'label': 'Automobile',
-      'link': '/automobile',
-      'icon': <IconCar />
-    },
-    {
-      'label': 'User',
-      'link': '/users',
-      'icon': <IconUser />
-    },
-  ]
 
+  const sideMenus: ISidebar[] = [
+    {
+      group: 'Database',
+      menus: [
+        { label: 'Automobile', link: '/automobile', icon: (color: string)=> <Automobile color={color} width={'20px'} height={'20px'} /> },
+        {
+          label: 'Power',
+          icon: (color:string)=><Power color={color} width={'20px'} height={'20px'}/>,
+          sub: [
+            { label: 'Engine', link: '/engine', isSubMenu: true },
+            { label: 'EV', link: '/ev', isSubMenu: true },
+          ],
+        },
+      ]
+    }
+  ];
+  
   return (
     <Navbar
+      hidden={!props.opened}
       width={{ sm: 140, lg: 240 }}
       style={{ paddingTop: -70 }}
     >
-      <Navbar.Section grow>
+      {sideMenus.map(({group, menus})=>
+        
+      <Navbar.Section key={group} grow>
         <Text size="xs" weight={500} style={{padding: '14px'}}>
-            Database
-          </Text>
-        {databaseMenus.map((dm, dmi) => (
-          <NavLink key={dmi} name={dm.label} icon={dm.icon} link={dm.link} active={dm.link == router.asPath} onChange={props.onChange} />
-        ))} 
+            {group}
+        </Text>
+        <div>
+          {menus.map((item) => <LinksGroup key={item.label} {...item}/>)}
+        </div>
       </Navbar.Section>
-    </Navbar>
-  );
-}
 
-function NavLink(props:any) {
-  return (
-    <Link href={props.link}>
-      <button style={{ display: "flex", width:'100%', flexDirection: "row", padding:'14px', borderRight: props.active ? '2px solid' : '0px', borderRightColor: props.active ? 'black' : 'transparent'}} onClick={()=>props.onChange(props.link)}>
-        {props.icon}
-        <Text style={{ marginLeft: 10, color: props.active ? 'black' : '#828282'  }}>{props.name}</Text>
-      </button>
-    </Link>
+      )}
+    </Navbar>
   );
 }
