@@ -1,370 +1,275 @@
-import { Anchor, Button, Center, createStyles, Grid, NumberInput, Radio, Select, Text, TextInput, Tooltip } from '@mantine/core';
-import { Fragment, useState } from 'react';
-import { RightSection } from '../../components/Inputs/RightSection';
-import { YearRange } from '../../components/Inputs/YearRange';
-import { IconChevronDown, IconX } from '@tabler/icons'
-import Trash from 'icons/Trash';
-import Plus from 'icons/Plus';
+import { useState, useEffect } from 'react';
+import { Table, ScrollArea, Menu, Drawer, Text, Pagination } from '@mantine/core';
+import { showNotification } from '@mantine/notifications';
 
-function AddAutoMobile(/*props*/) {
-  const [value, setValue] = useState('ICE');
-  const [lengths, setLengths] = useState([
-    { 
-        length: '',
-        startYear: '',
-        endYear: '' 
+import { Edit2 } from 'react-feather';
+import { IconDotsVertical } from '@tabler/icons';
+
+import Search from '@components/Forms/Search';
+import EditUserForm from '@components/Forms/EditUser';
+
+const MOCKUP_AUTOMOBILE: any = [
+  {
+    manufacturer: 'Mercedes Benz',
+    brand: 'mercedes',
+    model: 'S220',
+    bodytype: 'Sedan',
+    prodyear: '1950-1980',
+    powertype: 'ICE',
+  },
+  {
+    manufacturer: 'Mercedes Benz',
+    brand: 'mercedes',
+    model: 'S220',
+    bodytype: 'Sedan',
+    prodyear: '1950-1980',
+    powertype: 'ICE',
+  },
+  {
+    manufacturer: 'Mercedes Benz',
+    brand: 'mercedes',
+    model: 'S220',
+    bodytype: 'Sedan',
+    prodyear: '1950-1980',
+    powertype: 'ICE',
+  },
+  {
+    manufacturer: 'Mercedes Benz',
+    brand: 'mercedes',
+    model: 'S220',
+    bodytype: 'Sedan',
+    prodyear: '1950-1980',
+    powertype: 'ICE',
+  },
+  {
+    manufacturer: 'Mercedes Benz',
+    brand: 'mercedes',
+    model: 'S220',
+    bodytype: 'Sedan',
+    prodyear: '1950-1980',
+    powertype: 'ICE',
+  },
+  {
+    manufacturer: 'Mercedes Benz',
+    brand: 'mercedes',
+    model: 'S220',
+    bodytype: 'Sedan',
+    prodyear: '1950-1980',
+    powertype: 'ICE',
+  },
+  {
+    manufacturer: 'Mercedes Benz',
+    brand: 'mercedes',
+    model: 'S220',
+    bodytype: 'Sedan',
+    prodyear: '1950-1980',
+    powertype: 'ICE',
+  },
+  {
+    manufacturer: 'Mercedes Benz',
+    brand: 'mercedes',
+    model: 'S220',
+    bodytype: 'Sedan',
+    prodyear: '1950-1980',
+    powertype: 'ICE',
+  },
+  {
+    manufacturer: 'Mercedes Benz',
+    brand: 'mercedes',
+    model: 'S220',
+    bodytype: 'Sedan',
+    prodyear: '1950-1980',
+    powertype: 'ICE',
+  },
+  {
+    manufacturer: 'Mercedes Benz',
+    brand: 'mercedes',
+    model: 'S220',
+    bodytype: 'Sedan',
+    prodyear: '1950-1980',
+    powertype: 'ICE',
+  },
+];
+
+export default function Automobile(/*props*/) {
+  const [automobiles, setAutomobiles] = useState(MOCKUP_AUTOMOBILE); // props.automobiles
+  const [tableRows, setTableRows] = useState([]);
+  const [drawerOpened, toggleDrawer] = useState(false);
+  const [selectedProfileData, setSelectedProfileData] = useState({});
+  const [searchLoading, setSearchLoading] = useState(false);
+  const [activePage, setPage] = useState(1);
+
+  useEffect(
+    () =>
+      setTableRows(
+        automobiles.map((automobile: any, index: any) => (
+          <tr key={index}>
+            <td>{automobile.manufacturer}</td>
+            <td>{automobile.brand}</td>
+            <td>{automobile.model}</td>
+            <td>{automobile.bodytype}</td>
+            <td>{automobile.prodyear}</td>
+            <td>{automobile.powertype}</td>
+            <td>
+              <Menu>
+                <Menu.Target>
+                  {/* <Button variant="white" color={'red'}>Action</Button> */}
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      width: '60px',
+                      height: '36px',
+                    }}
+                  >
+                    <IconDotsVertical size={14} />
+                  </div>
+                </Menu.Target>
+
+                <Menu.Dropdown>
+                  <Menu.Label>{automobile.name}</Menu.Label>
+                  <Menu.Item
+                    icon={<Edit2 />}
+                    onClick={() => {
+                      setSelectedProfileData(automobile);
+                      toggleDrawer(true);
+                    }}
+                  >
+                    Edit
+                  </Menu.Item>
+                  {/* <Menu.Item icon={<Send />} onClick={() => sendMessage(automobile)}>
+                  Send Message
+                </Menu.Item>
+                <Divider />
+                <Menu.Item icon={<Save />} onClick={() => copyProfile(automobile)}>
+                  Copy
+                </Menu.Item> */}
+                  {/* <Menu.Item
+                  icon={<Trash2 />}
+                  onClick={() => deleteProfile(user)}
+                  color="red"
+                >
+                  Delete User
+                </Menu.Item> */}
+                </Menu.Dropdown>
+              </Menu>
+            </td>
+          </tr>
+        ))
+      ),
+    [automobiles]
+  );
+
+  const onSearch = (search: any) => {
+    setSearchLoading(true);
+
+    const trimmedSearch = search.toLowerCase().trim();
+
+    if (!trimmedSearch) {
+      setAutomobiles(MOCKUP_AUTOMOBILE); // props.automobiles
+      setSearchLoading(false);
+      return;
     }
-  ]);
-  const [widths, setWidths] = useState([
-    { 
-        width: '',
-        startYear: '',
-        endYear: '' 
-    }
-  ]);
-  const [heights, setHeights] = useState([
-    { 
-        height: '',
-        startYear: '',
-        endYear: '' 
-    }
-  ]);
 
-  const addLength = () => {
-    setLengths(prev=>[...prev, {
-        length: '',
-        startYear: '',
-        endYear: ''
-    }])
-  }
+    const filteredautomobiles = automobiles.filter(
+      (automobile: {
+        manufacturer: string;
+        brand: string;
+        model: string;
+        bodytype: string;
+        prodyear: string;
+        powertype: string | any[];
+      }) =>
+        automobile.manufacturer.toLowerCase().includes(search) ||
+        automobile.brand.toLowerCase().includes(search) ||
+        automobile.model.toLowerCase().includes(search) ||
+        automobile.bodytype.toLowerCase().includes(search) ||
+        automobile.prodyear.includes(search) ||
+        automobile.powertype.includes(search)
+    );
 
-  const addWidth = () => {
-    setWidths(prev=>[...prev, {
-        width: '',
-        startYear: '',
-        endYear: ''
-    }])
-  }
+    setAutomobiles(filteredautomobiles);
 
-  const addHeight = () => {
-    setHeights(prev=>[...prev, {
-        height: '',
-        startYear: '',
-        endYear: ''
-    }])
-  }
+    setSearchLoading(false);
+  };
 
-  const removeLength = (index: number) =>{
-    setLengths(prev => prev.filter((x,i)=>i!=index))
-  }
+  const cancelSearch = () => {
+    setAutomobiles(MOCKUP_AUTOMOBILE); // props.automobiles
+  };
 
-  const removeWidth = (index: number) =>{
-    setWidths(prev => prev.filter((x,i)=>i!=index))
-  }
+  const onSubmitEditForm = (oldAutomobile: any, newAutomobile: any) => {
+    toggleDrawer(false);
 
-  const removeHeight = (index: number) =>{
-    setHeights(prev => prev.filter((x,i)=>i!=index))
-  }
+    // edit data in db
+
+    let tmpautomobiles = automobiles;
+    tmpautomobiles.splice(tmpautomobiles.indexOf(oldAutomobile), 0, newAutomobile);
+    tmpautomobiles = tmpautomobiles.filter((u: any) => u !== oldAutomobile);
+    setAutomobiles(tmpautomobiles);
+
+    showNotification({
+      title: 'Profile',
+      message: `${newAutomobile.manufacturer} Edit Success`,
+      color: 'teal',
+    });
+  };
 
   return (
     <>
-      <Text className='mt-[1rem] mb-[1rem] text-[20px]' weight={700}>
-        Details
-      </Text>
-      <Grid gutter="xl" className='mb-10'>
-        <Grid.Col md={6}>
-          <Select
-            label="Manufacturer"
-            placeholder="Manufacturer"
-            rightSection={<IconChevronDown size={14} />}
-            data={[
-              { value: 'react', label: 'React' },
-              { value: 'ng', label: 'Angular' },
-              { value: 'svelte', label: 'Svelte' },
-              { value: 'vue', label: 'Vue' },
-            ]}
-          />
-        </Grid.Col>
-        <Grid.Col md={6}>
-        <Select
-            label="Brand"
-            placeholder="Brand"
-            rightSection={<IconChevronDown size={14} />}
-            data={[
-              { value: 'react', label: 'React' },
-              { value: 'ng', label: 'Angular' },
-              { value: 'svelte', label: 'Svelte' },
-              { value: 'vue', label: 'Vue' },
-            ]}
-          />
-        </Grid.Col>
+      <Drawer
+        opened={drawerOpened}
+        onClose={() => toggleDrawer(false)}
+        title="Modify user"
+        padding="xl"
+        size="xl"
+      >
+        <EditUserForm data={selectedProfileData} submitForm={onSubmitEditForm} />
+      </Drawer>
 
-        <Grid.Col md={6}>
-          <TextInput
-            label="Model"
-            placeholder="TextInput with custom styles"
-          />
-        </Grid.Col>
-        <Grid.Col md={6}>
-          <Select
-            label="Body Type"
-            placeholder="Body Type"
-            rightSection={<IconChevronDown size={14} />}
-            data={[
-              { value: 'react', label: 'React' },
-              { value: 'ng', label: 'Angular' },
-              { value: 'svelte', label: 'Svelte' },
-              { value: 'vue', label: 'Vue' },
-            ]}
-          />
-          </Grid.Col>
+      <Search loading={searchLoading} onSubmit={onSearch} onCancel={cancelSearch} />
 
-        <Grid.Col md={6} className="flex flex-row items-center">
-            <YearRange label='Production Year' />
-        </Grid.Col>
-      </Grid>
+      {tableRows.length > 0 ? (
+        <ScrollArea>
+          <Table striped highlightOnHover>
+            <thead>
+              <tr>
+                <th>Manufacturer</th>
+                <th>Brand</th>
+                <th>Model</th>
+                <th>Body Type</th>
+                <th>Prod. Year</th>
+                <th>Power Type</th>
+              </tr>
+            </thead>
+            <tbody>{tableRows}</tbody>
+          </Table>
+        </ScrollArea>
+      ) : (
+        <Text align="center" weight="bold">
+          Test.
+        </Text>
+      )}
 
-      <Text className='mt-[1rem] mb-[1rem] text-[20px]' size="lg" weight={700}>
-        Body & Chasis
-      </Text>
-      <Grid gutter="xl" className='mb-10'>
-        <Grid.Col md={6}>
-          <Select
-            label="Layout"
-            placeholder="Layout"
-            rightSection={<IconChevronDown size={14} />}
-            data={[
-              { value: 'react', label: 'React' },
-              { value: 'ng', label: 'Angular' },
-              { value: 'svelte', label: 'Svelte' },
-              { value: 'vue', label: 'Vue' },
-            ]}
-          />
-        </Grid.Col>
-      </Grid>
-
-      <Text className='mt-[1rem] mb-[1rem] text-[20px]' size="lg" weight={700}>
-        Power
-      </Text>
-      <Grid gutter="xl">
-        <Grid.Col md={6}>
-        <Radio.Group
-          value={value}
-          label="Type"
-          spacing="sm"
-          onChange={setValue}
-          required
-        >
-          <Radio value="ICE" label="Internal Combustion Engine" color="dark" />
-          <Radio value="EV" label="Electric Vehicle" color="dark" />
-        </Radio.Group>
-        </Grid.Col>
-      </Grid>
-      <Grid gutter="xl" className='mb-10'>
-        <Grid.Col md={6}>
-          <Select
-            label="Engine/Motor"
-            placeholder="Engine/Motor"
-            rightSection={<IconChevronDown size={14} />}
-            data={[
-              { value: 'react', label: 'React' },
-              { value: 'ng', label: 'Angular' },
-              { value: 'svelte', label: 'Svelte' },
-              { value: 'vue', label: 'Vue' },
-            ]}
-          />
-        </Grid.Col>
-      </Grid>
-
-      <Text className='mt-[1rem] mb-[1rem] text-[20px]' size="lg" weight={700}>
-        Dimension
-      </Text>
-      <Grid gutter="xl">
-        <Grid.Col md={6}>
-          <TextInput
-            label="Curb Weight"
-            placeholder="Curb Weight"
-            rightSection={<RightSection label='kg' />}
-          />
-        </Grid.Col>
-        <Grid.Col md={6}>
-          <TextInput
-            label="Wheelbase"
-            placeholder="Wheelbase"
-            rightSection={<RightSection label='mm' />}
-          />
-        </Grid.Col>
-      </Grid>
-
-      {/* Section Length */}
-      {
-        lengths.map((length, li) => (
-          <Fragment key={li} >
-            <div className='flex justify-between flex-row'>
-              <Text className='my-4' weight={700}>
-                {`Length ${li+1}`}
-              </Text>
-
-              <div className='flex flex-row' style={{}}>
-                {
-                  li == 0 &&
-                  <Anchor component='button' className='flex my-4 text-sm text-danger items-end justify-center flex-row' onClick={addLength}>
-                    <div className='flex h-max items-end pb-[3px]' >
-                      <Plus color={'red'} width={'16px'} height={'16px'}/>
-                    </div>
-                      <Text className='pl-2'>
-                        Add length
-                      </Text>
-                  </Anchor>
-                }
-                {
-                  li == 0 && lengths.length > 1 &&
-                  <div className="flex items-center px-3">
-                    |
-                  </div>
-                }
-                {
-                  (lengths.length > 1 || li > 0) &&
-                  <Anchor component='button' className='flex my-4 text-sm text-danger items-end justify-center flex-row' onClick={()=>removeLength(li)}>
-                      <div className='flex h-max items-end pb-[3px]' >
-                        <Trash color={'red'} width={'16px'} height={'16px'}/>
-                      </div>
-                      <Text className='pl-2'>
-                        Delete length
-                      </Text>
-                  </Anchor>
-                }
-              </div>
-            </div>
-            <Grid gutter="xl">
-              <Grid.Col md={6}>
-                <TextInput
-                    label="Length"
-                    placeholder="Length"
-                    rightSection={<RightSection label='mm' />}
-                />
-              </Grid.Col>
-              <Grid.Col md={6} className="flex flex-row items-center">
-                  <YearRange label='Production Year' />
-              </Grid.Col>
-            </Grid>
-          </Fragment>
-        ))
-      }
-
-      {/* Section Width */}
-      {
-        widths.map((width, wi) => (
-          <Fragment key={wi} >
-            <div className='flex justify-between flex-row'>
-              <Text className='my-4' weight={700}>
-                {`Width ${wi+1}`}
-              </Text>
-
-              <div className='flex flex-row' style={{}}>
-                {
-                  wi == 0 &&
-                  <Anchor component='button' className='flex my-4 text-sm text-danger items-end justify-center flex-row' onClick={addWidth}>
-                    <div className='flex h-max items-end pb-[3px]' >
-                      <Plus color={'red'} width={'16px'} height={'16px'}/>
-                    </div>
-                      <Text className='pl-2'>
-                        Add width
-                      </Text>
-                  </Anchor>
-                }
-                {
-                  wi == 0 && widths.length > 1 &&
-                  <div className="flex items-center px-3">
-                    |
-                  </div>
-                }
-                {
-                  (widths.length > 1 || wi > 0) &&
-                  <Anchor component='button' className='flex my-4 text-sm text-danger items-end justify-center flex-row' onClick={()=>removeWidth(wi)}>
-                      <div className='flex h-max items-end pb-[3px]' >
-                        <Trash color={'red'} width={'16px'} height={'16px'}/>
-                      </div>
-                      <Text className='pl-2'>
-                        Delete width
-                      </Text>
-                  </Anchor>
-                }
-              </div>
-            </div>
-            <Grid gutter="xl">
-              <Grid.Col md={6}>
-                <TextInput
-                    label="Length"
-                    placeholder="Length"
-                    rightSection={<RightSection label='mm' />}
-                />
-              </Grid.Col>
-              <Grid.Col md={6} className="flex flex-row items-center">
-                  <YearRange label='Production Year' />
-              </Grid.Col>
-            </Grid>
-          </Fragment>
-        ))
-      }
-
-      {/* Section Height */}
-      {
-        heights.map((height, hi) => (
-          <Fragment key={hi} >
-            <div className='flex justify-between flex-row'>
-              <Text className='my-4' weight={700}>
-                {`Height ${hi+1}`}
-              </Text>
-
-              <div className='flex flex-row' style={{}}>
-                {
-                  hi == 0 &&
-                  <Anchor component='button' className='flex my-4 text-sm text-danger items-end justify-center flex-row' onClick={addHeight}>
-                    <div className='flex h-max items-end pb-[3px]' >
-                      <Plus color={'red'} width={'16px'} height={'16px'}/>
-                    </div>
-                      <Text className='pl-2'>
-                        Add height
-                      </Text>
-                  </Anchor>
-                }
-                {
-                  hi == 0 && heights.length > 1 &&
-                  <div className="flex items-center px-3">
-                    |
-                  </div>
-                }
-                {
-                  (heights.length > 1 || hi > 0) &&
-                  <Anchor component='button' className='flex my-4 text-sm text-danger items-end justify-center flex-row' onClick={()=>removeHeight(hi)}>
-                      <div className='flex h-max items-end pb-[3px]' >
-                        <Trash color={'red'} width={'16px'} height={'16px'}/>
-                      </div>
-                      <Text className='pl-2'>
-                        Delete height
-                      </Text>
-                  </Anchor>
-                }
-              </div>
-            </div>
-            <Grid gutter="xl" className='mb-20'>
-              <Grid.Col md={6}>
-                <TextInput
-                    label="Length"
-                    placeholder="Length"
-                    rightSection={<RightSection label='mm' />}
-                />
-              </Grid.Col>
-              <Grid.Col md={6} className="flex flex-row items-center">
-                  <YearRange label='Production Year' />
-              </Grid.Col>
-            </Grid>
-          </Fragment>
-        ))
-      }
+      <div className="flex justify-between my-5">
+        <Text color="#828282" size={14}>
+          Show 10 from 1020 automobiles
+        </Text>
+        <Pagination page={activePage} onChange={setPage} total={10} />
+      </div>
     </>
   );
 }
 
-export default AddAutoMobile
+/*
+export async function getServerSideProps() {
+  const request = await fetch("http://localhost:3000/api/automobiles");
+  const automobiles = await request.json();
+
+  return {
+    props: {
+      automobiles,
+    },
+  };
+}
+*/

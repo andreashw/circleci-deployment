@@ -1,20 +1,19 @@
-import Head from "next/head";
-import { useEffect, useState } from "react";
-import { MantineProvider, AppShell, ColorSchemeProvider, ScrollArea } from "@mantine/core";
-import { NotificationsProvider } from "@mantine/notifications";
-import { ModalsProvider } from "@mantine/modals";
+import Head from 'next/head';
+import { useState } from 'react';
+import { MantineProvider, AppShell } from '@mantine/core';
+import { NotificationsProvider } from '@mantine/notifications';
+import { ModalsProvider } from '@mantine/modals';
 
-import Header from "../util/components/sections/Header";
-import Navbar from "../util/components/sections/Navbar";
-import "../styles/globals.css"
-import { useRouter } from "next/router";
+import Header from '@components/Sections/Header';
+import Navbar from '@components/Sections/Navbar';
+import '../styles/globals.css';
 
-function Application({ Component, pageProps }:{Component:any, pageProps:any }) {
+function Application({ Component, pageProps }: { Component: any; pageProps: any }) {
   const [opened, setOpened] = useState(false);
-  const [colorScheme, setColorScheme] = useState("dark");
+  const [colorScheme, setColorScheme] = useState('dark');
 
   const toggleColorScheme = () => {
-    setColorScheme(colorScheme === "light" ? "dark" : "light");
+    setColorScheme(colorScheme === 'light' ? 'dark' : 'light');
   };
 
   return (
@@ -35,7 +34,8 @@ function Application({ Component, pageProps }:{Component:any, pageProps:any }) {
               },
               classNames: {
                 root: 'flex flex-grow',
-                label: 'flex justify-start items-center w-[110px] flex-shrink-0 max-width-[45%] font-normal'
+                label:
+                  'flex justify-start items-center w-[110px] flex-shrink-0 max-width-[45%] font-normal',
               },
             },
 
@@ -55,8 +55,8 @@ function Application({ Component, pageProps }:{Component:any, pageProps:any }) {
             Select: {
               classNames: {
                 root: 'combobox-full',
-                input: 'bg-red'
-              }
+                input: 'bg-red',
+              },
             },
           },
         }}
@@ -73,13 +73,13 @@ function Application({ Component, pageProps }:{Component:any, pageProps:any }) {
                 />
               }
               navbar={<Navbar opened={opened} />}
-              styles={(theme) => ({
+              styles={() => ({
                 main: {
                   backgroundColor: '#FFFFFF',
                 },
               })}
             >
-                <Component {...pageProps} />
+              <Component {...pageProps} />
             </AppShell>
           </ModalsProvider>
         </NotificationsProvider>

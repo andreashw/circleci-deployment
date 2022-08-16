@@ -2,9 +2,11 @@ import { Anchor, Grid, Radio, Select, Text, TextInput } from '@mantine/core';
 import { Fragment, useState } from 'react';
 import { RightSection } from '@components/Inputs/RightSection';
 import { YearRange } from '@components/Inputs/YearRange';
-import { IconChevronDown, IconX } from '@tabler/icons';
+import { IconChevronDown } from '@tabler/icons';
+import Trash from 'icons/Trash';
+import Plus from 'icons/Plus';
 
-function AddEV(/*props*/) {
+function AddAutomobile(/*props*/) {
   const [value, setValue] = useState('ICE');
   const [lengths, setLengths] = useState([
     {
@@ -65,12 +67,20 @@ function AddEV(/*props*/) {
     setLengths((prev) => prev.filter((x, i) => i !== index));
   };
 
+  const removeWidth = (index: number) => {
+    setWidths((prev) => prev.filter((x, i) => i !== index));
+  };
+
+  const removeHeight = (index: number) => {
+    setHeights((prev) => prev.filter((x, i) => i !== index));
+  };
+
   return (
     <>
       <Text className="mt-[1rem] mb-[1rem] text-[20px]" weight={700}>
         Details
       </Text>
-      <Grid gutter="xl" className="mb-[48px]">
+      <Grid gutter="xl" className="mb-10">
         <Grid.Col md={6}>
           <Select
             label="Manufacturer"
@@ -123,7 +133,7 @@ function AddEV(/*props*/) {
       <Text className="mt-[1rem] mb-[1rem] text-[20px]" size="lg" weight={700}>
         Body & Chasis
       </Text>
-      <Grid gutter="xl" className="mb-[48px]">
+      <Grid gutter="xl" className="mb-10">
         <Grid.Col md={6}>
           <Select
             label="Layout"
@@ -150,7 +160,7 @@ function AddEV(/*props*/) {
           </Radio.Group>
         </Grid.Col>
       </Grid>
-      <Grid gutter="xl" className="mb-[48px]">
+      <Grid gutter="xl" className="mb-10">
         <Grid.Col md={6}>
           <Select
             label="Engine/Motor"
@@ -187,21 +197,45 @@ function AddEV(/*props*/) {
       </Grid>
 
       {/* Section Length */}
-      <div className="flex justify-between flex-row">
-        <Text className="my-4" weight={700}>
-          Length
-        </Text>
+      {lengths.map((length, li) => (
+        <Fragment key={li}>
+          <div className="flex justify-between flex-row">
+            <Text className="my-4" weight={700}>
+              {`Length ${li + 1}`}
+            </Text>
 
-        <Anchor component="button" className="my-4 text-sm text-danger" onClick={addLength}>
-          add length +
-        </Anchor>
-      </div>
-      <Grid gutter="xl">
-        {lengths.map((length, li) => (
-          <Fragment key={li}>
-            <Grid.Col md={5.5}>
+            <div className="flex flex-row" style={{}}>
+              {li === 0 && (
+                <Anchor
+                  component="button"
+                  className="flex my-4 text-sm text-danger items-end justify-center flex-row"
+                  onClick={addLength}
+                >
+                  <div className="flex h-max items-end pb-[3px]">
+                    <Plus color="red" width="16" height="16" />
+                  </div>
+                  <Text className="pl-2">Add length</Text>
+                </Anchor>
+              )}
+              {li === 0 && lengths.length > 1 && <div className="flex items-center px-3">|</div>}
+              {(lengths.length > 1 || li > 0) && (
+                <Anchor
+                  component="button"
+                  className="flex my-4 text-sm text-danger items-end justify-center flex-row"
+                  onClick={() => removeLength(li)}
+                >
+                  <div className="flex h-max items-end pb-[3px]">
+                    <Trash color="red" width="16" height="16" />
+                  </div>
+                  <Text className="pl-2">Delete length</Text>
+                </Anchor>
+              )}
+            </div>
+          </div>
+          <Grid gutter="xl">
+            <Grid.Col md={6}>
               <TextInput
-                label={`Length ${li + 1}`}
+                label="Length"
                 placeholder="Length"
                 rightSection={<RightSection label="mm" />}
               />
@@ -209,72 +243,113 @@ function AddEV(/*props*/) {
             <Grid.Col md={6} className="flex flex-row items-center">
               <YearRange label="Production Year" />
             </Grid.Col>
-            <Grid.Col
-              md={0.5}
-              className="flex justify-center items-center"
-              onClick={() => removeLength(li)}
-            >
-              <IconX size={18} />
-            </Grid.Col>
-          </Fragment>
-        ))}
-      </Grid>
+          </Grid>
+        </Fragment>
+      ))}
 
       {/* Section Width */}
-      <div className="flex justify-between flex-row">
-        <Text className="my-4" weight={700}>
-          Width
-        </Text>
+      {widths.map((width, wi) => (
+        <Fragment key={wi}>
+          <div className="flex justify-between flex-row">
+            <Text className="my-4" weight={700}>
+              {`Width ${wi + 1}`}
+            </Text>
 
-        <Anchor component="button" className="my-4 text-sm text-danger" onClick={addWidth}>
-          add width +
-        </Anchor>
-      </div>
-      <Grid gutter="xl">
-        {widths.map((width, wi) => (
-          <Fragment key={wi}>
+            <div className="flex flex-row" style={{}}>
+              {wi === 0 && (
+                <Anchor
+                  component="button"
+                  className="flex my-4 text-sm text-danger items-end justify-center flex-row"
+                  onClick={addWidth}
+                >
+                  <div className="flex h-max items-end pb-[3px]">
+                    <Plus color="red" width="16" height="16" />
+                  </div>
+                  <Text className="pl-2">Add width</Text>
+                </Anchor>
+              )}
+              {wi === 0 && widths.length > 1 && <div className="flex items-center px-3">|</div>}
+              {(widths.length > 1 || wi > 0) && (
+                <Anchor
+                  component="button"
+                  className="flex my-4 text-sm text-danger items-end justify-center flex-row"
+                  onClick={() => removeWidth(wi)}
+                >
+                  <div className="flex h-max items-end pb-[3px]">
+                    <Trash color="red" width="16" height="16" />
+                  </div>
+                  <Text className="pl-2">Delete width</Text>
+                </Anchor>
+              )}
+            </div>
+          </div>
+          <Grid gutter="xl">
             <Grid.Col md={6}>
               <TextInput
-                label={`Width ${wi + 1}`}
-                placeholder="Width"
+                label="Length"
+                placeholder="Length"
                 rightSection={<RightSection label="mm" />}
               />
             </Grid.Col>
             <Grid.Col md={6} className="flex flex-row items-center">
               <YearRange label="Production Year" />
             </Grid.Col>
-          </Fragment>
-        ))}
-      </Grid>
+          </Grid>
+        </Fragment>
+      ))}
 
       {/* Section Height */}
-      <div className="flex justify-between flex-row">
-        <Text className="my-4" weight={700}>
-          Height
-        </Text>
+      {heights.map((height, hi) => (
+        <Fragment key={hi}>
+          <div className="flex justify-between flex-row">
+            <Text className="my-4" weight={700}>
+              {`Height ${hi + 1}`}
+            </Text>
 
-        <Anchor component="button" className="my-4 text-sm text-danger" onClick={addHeight}>
-          add height +
-        </Anchor>
-      </div>
-      <Grid gutter="xl" className="mb-[48px]">
-        {heights.map((height, hi) => (
-          <Fragment key={hi}>
+            <div className="flex flex-row" style={{}}>
+              {hi === 0 && (
+                <Anchor
+                  component="button"
+                  className="flex my-4 text-sm text-danger items-end justify-center flex-row"
+                  onClick={addHeight}
+                >
+                  <div className="flex h-max items-end pb-[3px]">
+                    <Plus color="red" width="16" height="16" />
+                  </div>
+                  <Text className="pl-2">Add height</Text>
+                </Anchor>
+              )}
+              {hi === 0 && heights.length > 1 && <div className="flex items-center px-3">|</div>}
+              {(heights.length > 1 || hi > 0) && (
+                <Anchor
+                  component="button"
+                  className="flex my-4 text-sm text-danger items-end justify-center flex-row"
+                  onClick={() => removeHeight(hi)}
+                >
+                  <div className="flex h-max items-end pb-[3px]">
+                    <Trash color="red" width="16" height="16" />
+                  </div>
+                  <Text className="pl-2">Delete height</Text>
+                </Anchor>
+              )}
+            </div>
+          </div>
+          <Grid gutter="xl" className="mb-20">
             <Grid.Col md={6}>
               <TextInput
-                label={`Height ${hi + 1}`}
-                placeholder="Height"
+                label="Length"
+                placeholder="Length"
                 rightSection={<RightSection label="mm" />}
               />
             </Grid.Col>
             <Grid.Col md={6} className="flex flex-row items-center">
               <YearRange label="Production Year" />
             </Grid.Col>
-          </Fragment>
-        ))}
-      </Grid>
+          </Grid>
+        </Fragment>
+      ))}
     </>
   );
 }
 
-export default AddEV;
+export default AddAutomobile;

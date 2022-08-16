@@ -1,20 +1,20 @@
-import { Burger, Header, MediaQuery, Text, ActionIcon } from "@mantine/core";
-import { Sun } from "react-feather";
+import { Burger, Header, MediaQuery, Text, ActionIcon } from '@mantine/core';
+import { Sun } from 'react-feather';
 
-export default function HeaderComponent(props:any) {
+export default function HeaderComponent(props: any) {
   return (
     <Header height={70} p="md">
       <div
         style={{
-          display: "flex",
-          alignItems: "center",
-          height: "100%",
+          display: 'flex',
+          alignItems: 'center',
+          height: '100%',
         }}
       >
-        <MediaQuery largerThan="sm" styles={{ display: "none" }}>
+        <MediaQuery largerThan="sm" styles={{ display: 'none' }}>
           <Burger
             opened={props.opened}
-            onClick={() => props.setOpened((o:any) => !o)}
+            onClick={() => props.setOpened((o: any) => !o)}
             size="sm"
             mr="xl"
           />
@@ -24,10 +24,10 @@ export default function HeaderComponent(props:any) {
 
         <div
           style={{
-            display: "flex",
+            display: 'flex',
             flex: 1,
-            alignItems: "center",
-            justifyContent: "flex-end",
+            alignItems: 'center',
+            justifyContent: 'flex-end',
           }}
         >
           <ActionIcon

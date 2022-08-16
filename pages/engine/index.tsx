@@ -1,46 +1,36 @@
-import { Anchor, Button, Center, createStyles, Grid, NumberInput, Radio, Select, Text, TextInput, Tooltip } from '@mantine/core';
+import { Anchor, Grid, Radio, Select, Text, TextInput } from '@mantine/core';
 import { Fragment, useState } from 'react';
-import { RightSection } from '../../components/Inputs/RightSection';
-import { YearRange } from '../../components/Inputs/YearRange';
-import { IconChevronDown, IconX } from '@tabler/icons'
+import { RightSection } from '@components/Inputs/RightSection';
+import { YearRange } from '@components/Inputs/YearRange';
+import { IconChevronDown } from '@tabler/icons';
 import Plus from 'icons/Plus';
 import Trash from 'icons/Trash';
 
-const useStyles = createStyles((theme) => ({
-  select: {
-    backgroundColor: 'blue'
-  },
-}));
-
 function AddEngine(/*props*/) {
-  const { classes } = useStyles();
   const [generalType, setGeneralType] = useState('normal');
   const [fuelType, setFuelType] = useState('gasoline');
   const [displacements, setDisplacements] = useState([
-    { 
+    {
       displacement: '',
       power: '',
-      torqueopt: ''
-    }
+      torqueopt: '',
+    },
   ]);
 
   const addDisplacement = () => {
-    setDisplacements(prev=>[...prev, {
-      displacement: '',
-      power: '',
-      torqueopt: ''
-    }])
-  }
+    setDisplacements((prev) => [
+      ...prev,
+      {
+        displacement: '',
+        power: '',
+        torqueopt: '',
+      },
+    ]);
+  };
 
-  const removeDisplacement = (index: number) =>{
-    setDisplacements(prev => prev.filter((x,i)=>i!=index))
-  }
-
-  const dropdown = (
-    <div style={{display:'flex', justifyContent:'flex-end'}}>
-      <IconChevronDown size={14} style={{}} />
-    </div>
-  );
+  const removeDisplacement = (index: number) => {
+    setDisplacements((prev) => prev.filter((x, i) => i !== index));
+  };
 
   const displacementRight = (
     <Select
@@ -55,15 +45,12 @@ function AddEngine(/*props*/) {
 
   return (
     <>
-      <Text className='mt-[1rem] mb-[1rem] text-[20px]' weight={700}>
+      <Text className="mt-[1rem] mb-[1rem] text-[20px]" weight={700}>
         Details
       </Text>
-      <Grid gutter="xl" className='mb-10'>
+      <Grid gutter="xl" className="mb-10">
         <Grid.Col md={6}>
-          <TextInput
-            label="Model"
-            placeholder="TextInput with custom styles"
-          />
+          <TextInput label="Model" placeholder="TextInput with custom styles" />
         </Grid.Col>
         <Grid.Col md={6}>
           <Select
@@ -79,78 +66,67 @@ function AddEngine(/*props*/) {
           />
         </Grid.Col>
         <Grid.Col md={6} className="flex flex-row items-center">
-            <YearRange label='Production Year' />
+          <YearRange label="Production Year" />
         </Grid.Col>
       </Grid>
 
       {/* Section Displacement */}
-      {
-        displacements.map((displacement, di) => (
-          <Fragment key={di} >
-            <div className='flex justify-between flex-row'>
-              <Text className='my-4' weight={700}>
-                {`Displacement ${di+1}`}
-              </Text>
+      {displacements.map((displacement, di) => (
+        <Fragment key={di}>
+          <div className="flex justify-between flex-row">
+            <Text className="my-4" weight={700}>
+              {`Displacement ${di + 1}`}
+            </Text>
 
-              <div className='flex flex-row' style={{}}>
-                {
-                  di == 0 &&
-                  <Anchor component='button' className='flex my-4 text-sm text-danger items-end justify-center flex-row' onClick={addDisplacement}>
-                    <div className='flex h-max items-end pb-[3px]' >
-                      <Plus color={'red'} width={'16px'} height={'16px'}/>
-                    </div>
-                      <Text className='pl-2'>
-                        Add Displacement
-                      </Text>
-                  </Anchor>
-                }
-                {
-                  di == 0 && displacements.length > 1 &&
-                  <div className="flex items-center px-3">
-                    |
+            <div className="flex flex-row" style={{}}>
+              {di === 0 && (
+                <Anchor
+                  component="button"
+                  className="flex my-4 text-sm text-danger items-end justify-center flex-row"
+                  onClick={addDisplacement}
+                >
+                  <div className="flex h-max items-end pb-[3px]">
+                    <Plus color="red" width="16" height="16" />
                   </div>
-                }
-                {
-                  (displacements.length > 1 || di > 0) &&
-                  <Anchor component='button' className='flex my-4 text-sm text-danger items-end justify-center flex-row' onClick={()=>removeDisplacement(di)}>
-                      <div className='flex h-max items-end pb-[3px]' >
-                        <Trash color={'red'} width={'16px'} height={'16px'}/>
-                      </div>
-                      <Text className='pl-2'>
-                        Delete height
-                      </Text>
-                  </Anchor>
-                }
-              </div>
+                  <Text className="pl-2">Add Displacement</Text>
+                </Anchor>
+              )}
+              {di === 0 && displacements.length > 1 && (
+                <div className="flex items-center px-3">|</div>
+              )}
+              {(displacements.length > 1 || di > 0) && (
+                <Anchor
+                  component="button"
+                  className="flex my-4 text-sm text-danger items-end justify-center flex-row"
+                  onClick={() => removeDisplacement(di)}
+                >
+                  <div className="flex h-max items-end pb-[3px]">
+                    <Trash color="red" width="16" height="16" />
+                  </div>
+                  <Text className="pl-2">Delete height</Text>
+                </Anchor>
+              )}
             </div>
-            <Grid gutter="xl">
-              <Grid.Col md={6}>
-                <TextInput
-                    label="Displacement"
-                    placeholder="Displacement"
-                    rightSection={displacementRight}
-                />
-              </Grid.Col>
-              <Grid.Col md={6}>
-                <TextInput
-                    label="Power"
-                    placeholder="Power"
-                    rightSection={displacementRight}
-                />
-              </Grid.Col>
-              <Grid.Col md={6}>
-                <TextInput
-                    label="Torque"
-                    placeholder="Torque"
-                    rightSection={displacementRight}
-                />
-              </Grid.Col>
-            </Grid>
-          </Fragment>
-        ))
-      }
+          </div>
+          <Grid gutter="xl">
+            <Grid.Col md={6}>
+              <TextInput
+                label="Displacement"
+                placeholder="Displacement"
+                rightSection={displacementRight}
+              />
+            </Grid.Col>
+            <Grid.Col md={6}>
+              <TextInput label="Power" placeholder="Power" rightSection={displacementRight} />
+            </Grid.Col>
+            <Grid.Col md={6}>
+              <TextInput label="Torque" placeholder="Torque" rightSection={displacementRight} />
+            </Grid.Col>
+          </Grid>
+        </Fragment>
+      ))}
 
-      <Text className='mt-10 mb-4 text-xl' size="lg" weight={700}>
+      <Text className="mt-10 mb-4 text-xl" size="lg" weight={700}>
         General
       </Text>
       <Grid gutter="xl">
@@ -171,44 +147,38 @@ function AddEngine(/*props*/) {
           <TextInput
             label="Cynlinder Bore"
             placeholder="Cynlinder Bore"
-            rightSection={<RightSection label='mm' />}
+            rightSection={<RightSection label="mm" />}
           />
         </Grid.Col>
       </Grid>
       <Grid gutter="xl">
         <Grid.Col md={6}>
-        <Radio.Group
-          value={generalType}
-          label="Type"
-          spacing="xl"
-          onChange={setGeneralType}
-          required
-        >
-          <Radio value="normal" label="Normal" color="dark" />
-          <Radio value="turbocharged" label="Turbocharged" color="dark" />
-          <Radio value="supercharged" label="Supercharged" color="dark" />
-        </Radio.Group>
+          <Radio.Group
+            value={generalType}
+            label="Type"
+            spacing="xl"
+            onChange={setGeneralType}
+            required
+          >
+            <Radio value="normal" label="Normal" color="dark" />
+            <Radio value="turbocharged" label="Turbocharged" color="dark" />
+            <Radio value="supercharged" label="Supercharged" color="dark" />
+          </Radio.Group>
         </Grid.Col>
       </Grid>
-      <Grid gutter="xl" className='mb-10'>
+      <Grid gutter="xl" className="mb-10">
         <Grid.Col md={6}>
-        <Radio.Group
-          value={fuelType}
-          label="Type"
-          spacing="xl"
-          onChange={setFuelType}
-          required
-        >
-          <Radio value="gasoline" label="Internal Combustion Engine" color="dark" />
-          <Radio value="diesel" label="Electric Vehicle" color="dark" />
-        </Radio.Group>
+          <Radio.Group value={fuelType} label="Type" spacing="xl" onChange={setFuelType} required>
+            <Radio value="gasoline" label="Internal Combustion Engine" color="dark" />
+            <Radio value="diesel" label="Electric Vehicle" color="dark" />
+          </Radio.Group>
         </Grid.Col>
       </Grid>
 
-      <Text className='mt-[1rem] mb-[1rem] text-[20px]' size="lg" weight={700}>
+      <Text className="mt-[1rem] mb-[1rem] text-[20px]" size="lg" weight={700}>
         Transmission
       </Text>
-      <Grid gutter="xl" className='mb-10'>
+      <Grid gutter="xl" className="mb-10">
         <Grid.Col md={6}>
           <Select
             label="Transmission"
@@ -242,4 +212,4 @@ function AddEngine(/*props*/) {
   );
 }
 
-export default AddEngine
+export default AddEngine;
