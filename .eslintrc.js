@@ -17,6 +17,7 @@ module.exports = {
   },
   rules: {
     'react/react-in-jsx-scope': 'off',
-    'no-plusplus': [2, { allowForLoopAfterthoughts: true }]
+    'no-plusplus': [2, { allowForLoopAfterthoughts: true }],
+    "linebreak-style": 0  
   },
 };
