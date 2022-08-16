@@ -1,5 +1,4 @@
-export default ({ color = 'black', width = '', height = '' }) => {
-  return (
+export default ({ color = 'black', width = '', height = '' }) => (
     <svg
       width={width}
       height={height}
@@ -10,4 +9,3 @@ export default ({ color = 'black', width = '', height = '' }) => {
       <path d="M7 12.5V6.5M7 6.5V0.5M7 6.5L13 6.5M7 6.5H1" stroke={color} strokeLinecap="round" />
     </svg>
   );
-};

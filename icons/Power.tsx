@@ -1,5 +1,4 @@
-export default ({ color = 'black', width = '', height = '' }) => {
-  return (
+export default ({ color = 'black', width = '', height = '' }) => (
     <svg
       width={width}
       height={height}
@@ -15,4 +14,3 @@ export default ({ color = 'black', width = '', height = '' }) => {
       />
     </svg>
   );
-};
