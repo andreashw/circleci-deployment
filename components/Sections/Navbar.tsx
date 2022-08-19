@@ -25,18 +25,18 @@ export default function NavbarComponent(props: any) {
           ],
         },
 
-      {
-        label: 'Clients',
-        link: '/clients',
-        icon: (color: string) => <Client color={color} width="20" height="20" />,
-      },
-      {
-        label: 'Vendor',
-        link: '/vendor',
-        icon: (color: string) => <Vendor color={color} width="20" height="20" />,
-      },
-        ],
-      },
+        {
+          label: 'Clients',
+          link: '/clients',
+          icon: (color: string) => <Client color={color} width="20" height="20" />,
+        },
+        {
+          label: 'Vendor',
+          link: '/vendor',
+          icon: (color: string) => <Vendor color={color} width="20" height="20" />,
+        },
+      ],
+    },
   ];
 
   return (

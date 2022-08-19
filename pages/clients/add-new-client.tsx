@@ -9,19 +9,25 @@ const useStyles = createStyles(() => ({
     color: 'black',
     height: '56px',
     width: '100%',
+    '&:hover': {
+      backgroundColor: 'transparent',
+    },
   },
   root: {
     width: '100%',
     height: '56px',
+    '&:hover': {
+      backgroundColor: 'transparent',
+    },
   },
 }));
-function VendorPage() {
+function ClientsPage() {
   const { classes } = useStyles();
   return (
     <>
       <div style={{ backgroundColor: 'rgba(44, 44, 44, 0.05)' }}>
         <Text align="left" weight="bold" mb="xs" size="xl">
-          Vendor
+          Client
         </Text>
       </div>
       <Text className="mt-[1rem] mb-[1rem] text-[20px]" weight={700}>
@@ -32,23 +38,15 @@ function VendorPage() {
         <Grid.Col md={6}>
           <TextInput label="Name" placeholder="e.g Herjanto" />
         </Grid.Col>
-
         <Grid.Col md={6}>
-          <Select
-            label="Type"
-            placeholder="Select Type"
-            rightSection={<IconChevronDown size={14} />}
-            data={[]}
-          />
+          <TextInput label="Email" placeholder="e.g herjanto@gmail.com" />
         </Grid.Col>
-
         <Grid.Col md={6}>
-          <TextInput label="Website" placeholder="e.g www.tokopedia.com/erajayabubut" />
+          <TextInput label="Address" placeholder="e.g Jl. k.h. Agus Salim No.07" />
         </Grid.Col>
         <Grid.Col md={6}>
           <TextInput label="Phone Number" placeholder="e.g 0837xxxxxxxx" />
         </Grid.Col>
-
         <Grid.Col md={6}>
           <Select
             label="City"
@@ -66,16 +64,12 @@ function VendorPage() {
           />
         </Grid.Col>
         <Grid.Col md={12}>
-          <Textarea
-            className={classes.label}
-            label="Description"
-            placeholder="Description"
-            minRows={4}
-          />
+          <Textarea className={classes.label} label="Notes" placeholder="Notes" minRows={4} />
         </Grid.Col>
+
         <Grid.Col md={8} />
         <Grid.Col md={2}>
-          <Button className={`${classes.cancel} hover:bg-transparent`}>Cancel</Button>
+          <Button className={`${classes.cancel}`}>Cancel</Button>
         </Grid.Col>
         <Grid.Col md={2}>
           <Button className={`${classes.root} bg-black hover:bg-black`}>Save</Button>
@@ -85,4 +79,4 @@ function VendorPage() {
   );
 }
 
-export default VendorPage;
+export default ClientsPage;

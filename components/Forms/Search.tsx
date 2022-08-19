@@ -27,7 +27,7 @@ export default function SearchForm(props: any) {
       <Button rightIcon={<IconFilter />} variant="white" color="black" onClick={submitForm}>
         Filter
       </Button>
-      <Button onClick={cancelSearch} color="gray">
+      <Button onClick={cancelSearch} className="bg-gray-500 hover:bg-gray-500">
         <X />
       </Button>
     </Group>
