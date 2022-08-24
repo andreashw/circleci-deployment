@@ -64,7 +64,13 @@ function ClientsPage() {
           />
         </Grid.Col>
         <Grid.Col md={12}>
-          <Textarea className={classes.label} label="Notes" placeholder="Notes" minRows={4} />
+          <Textarea
+            styles={{ input: { height: 'unset !important' } }}
+            className={classes.label}
+            label="Notes"
+            placeholder="Notes"
+            minRows={4}
+          />
         </Grid.Col>
 
         <Grid.Col md={8} />

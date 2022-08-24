@@ -5,6 +5,8 @@ import Automobile from 'icons/Automobile';
 import Power from 'icons/Power';
 import Client from 'icons/Client';
 import Vendor from 'icons/Vendor';
+import Part from 'icons/Part';
+import Project from 'icons/Project';
 
 export default function NavbarComponent(props: any) {
   const sideMenus: ISidebar[] = [
@@ -26,14 +28,30 @@ export default function NavbarComponent(props: any) {
         },
 
         {
+          label: 'Parts',
+          link: '/part',
+          icon: (color: string) => <Part color={color} width="20" height="20" />,
+        },
+
+        {
           label: 'Clients',
-          link: '/clients',
+          link: '/client',
           icon: (color: string) => <Client color={color} width="20" height="20" />,
         },
         {
           label: 'Vendor',
           link: '/vendor',
           icon: (color: string) => <Vendor color={color} width="20" height="20" />,
+        },
+        {
+          label: 'Workshop',
+          link: '/vendor',
+          icon: null,
+        },
+        {
+          label: 'Projects',
+          link: '/project/add',
+          icon: (color: string) => <Project color={color} width="20" height="20" />,
         },
       ],
     },
