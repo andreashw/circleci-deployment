@@ -58,13 +58,29 @@ function Application({ Component, pageProps }: { Component: any; pageProps: any 
                 input: 'bg-red',
               },
             },
+            Table: {
+              styles: {
+                root: {
+                  '& thead tr th': {
+                    paddingTop: '24px',
+                    paddingBottom: '16px',
+                    paddingLeft: '24px',
+                    paddingRight: '24px',
+                    backgroundColor: '#f1f1f1',
+                  },
+                  '& tbody tr td': {
+                    padding: '24px',
+                  },
+                },
+              },
+            },
           },
         }}
       >
         <NotificationsProvider>
           <ModalsProvider>
             <AppShell
-              padding="lg"
+              // padding="lg"
               header={
                 <Header
                   opened={opened}

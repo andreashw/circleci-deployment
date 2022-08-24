@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
-import { Table, ScrollArea, Menu, Drawer, Text, Pagination } from '@mantine/core';
+import { useState } from 'react';
+import { Table, ScrollArea, Menu, Drawer, Text, Pagination, Divider, Button } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
 
-import { Edit2 } from 'react-feather';
+import { Edit2, Trash2 } from 'react-feather';
 import { IconDotsVertical } from '@tabler/icons';
 
 import Search from '@components/Forms/Search';
@@ -93,73 +93,10 @@ const MOCKUP_AUTOMOBILE: any = [
 
 export default function Automobile(/*props*/) {
   const [automobiles, setAutomobiles] = useState(MOCKUP_AUTOMOBILE); // props.automobiles
-  const [tableRows, setTableRows] = useState([]);
   const [drawerOpened, toggleDrawer] = useState(false);
   const [selectedProfileData, setSelectedProfileData] = useState({});
   const [searchLoading, setSearchLoading] = useState(false);
   const [activePage, setPage] = useState(1);
-
-  useEffect(
-    () =>
-      setTableRows(
-        automobiles.map((automobile: any, index: any) => (
-          <tr key={index}>
-            <td>{automobile.manufacturer}</td>
-            <td>{automobile.brand}</td>
-            <td>{automobile.model}</td>
-            <td>{automobile.bodytype}</td>
-            <td>{automobile.prodyear}</td>
-            <td>{automobile.powertype}</td>
-            <td>
-              <Menu>
-                <Menu.Target>
-                  {/* <Button variant="white" color={'red'}>Action</Button> */}
-                  <div
-                    style={{
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      width: '60px',
-                      height: '36px',
-                    }}
-                  >
-                    <IconDotsVertical size={14} />
-                  </div>
-                </Menu.Target>
-
-                <Menu.Dropdown>
-                  <Menu.Label>{automobile.name}</Menu.Label>
-                  <Menu.Item
-                    icon={<Edit2 />}
-                    onClick={() => {
-                      setSelectedProfileData(automobile);
-                      toggleDrawer(true);
-                    }}
-                  >
-                    Edit
-                  </Menu.Item>
-                  {/* <Menu.Item icon={<Send />} onClick={() => sendMessage(automobile)}>
-                  Send Message
-                </Menu.Item>
-                <Divider />
-                <Menu.Item icon={<Save />} onClick={() => copyProfile(automobile)}>
-                  Copy
-                </Menu.Item> */}
-                  {/* <Menu.Item
-                  icon={<Trash2 />}
-                  onClick={() => deleteProfile(user)}
-                  color="red"
-                >
-                  Delete User
-                </Menu.Item> */}
-                </Menu.Dropdown>
-              </Menu>
-            </td>
-          </tr>
-        ))
-      ),
-    [automobiles]
-  );
 
   const onSearch = (search: any) => {
     setSearchLoading(true);
@@ -227,9 +164,17 @@ export default function Automobile(/*props*/) {
         <EditUserForm data={selectedProfileData} submitForm={onSubmitEditForm} />
       </Drawer>
 
-      <Search loading={searchLoading} onSubmit={onSearch} onCancel={cancelSearch} />
+      <div className="p-6" style={{ backgroundColor: 'rgba(44, 44, 44, 0.05)' }}>
+        <Text align="left" weight="bold" mb="xs" size="xl">
+          Automobile
+        </Text>
+        <div className="flex justify-between">
+          <Search loading={searchLoading} onSubmit={onSearch} onCancel={cancelSearch} />
+          <Button className="bg-black hover:bg-black px-6">Add New Automobile</Button>
+        </div>
+      </div>
 
-      {tableRows.length > 0 ? (
+      {MOCKUP_AUTOMOBILE.length > 0 ? (
         <ScrollArea>
           <Table striped highlightOnHover>
             <thead>
@@ -240,9 +185,62 @@ export default function Automobile(/*props*/) {
                 <th>Body Type</th>
                 <th>Prod. Year</th>
                 <th>Power Type</th>
+                <th />
               </tr>
             </thead>
-            <tbody>{tableRows}</tbody>
+            <tbody>
+              {automobiles.map((automobile: any, index: any) => (
+                <tr key={index}>
+                  <td>{automobile.manufacturer}</td>
+                  <td>{automobile.brand}</td>
+                  <td>{automobile.model}</td>
+                  <td>{automobile.bodytype}</td>
+                  <td>{automobile.prodyear}</td>
+                  <td>{automobile.powertype}</td>
+                  <td>
+                    <Menu>
+                      <Menu.Target>
+                        <div
+                          style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            width: '60px',
+                            height: '36px',
+                          }}
+                        >
+                          <IconDotsVertical size={14} />
+                        </div>
+                      </Menu.Target>
+
+                      <Menu.Dropdown>
+                        <Menu.Label>{automobile.name}</Menu.Label>
+                        <Menu.Item
+                          icon={<Edit2 />}
+                          onClick={() => {
+                            setSelectedProfileData(automobile);
+                            toggleDrawer(true);
+                          }}
+                        >
+                          Edit
+                        </Menu.Item>
+                        <Divider />
+                        <Menu.Item
+                          icon={<Trash2 />}
+                          onClick={() => {
+                            setSelectedProfileData(automobile);
+                            toggleDrawer(true);
+                          }}
+                          color="red"
+                        >
+                          Delete
+                        </Menu.Item>
+                      </Menu.Dropdown>
+                    </Menu>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
           </Table>
         </ScrollArea>
       ) : (

@@ -2,6 +2,13 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
+.mantine-AppShell-main {
+    padding-top: 70px;
+    padding-left: 240px;
+    padding-right: 0px;
+    padding-bottom: 0px;
+}
+
 .combobox-full> [role=combobox]{
     width: 100%;
 }
