@@ -1,139 +1,42 @@
-import { useState } from 'react';
-import { Table, ScrollArea, Menu, Drawer, Text, Pagination, Divider, Button } from '@mantine/core';
+import { useState, useEffect } from 'react';
+import { Table, ScrollArea, Menu, Drawer, Text, Pagination } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
 
-import { Edit2, Trash2 } from 'react-feather';
+import { Edit2 } from 'react-feather';
 import { IconDotsVertical } from '@tabler/icons';
 
-import Search from '@components/Forms/Search';
 import EditUserForm from '@components/Forms/EditUser';
 
-const MOCKUP_AUTOMOBILE: any = [
-  {
-    manufacturer: 'Mercedes Benz',
-    brand: 'mercedes',
-    model: 'S220',
-    bodytype: 'Sedan',
-    prodyear: '1950-1980',
-    powertype: 'ICE',
-  },
-  {
-    manufacturer: 'Mercedes Benz',
-    brand: 'mercedes',
-    model: 'S220',
-    bodytype: 'Sedan',
-    prodyear: '1950-1980',
-    powertype: 'ICE',
-  },
-  {
-    manufacturer: 'Mercedes Benz',
-    brand: 'mercedes',
-    model: 'S220',
-    bodytype: 'Sedan',
-    prodyear: '1950-1980',
-    powertype: 'ICE',
-  },
-  {
-    manufacturer: 'Mercedes Benz',
-    brand: 'mercedes',
-    model: 'S220',
-    bodytype: 'Sedan',
-    prodyear: '1950-1980',
-    powertype: 'ICE',
-  },
-  {
-    manufacturer: 'Mercedes Benz',
-    brand: 'mercedes',
-    model: 'S220',
-    bodytype: 'Sedan',
-    prodyear: '1950-1980',
-    powertype: 'ICE',
-  },
-  {
-    manufacturer: 'Mercedes Benz',
-    brand: 'mercedes',
-    model: 'S220',
-    bodytype: 'Sedan',
-    prodyear: '1950-1980',
-    powertype: 'ICE',
-  },
-  {
-    manufacturer: 'Mercedes Benz',
-    brand: 'mercedes',
-    model: 'S220',
-    bodytype: 'Sedan',
-    prodyear: '1950-1980',
-    powertype: 'ICE',
-  },
-  {
-    manufacturer: 'Mercedes Benz',
-    brand: 'mercedes',
-    model: 'S220',
-    bodytype: 'Sedan',
-    prodyear: '1950-1980',
-    powertype: 'ICE',
-  },
-  {
-    manufacturer: 'Mercedes Benz',
-    brand: 'mercedes',
-    model: 'S220',
-    bodytype: 'Sedan',
-    prodyear: '1950-1980',
-    powertype: 'ICE',
-  },
-  {
-    manufacturer: 'Mercedes Benz',
-    brand: 'mercedes',
-    model: 'S220',
-    bodytype: 'Sedan',
-    prodyear: '1950-1980',
-    powertype: 'ICE',
-  },
-];
+import useSWR from 'swr';
+import { IAutomobile } from '@contracts/automobile-interface';
+import { fetcher } from '@api/fetcher';
+import { IResponse } from '@contracts/response-interface';
+
+// const fetcher = (url: RequestInfo | URL) => fetch(url).then((res) => res.json());
 
 export default function Automobile(/*props*/) {
-  const [automobiles, setAutomobiles] = useState(MOCKUP_AUTOMOBILE); // props.automobiles
+  const [automobiles, setAutomobiles] = useState<IAutomobile[]>([]); // props.automobiles
   const [drawerOpened, toggleDrawer] = useState(false);
   const [selectedProfileData, setSelectedProfileData] = useState({});
-  const [searchLoading, setSearchLoading] = useState(false);
   const [activePage, setPage] = useState(1);
 
-  const onSearch = (search: any) => {
-    setSearchLoading(true);
+  function fetchAutomobile() {
+    const { data, error } = useSWR<IResponse<IAutomobile[]>>('/api/v1/automobiles/', fetcher);
 
-    const trimmedSearch = search.toLowerCase().trim();
+    return {
+      dataAutomobiles: data?.data,
+      isLoading: !error && !data,
+      isError: error,
+    };
+  }
 
-    if (!trimmedSearch) {
-      setAutomobiles(MOCKUP_AUTOMOBILE); // props.automobiles
-      setSearchLoading(false);
-      return;
+  const { dataAutomobiles } = fetchAutomobile();
+
+  useEffect(() => {
+    if (dataAutomobiles) {
+      setAutomobiles(dataAutomobiles);
     }
-
-    const filteredautomobiles = automobiles.filter(
-      (automobile: {
-        manufacturer: string;
-        brand: string;
-        model: string;
-        bodytype: string;
-        prodyear: string;
-        powertype: string | any[];
-      }) =>
-        automobile.manufacturer.toLowerCase().includes(search) ||
-        automobile.brand.toLowerCase().includes(search) ||
-        automobile.model.toLowerCase().includes(search) ||
-        automobile.bodytype.toLowerCase().includes(search) ||
-        automobile.prodyear.includes(search) ||
-        automobile.powertype.includes(search)
-    );
-
-    setAutomobiles(filteredautomobiles);
-
-    setSearchLoading(false);
-  };
-
-  const cancelSearch = () => {
-    setAutomobiles(MOCKUP_AUTOMOBILE); // props.automobiles
-  };
+  }, [dataAutomobiles]);
 
   const onSubmitEditForm = (oldAutomobile: any, newAutomobile: any) => {
     toggleDrawer(false);
@@ -152,6 +55,62 @@ export default function Automobile(/*props*/) {
     });
   };
 
+  const body = () =>
+    automobiles.map((item: any, index: any) => (
+      <tr key={index}>
+        <td>{item.AutomobileManufactures.name}</td>
+        <td>{item.AutomobileBrands.name}</td>
+        <td>{item.wheel_base}</td>
+        <td>{item.bodytype}</td>
+        <td>{item.year_start}</td>
+        <td>{item.power_type}</td>
+        <td>
+          <Menu>
+            <Menu.Target>
+              {/* <Button variant="white" color={'red'}>Action</Button> */}
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  width: '60px',
+                  height: '36px',
+                }}
+              >
+                <IconDotsVertical size={14} />
+              </div>
+            </Menu.Target>
+            <Menu.Dropdown>
+              <Menu.Label>{item.AutomobileManufactures.name}</Menu.Label>
+              <Menu.Item
+                icon={<Edit2 />}
+                onClick={() => {
+                  setSelectedProfileData(item);
+                  toggleDrawer(true);
+                }}
+              >
+                Edit
+              </Menu.Item>
+              {/* <Menu.Item icon={<Send />} onClick={() => sendMessage(automobile)}>
+              Send Message
+            </Menu.Item>
+            <Divider />
+            <Menu.Item icon={<Save />} onClick={() => copyProfile(automobile)}>
+              Copy
+            </Menu.Item> */}
+              {/* <Menu.Item
+              icon={<Trash2 />}
+              onClick={() => deleteProfile(user)}
+              color="red"
+            >
+              Delete User
+            </Menu.Item> */}
+            </Menu.Dropdown>
+          </Menu>
+        </td>
+      </tr>
+    ));
+
   return (
     <>
       <Drawer
@@ -164,17 +123,7 @@ export default function Automobile(/*props*/) {
         <EditUserForm data={selectedProfileData} submitForm={onSubmitEditForm} />
       </Drawer>
 
-      <div className="p-6" style={{ backgroundColor: 'rgba(44, 44, 44, 0.05)' }}>
-        <Text align="left" weight="bold" mb="xs" size="xl">
-          Automobile
-        </Text>
-        <div className="flex justify-between">
-          <Search loading={searchLoading} onSubmit={onSearch} onCancel={cancelSearch} />
-          <Button className="bg-black hover:bg-black px-6">Add New Automobile</Button>
-        </div>
-      </div>
-
-      {MOCKUP_AUTOMOBILE.length > 0 ? (
+      {automobiles.length > 0 ? (
         <ScrollArea>
           <Table striped highlightOnHover>
             <thead>
@@ -185,62 +134,9 @@ export default function Automobile(/*props*/) {
                 <th>Body Type</th>
                 <th>Prod. Year</th>
                 <th>Power Type</th>
-                <th />
               </tr>
             </thead>
-            <tbody>
-              {automobiles.map((automobile: any, index: any) => (
-                <tr key={index}>
-                  <td>{automobile.manufacturer}</td>
-                  <td>{automobile.brand}</td>
-                  <td>{automobile.model}</td>
-                  <td>{automobile.bodytype}</td>
-                  <td>{automobile.prodyear}</td>
-                  <td>{automobile.powertype}</td>
-                  <td>
-                    <Menu>
-                      <Menu.Target>
-                        <div
-                          style={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            width: '60px',
-                            height: '36px',
-                          }}
-                        >
-                          <IconDotsVertical size={14} />
-                        </div>
-                      </Menu.Target>
-
-                      <Menu.Dropdown>
-                        <Menu.Label>{automobile.name}</Menu.Label>
-                        <Menu.Item
-                          icon={<Edit2 />}
-                          onClick={() => {
-                            setSelectedProfileData(automobile);
-                            toggleDrawer(true);
-                          }}
-                        >
-                          Edit
-                        </Menu.Item>
-                        <Divider />
-                        <Menu.Item
-                          icon={<Trash2 />}
-                          onClick={() => {
-                            setSelectedProfileData(automobile);
-                            toggleDrawer(true);
-                          }}
-                          color="red"
-                        >
-                          Delete
-                        </Menu.Item>
-                      </Menu.Dropdown>
-                    </Menu>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
+            <tbody>{body()}</tbody>
           </Table>
         </ScrollArea>
       ) : (
