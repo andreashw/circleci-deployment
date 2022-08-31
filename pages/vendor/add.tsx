@@ -1,23 +1,10 @@
 import HeadingTop from '@components/TopComponents/Heading';
-import {
-  Button,
-  createStyles,
-  Grid,
-  Radio,
-  Select,
-  Text,
-  Textarea,
-  TextInput,
-} from '@mantine/core';
+import { Button, createStyles, Grid, Select, Text, Textarea, TextInput } from '@mantine/core';
 import { IconChevronDown } from '@tabler/icons';
-import { useState } from 'react';
 
 const useStyles = createStyles(() => ({
   label: {
     alignItems: 'flex-start',
-  },
-  input: {
-    height: 'unset',
   },
   cancel: {
     color: 'black',
@@ -29,13 +16,12 @@ const useStyles = createStyles(() => ({
     height: '56px',
   },
 }));
-function ProjectPage() {
+function VendorPage() {
   const { classes } = useStyles();
-  const [value, setValue] = useState('ICE');
   return (
     <>
       <HeadingTop
-        text="Create Project"
+        text="Vendor"
         items={[
           { title: 'Mantine', href: '#' },
           { title: 'Mantine hooks', href: '#' },
@@ -49,63 +35,56 @@ function ProjectPage() {
 
         <Grid gutter="xl" className="mb-[48px]">
           <Grid.Col md={6}>
-            <TextInput label="Project Name" placeholder="e.g Opel 1" />
+            <TextInput label="Name" placeholder="e.g Herjanto" />
           </Grid.Col>
 
           <Grid.Col md={6}>
             <Select
-              label="Client"
-              placeholder="Select Client"
+              label="Type"
+              placeholder="Select Type"
               rightSection={<IconChevronDown size={14} />}
               data={[]}
             />
           </Grid.Col>
 
           <Grid.Col md={6}>
-            <TextInput label="PIC" placeholder="e.g Michael" />
+            <TextInput label="Website" placeholder="e.g www.tokopedia.com/erajayabubut" />
+          </Grid.Col>
+          <Grid.Col md={6}>
+            <TextInput label="Phone Number" placeholder="e.g 0837xxxxxxxx" />
           </Grid.Col>
 
           <Grid.Col md={6}>
             <Select
-              label="Automobile"
-              placeholder="Select Automobile"
+              label="City"
+              placeholder="Select City"
               rightSection={<IconChevronDown size={14} />}
               data={[]}
             />
           </Grid.Col>
-
-          <Grid.Col md={6}>
-            <Radio.Group value={value} label="Type" spacing="sm" onChange={setValue} required>
-              <Radio value="ICE" label="Internal Combustion Engine" color="dark" />
-              <Radio value="EV" label="Electric Vehicle" color="dark" />
-            </Radio.Group>
-          </Grid.Col>
-
           <Grid.Col md={6}>
             <Select
-              label="Power"
-              placeholder="Select Power"
+              label="Province"
+              placeholder="Select Province"
               rightSection={<IconChevronDown size={14} />}
               data={[]}
             />
           </Grid.Col>
-
           <Grid.Col md={12}>
             <Textarea
               styles={{ input: { height: 'unset !important' } }}
-              className={`${classes.label}`}
-              label="Notes"
-              placeholder="Notes"
+              className={classes.label}
+              label="Description"
+              placeholder="Description"
               minRows={4}
             />
           </Grid.Col>
-
           <Grid.Col md={8} />
           <Grid.Col md={2}>
             <Button className={`${classes.cancel} hover:bg-transparent`}>Cancel</Button>
           </Grid.Col>
           <Grid.Col md={2}>
-            <Button className={`${classes.root}  bg-black hover:bg-black`}>Save</Button>
+            <Button className={`${classes.root} bg-black hover:bg-black`}>Save</Button>
           </Grid.Col>
         </Grid>
       </div>
@@ -113,4 +92,4 @@ function ProjectPage() {
   );
 }
 
-export default ProjectPage;
+export default VendorPage;

@@ -22,4 +22,9 @@ export interface ISidebar {
   menus: ILinkGroup[];
 }
 
+export interface IBreadcrumbs {
+  title?: string;
+  href?: string;
+}
+
 export type TLinkChangeCallback = (link: string) => any;

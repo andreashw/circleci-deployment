@@ -234,6 +234,7 @@ function Clients() {
                 <th>Email</th>
                 <th>Address</th>
                 <th>Phone Number</th>
+                <th />
               </tr>
             </thead>
             <tbody>{tableRows}</tbody>

@@ -44,13 +44,18 @@ export default function NavbarComponent(props: any) {
           icon: (color: string) => <Vendor color={color} width="20" height="20" />,
         },
         {
-          label: 'Workshop',
-          link: '/vendor',
-          icon: null,
+          label: 'Engineers',
+          link: '/engineer',
+          icon: (color: string) => <Vendor color={color} width="20" height="20" />,
         },
+      ],
+    },
+    {
+      group: 'Workshop',
+      menus: [
         {
           label: 'Projects',
-          link: '/project/add',
+          link: '/project',
           icon: (color: string) => <Project color={color} width="20" height="20" />,
         },
       ],
@@ -60,8 +65,12 @@ export default function NavbarComponent(props: any) {
   return (
     <Navbar hidden={!props.opened} width={{ sm: 140, lg: 240 }} style={{ paddingTop: -70 }}>
       {sideMenus.map(({ group, menus }) => (
-        <Navbar.Section key={group} grow>
-          <Text size="xs" weight={500} style={{ padding: '14px' }}>
+        <Navbar.Section key={group}>
+          <Text
+            size="xs"
+            weight={500}
+            style={{ padding: '14px', background: 'rgba(44, 44, 44, 0.05)' }}
+          >
             {group}
           </Text>
           <div>
