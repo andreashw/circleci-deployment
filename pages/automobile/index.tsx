@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Table, ScrollArea, Menu, Drawer, Text, Pagination } from '@mantine/core';
+import { Table, ScrollArea, Menu, Drawer, Text, Pagination, Button } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
 
 import { Edit2 } from 'react-feather';
@@ -11,8 +11,8 @@ import useSWR from 'swr';
 import { IAutomobile } from '@contracts/automobile-interface';
 import { fetcher } from '@api/fetcher';
 import { IResponse } from '@contracts/response-interface';
-
-// const fetcher = (url: RequestInfo | URL) => fetch(url).then((res) => res.json());
+import SearchForm from '@components/Forms/Search';
+import Router from 'next/router';
 
 export default function Automobile(/*props*/) {
   const [automobiles, setAutomobiles] = useState<IAutomobile[]>([]); // props.automobiles
@@ -123,9 +123,24 @@ export default function Automobile(/*props*/) {
         <EditUserForm data={selectedProfileData} submitForm={onSubmitEditForm} />
       </Drawer>
 
+      <div className="px-6 pt-6" style={{ backgroundColor: 'rgba(44, 44, 44, 0.05)' }}>
+        <Text align="left" weight="bold" mb="xs" size="xl">
+          Automobile
+        </Text>
+        <div className="flex justify-between">
+          <SearchForm />
+          <Button
+            className="bg-black hover:bg-black px-6"
+            onClick={() => Router.push('/automobile/add')}
+          >
+            Add New Automobile
+          </Button>
+        </div>
+      </div>
+
       {automobiles.length > 0 ? (
         <ScrollArea>
-          <Table striped highlightOnHover>
+          <Table highlightOnHover>
             <thead>
               <tr>
                 <th>Manufacturer</th>
@@ -134,6 +149,7 @@ export default function Automobile(/*props*/) {
                 <th>Body Type</th>
                 <th>Prod. Year</th>
                 <th>Power Type</th>
+                <th />
               </tr>
             </thead>
             <tbody>{body()}</tbody>
@@ -145,7 +161,7 @@ export default function Automobile(/*props*/) {
         </Text>
       )}
 
-      <div className="flex justify-between my-5">
+      <div className="flex justify-between my-5 p-6">
         <Text color="#828282" size={14}>
           Show 10 from 1020 automobiles
         </Text>

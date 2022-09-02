@@ -1,13 +1,25 @@
-import { Anchor, Grid, Radio, Select, Text, TextInput } from '@mantine/core';
+/* eslint-disable no-console */
+import { Anchor, Button, Grid, Radio, Select, Text, TextInput } from '@mantine/core';
 import { Fragment, useState } from 'react';
 import { RightSection } from '@components/Inputs/RightSection';
 import { YearRange } from '@components/Inputs/YearRange';
 import { IconChevronDown } from '@tabler/icons';
+import useInput from '@hooks/useInput';
 import Trash from 'icons/Trash';
 import Plus from 'icons/Plus';
+import Router from 'next/router';
+import { IAutomobile } from '@contracts/automobile-interface';
+import { fetcher } from '@api/fetcher';
 
 function AddAutomobile(/*props*/) {
-  const [value, setValue] = useState('ICE');
+  const [input, handleInput] = useInput({
+    model: '',
+    year_start: '',
+    year_end: '',
+    power_type: 'ICE',
+    curb: '',
+    wheel: '',
+  });
   const [lengths, setLengths] = useState([
     {
       length: '',
@@ -75,8 +87,27 @@ function AddAutomobile(/*props*/) {
     setHeights((prev) => prev.filter((x, i) => i !== index));
   };
 
+  const addData = async () => {
+    const response: IAutomobile | undefined = await fetcher('/api/v1/automobiles/', {
+      method: 'POST',
+      body: {
+        automobile_manufacture_id: 1,
+        automobile_brand_id: 1,
+        automobile_body_type_id: 1,
+        automobile_layout_id: 1,
+        model: input.model,
+        year_start: Number(input.year_start),
+        year_end: Number(input.year_end),
+        power_type: input.power_type,
+        curb_wight: Number(input.curb),
+        wheel_base: Number(input.wheel),
+      },
+    });
+    console.log('Response from API ', response);
+  };
+
   return (
-    <>
+    <div className="p-6">
       <Text className="mt-[1rem] mb-[1rem] text-[20px]" weight={700}>
         Details
       </Text>
@@ -109,7 +140,12 @@ function AddAutomobile(/*props*/) {
         </Grid.Col>
 
         <Grid.Col md={6}>
-          <TextInput label="Model" placeholder="TextInput with custom styles" />
+          <TextInput
+            label="Model"
+            placeholder="TextInput with custom styles"
+            value={input.model}
+            onChange={handleInput('model')}
+          />
         </Grid.Col>
         <Grid.Col md={6}>
           <Select
@@ -126,7 +162,11 @@ function AddAutomobile(/*props*/) {
         </Grid.Col>
 
         <Grid.Col md={6} className="flex flex-row items-center">
-          <YearRange label="Production Year" />
+          <YearRange
+            label="Production Year"
+            onStartChange={handleInput('year_start', true)}
+            onEndChange={handleInput('year_end', true)}
+          />
         </Grid.Col>
       </Grid>
 
@@ -154,7 +194,13 @@ function AddAutomobile(/*props*/) {
       </Text>
       <Grid gutter="xl">
         <Grid.Col md={6}>
-          <Radio.Group value={value} label="Type" spacing="sm" onChange={setValue} required>
+          <Radio.Group
+            value={input.powerType}
+            label="Type"
+            spacing="sm"
+            onChange={handleInput('power_type', true)}
+            required
+          >
             <Radio value="ICE" label="Internal Combustion Engine" color="dark" />
             <Radio value="EV" label="Electric Vehicle" color="dark" />
           </Radio.Group>
@@ -185,6 +231,8 @@ function AddAutomobile(/*props*/) {
             label="Curb Weight"
             placeholder="Curb Weight"
             rightSection={<RightSection label="kg" />}
+            value={input.curb}
+            onChange={handleInput('curb')}
           />
         </Grid.Col>
         <Grid.Col md={6}>
@@ -192,6 +240,8 @@ function AddAutomobile(/*props*/) {
             label="Wheelbase"
             placeholder="Wheelbase"
             rightSection={<RightSection label="mm" />}
+            value={input.wheel}
+            onChange={handleInput('wheel')}
           />
         </Grid.Col>
       </Grid>
@@ -348,7 +398,21 @@ function AddAutomobile(/*props*/) {
           </Grid>
         </Fragment>
       ))}
-    </>
+
+      <Grid>
+        <Grid.Col md={8} />
+        <Grid.Col md={2}>
+          <Button className="bg-black hover:bg-black w-full h-14" onClick={() => Router.back()}>
+            Cancel
+          </Button>
+        </Grid.Col>
+        <Grid.Col md={2}>
+          <Button className="bg-black hover:bg-black w-full h-14" onClick={() => addData()}>
+            Save
+          </Button>
+        </Grid.Col>
+      </Grid>
+    </div>
   );
 }
 

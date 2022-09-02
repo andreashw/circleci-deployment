@@ -5,8 +5,12 @@ const years: number[] = [];
 for (let i = 1990; i <= 2010; i++) {
   years.push(i);
 }
-
-export function YearRange({ label = 'label' }) {
+interface YearRangProps {
+  label: string;
+  onStartChange?: (val: any) => void;
+  onEndChange?: (val: any) => void;
+}
+export function YearRange({ label = 'label', onStartChange, onEndChange }: YearRangProps) {
   return (
     <>
       <div className="w-28 max-width-[45%] text-[14px]">{label}</div>
@@ -17,6 +21,7 @@ export function YearRange({ label = 'label' }) {
           value: y.toString(),
           label: y.toString(),
         }))}
+        onChange={onStartChange}
       />
       <span className="px-4">-</span>
       <Select
@@ -26,6 +31,7 @@ export function YearRange({ label = 'label' }) {
           value: y.toString(),
           label: y.toString(),
         }))}
+        onChange={onEndChange}
       />
     </>
   );

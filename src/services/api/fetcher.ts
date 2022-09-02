@@ -3,9 +3,9 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 export interface IPayload {
-  method: 'POST' | 'GET' | 'DELETE' | 'PUT';
-  body: FormData | object;
-  params: object;
+  method?: 'POST' | 'GET' | 'DELETE' | 'PUT';
+  body?: FormData | object;
+  params?: object;
 }
 
 export async function fetcher(url: string, payload?: IPayload) {
