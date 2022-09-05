@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { MantineProvider, AppShell } from '@mantine/core';
 import { NotificationsProvider } from '@mantine/notifications';
 import { ModalsProvider } from '@mantine/modals';
@@ -7,14 +7,28 @@ import { ModalsProvider } from '@mantine/modals';
 import Header from '@components/Sections/Header';
 import Navbar from '@components/Sections/Navbar';
 import '../styles/globals.css';
+import { SWRConfig } from 'swr';
+import { fetcher } from '@api/fetcher';
+import ErrorBoundary from '@components/ErrorBoundary';
 
 function Application({ Component, pageProps }: { Component: any; pageProps: any }) {
   const [opened, setOpened] = useState(false);
   const [colorScheme, setColorScheme] = useState('dark');
+  const [isLoading, setLoading] = useState(true);
 
   const toggleColorScheme = () => {
     setColorScheme(colorScheme === 'light' ? 'dark' : 'light');
   };
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+  }, []);
+
+  if (isLoading) {
+    return <div>Loading ...</div>;
+  }
 
   return (
     <>
@@ -95,7 +109,16 @@ function Application({ Component, pageProps }: { Component: any; pageProps: any 
                 },
               })}
             >
-              <Component {...pageProps} />
+              <SWRConfig
+                value={{
+                  fetcher: (url: string) => fetcher(url),
+                  suspense: true,
+                }}
+              >
+                <ErrorBoundary FallbackComponent={<div>Error</div>}>
+                  <Component {...pageProps} />
+                </ErrorBoundary>
+              </SWRConfig>
             </AppShell>
           </ModalsProvider>
         </NotificationsProvider>

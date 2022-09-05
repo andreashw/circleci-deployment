@@ -21,8 +21,8 @@ export async function fetcher(url: string, payload?: IPayload) {
         Authorization: `Bearer ${token}`,
       },
     });
-    return fetchData.data;
+    return fetchData.data.data;
   } catch (error) {
-    return null;
+    throw new Error('Something Wrong');
   }
 }

@@ -9,8 +9,6 @@ import EditUserForm from '@components/Forms/EditUser';
 
 import useSWR from 'swr';
 import { IAutomobile } from '@contracts/automobile-interface';
-import { fetcher } from '@api/fetcher';
-import { IResponse } from '@contracts/response-interface';
 import SearchForm from '@components/Forms/Search';
 import Router from 'next/router';
 
@@ -21,10 +19,10 @@ export default function Automobile(/*props*/) {
   const [activePage, setPage] = useState(1);
 
   function fetchAutomobile() {
-    const { data, error } = useSWR<IResponse<IAutomobile[]>>('/api/v1/automobiles/', fetcher);
+    const { data, error } = useSWR<IAutomobile[]>('/api/v1/automobiles/');
 
     return {
-      dataAutomobiles: data?.data,
+      dataAutomobiles: data,
       isLoading: !error && !data,
       isError: error,
     };
@@ -56,12 +54,12 @@ export default function Automobile(/*props*/) {
   };
 
   const body = () =>
-    automobiles.map((item: any, index: any) => (
-      <tr key={index}>
+    automobiles.map((item: IAutomobile, index: any) => (
+      <tr key={index} onClick={() => Router.push(`/automobile/${item.ID}`)}>
         <td>{item.AutomobileManufactures.name}</td>
         <td>{item.AutomobileBrands.name}</td>
-        <td>{item.wheel_base}</td>
-        <td>{item.bodytype}</td>
+        <td>{item.model}</td>
+        <td>{item.AutomobileBodyTypes.name}</td>
         <td>{item.year_start}</td>
         <td>{item.power_type}</td>
         <td>

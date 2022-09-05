@@ -1,14 +1,11 @@
 import { IBreadcrumbs } from '@contracts/navigation';
 import { Anchor, Breadcrumbs, Text } from '@mantine/core';
 
-function HeadingTop({ text = '', items = [] }: { items: IBreadcrumbs[]; text: string }) {
+function HeadingTop({ text = '', items = [] }: { items: IBreadcrumbs[]; text?: string }) {
   return (
     <>
       <div className=" mb-0 p-5 bg-[#2c2c2c0d]">
         <Breadcrumbs separator=">">
-          <Anchor style={{ color: '#828282' }} className="color-[#828282]">
-            {text}
-          </Anchor>
           {items.map((item, index) => (
             <Anchor
               style={{ color: index === 0 ? '#828282' : '#2C2C2C' }}
