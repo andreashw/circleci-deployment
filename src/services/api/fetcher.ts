@@ -3,7 +3,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 export interface IPayload {
-  method?: 'POST' | 'GET' | 'DELETE' | 'PUT';
+  method?: 'POST' | 'GET' | 'DELETE' | 'PUT' | 'PATCH';
   body?: FormData | object;
   params?: object;
 }

@@ -1,12 +1,6 @@
 function Project({ color = 'black', width = '', height = '' }) {
   return (
-    <svg
-      width={width}
-      height={height}
-      viewBox="0 0 24 24"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width={width} height={height} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M13.6996 19.8981H20.0766" stroke={color} strokeWidth="1.5" strokeLinejoin="round" />
       <path
         fillRule="evenodd"

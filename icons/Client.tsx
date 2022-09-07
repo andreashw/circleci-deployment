@@ -1,12 +1,6 @@
 function Client({ color = 'black', width = '', height = '' }) {
   return (
-    <svg
-      width={width}
-      height={height}
-      viewBox="0 0 24 24"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width={width} height={height} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <circle
         cx="11.5789"
         cy="7.27803"

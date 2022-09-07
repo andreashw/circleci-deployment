@@ -15,7 +15,6 @@ import Router from 'next/router';
 export default function Automobile(/*props*/) {
   const [automobiles, setAutomobiles] = useState<IAutomobile[]>([]); // props.automobiles
   const [drawerOpened, toggleDrawer] = useState(false);
-  const [selectedProfileData, setSelectedProfileData] = useState({});
   const [activePage, setPage] = useState(1);
 
   function fetchAutomobile() {
@@ -55,13 +54,13 @@ export default function Automobile(/*props*/) {
 
   const body = () =>
     automobiles.map((item: IAutomobile, index: any) => (
-      <tr key={index} onClick={() => Router.push(`/automobile/${item.ID}`)}>
-        <td>{item.AutomobileManufactures.name}</td>
-        <td>{item.AutomobileBrands.name}</td>
-        <td>{item.model}</td>
-        <td>{item.AutomobileBodyTypes.name}</td>
-        <td>{item.year_start}</td>
-        <td>{item.power_type}</td>
+      <tr key={index}>
+        <td onClick={() => Router.push(`/automobile/${item.ID}`)}>{item.AutomobileManufactures.name}</td>
+        <td onClick={() => Router.push(`/automobile/${item.ID}`)}>{item.AutomobileBrands.name}</td>
+        <td onClick={() => Router.push(`/automobile/${item.ID}`)}>{item.model}</td>
+        <td onClick={() => Router.push(`/automobile/${item.ID}`)}>{item.AutomobileBodyTypes.name}</td>
+        <td onClick={() => Router.push(`/automobile/${item.ID}`)}>{item.year_start}</td>
+        <td onClick={() => Router.push(`/automobile/${item.ID}`)}>{item.power_type}</td>
         <td>
           <Menu>
             <Menu.Target>
@@ -80,13 +79,7 @@ export default function Automobile(/*props*/) {
             </Menu.Target>
             <Menu.Dropdown>
               <Menu.Label>{item.AutomobileManufactures.name}</Menu.Label>
-              <Menu.Item
-                icon={<Edit2 />}
-                onClick={() => {
-                  setSelectedProfileData(item);
-                  toggleDrawer(true);
-                }}
-              >
+              <Menu.Item icon={<Edit2 />} onClick={() => Router.push(`/automobile/edit/${item.ID}`)}>
                 Edit
               </Menu.Item>
               {/* <Menu.Item icon={<Send />} onClick={() => sendMessage(automobile)}>
@@ -111,14 +104,8 @@ export default function Automobile(/*props*/) {
 
   return (
     <>
-      <Drawer
-        opened={drawerOpened}
-        onClose={() => toggleDrawer(false)}
-        title="Modify user"
-        padding="xl"
-        size="xl"
-      >
-        <EditUserForm data={selectedProfileData} submitForm={onSubmitEditForm} />
+      <Drawer opened={drawerOpened} onClose={() => toggleDrawer(false)} title="Modify user" padding="xl" size="xl">
+        <EditUserForm submitForm={onSubmitEditForm} />
       </Drawer>
 
       <div className="px-6 pt-6" style={{ backgroundColor: 'rgba(44, 44, 44, 0.05)' }}>
@@ -127,10 +114,7 @@ export default function Automobile(/*props*/) {
         </Text>
         <div className="flex justify-between">
           <SearchForm />
-          <Button
-            className="bg-black hover:bg-black px-6"
-            onClick={() => Router.push('/automobile/add')}
-          >
+          <Button className="bg-black hover:bg-black px-6" onClick={() => Router.push('/automobile/add')}>
             Add New Automobile
           </Button>
         </div>

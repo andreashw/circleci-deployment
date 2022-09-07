@@ -48,8 +48,7 @@ function Application({ Component, pageProps }: { Component: any; pageProps: any 
               },
               classNames: {
                 root: 'flex flex-grow',
-                label:
-                  'flex justify-start items-center w-[110px] flex-shrink-0 max-width-[45%] font-normal',
+                label: 'flex justify-start items-center w-[110px] flex-shrink-0 max-width-[45%] font-normal',
               },
             },
 
@@ -95,13 +94,7 @@ function Application({ Component, pageProps }: { Component: any; pageProps: any 
           <ModalsProvider>
             <AppShell
               // padding="lg"
-              header={
-                <Header
-                  opened={opened}
-                  setOpened={setOpened}
-                  toggleColorScheme={toggleColorScheme}
-                />
-              }
+              header={<Header opened={opened} setOpened={setOpened} toggleColorScheme={toggleColorScheme} />}
               navbar={<Navbar opened={opened} />}
               styles={() => ({
                 main: {

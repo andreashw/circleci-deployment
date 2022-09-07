@@ -2,15 +2,17 @@ import { Select } from '@mantine/core';
 import { IconChevronDown } from '@tabler/icons';
 
 const years: number[] = [];
-for (let i = 1990; i <= 2010; i++) {
+for (let i = 1990; i <= 2030; i++) {
   years.push(i);
 }
 interface YearRangProps {
   label: string;
+  valStart?: string;
+  valEnd?: string;
   onStartChange?: (val: any) => void;
   onEndChange?: (val: any) => void;
 }
-export function YearRange({ label = 'label', onStartChange, onEndChange }: YearRangProps) {
+export function YearRange({ label = 'label', onStartChange, onEndChange, valStart = '', valEnd = '' }: YearRangProps) {
   return (
     <>
       <div className="w-28 max-width-[45%] text-[14px]">{label}</div>
@@ -21,6 +23,7 @@ export function YearRange({ label = 'label', onStartChange, onEndChange }: YearR
           value: y.toString(),
           label: y.toString(),
         }))}
+        value={valStart.toString()}
         onChange={onStartChange}
       />
       <span className="px-4">-</span>
@@ -31,6 +34,7 @@ export function YearRange({ label = 'label', onStartChange, onEndChange }: YearR
           value: y.toString(),
           label: y.toString(),
         }))}
+        value={valEnd.toString()}
         onChange={onEndChange}
       />
     </>

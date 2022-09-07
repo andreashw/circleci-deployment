@@ -167,13 +167,7 @@ export default function Automobile(/*props*/) {
 
   return (
     <>
-      <Drawer
-        opened={drawerOpened}
-        onClose={() => toggleDrawer(false)}
-        title="Modify Engine"
-        padding="xl"
-        size="xl"
-      >
+      <Drawer opened={drawerOpened} onClose={() => toggleDrawer(false)} title="Modify Engine" padding="xl" size="xl">
         <EditUserForm data={selectedProfileData} submitForm={onSubmitEditForm} />
       </Drawer>
 

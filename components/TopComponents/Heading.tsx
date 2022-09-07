@@ -4,14 +4,10 @@ import { Anchor, Breadcrumbs, Text } from '@mantine/core';
 function HeadingTop({ text = '', items = [] }: { items: IBreadcrumbs[]; text?: string }) {
   return (
     <>
-      <div className="  p-6 bg-[#2c2c2c0d]">
+      <div className=" mb-0 px-6 pt-6 pb-2 bg-[#2c2c2c0d]">
         <Breadcrumbs separator=">">
           {items.map((item, index) => (
-            <Anchor
-              style={{ color: index === 0 ? '#828282' : '#2C2C2C' }}
-              href={item.href}
-              key={index}
-            >
+            <Anchor style={{ color: index === 0 ? '#828282' : '#2C2C2C' }} href={item.href} key={index}>
               {item.title}
             </Anchor>
           ))}

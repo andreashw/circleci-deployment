@@ -7,11 +7,7 @@ export const parameters = { layout: 'fullscreen' };
 function ThemeWrapper(props: { children: React.ReactNode }) {
   return (
     <ColorSchemeProvider colorScheme="light" toggleColorScheme={() => {}}>
-      <MantineProvider
-        theme={{ colorScheme: useDarkMode() ? 'dark' : 'light' }}
-        withGlobalStyles
-        withNormalizeCSS
-      >
+      <MantineProvider theme={{ colorScheme: useDarkMode() ? 'dark' : 'light' }} withGlobalStyles withNormalizeCSS>
         <NotificationsProvider>{props.children}</NotificationsProvider>
       </MantineProvider>
     </ColorSchemeProvider>

@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { Anchor, Button, Grid, Radio, Select, Text, TextInput } from '@mantine/core';
 import { Fragment, useState } from 'react';
 import { RightSection } from '@components/Inputs/RightSection';
@@ -7,7 +6,7 @@ import { IconChevronDown } from '@tabler/icons';
 import useInput from '@hooks/useInput';
 import Trash from 'icons/Trash';
 import Plus from 'icons/Plus';
-import Router from 'next/router';
+import Router, { useRouter } from 'next/router';
 import {
   IAutomobile,
   IAutomobileBodyTypes,
@@ -19,23 +18,7 @@ import { fetcher } from '@api/fetcher';
 import useSWR from 'swr';
 import { Dropdown } from '@components/Inputs/Dropdown';
 
-function AddAutomobile(/*props*/) {
-  const { data: AutomobileBrand } = useSWR<IAutomobileBrands[]>('/api/v1/automobiles-brands/');
-  const { data: AutomobileManufacture } = useSWR<IAutomobileManufactures[]>('/api/v1/automobiles-manufactures/');
-  const { data: AutomobileLayout } = useSWR<IAutomobileLayouts[]>('/api/v1/automobiles-layouts/');
-  const { data: AutomobileBodyType } = useSWR<IAutomobileBodyTypes[]>('/api/v1/automobiles-body-types/');
-  const [input, handleInput] = useInput({
-    manufacture: '',
-    brand: '',
-    body_type: '',
-    layout: '',
-    model: '',
-    year_start: '',
-    year_end: '',
-    power_type: 'ICE',
-    curb: '',
-    wheel: '',
-  });
+function EditAutomobile(/*props*/) {
   const [lengths, setLengths] = useState([
     {
       length: '',
@@ -103,9 +86,30 @@ function AddAutomobile(/*props*/) {
     setHeights((prev) => prev.filter((x, i) => i !== index));
   };
 
-  const addData = async () => {
-    const response: IAutomobile | undefined = await fetcher('/api/v1/automobiles/', {
-      method: 'POST',
+  const router = useRouter();
+  const id = router.query.id as unknown as number;
+  const { data, mutate } = useSWR<IAutomobile[]>(`/api/v1/automobiles/${id}`);
+  const { data: AutomobileBrand } = useSWR<IAutomobileBrands[]>('/api/v1/automobiles-brands/');
+  const { data: AutomobileManufacture } = useSWR<IAutomobileManufactures[]>('/api/v1/automobiles-manufactures/');
+  const { data: AutomobileLayout } = useSWR<IAutomobileLayouts[]>('/api/v1/automobiles-layouts/');
+  const { data: AutomobileBodyType } = useSWR<IAutomobileBodyTypes[]>('/api/v1/automobiles-body-types/');
+
+  const [input, handleInput] = useInput({
+    manufacture: data ? data[0]?.AutomobileManufactures.ID : '',
+    brand: data ? data[0]?.AutomobileBrands.ID : '',
+    body_type: data ? data[0]?.AutomobileBodyTypes.ID : '',
+    layout: data ? data[0]?.AutomobileLayouts.ID : '',
+    model: data ? data[0]?.model : '',
+    year_start: data ? data[0]?.year_start : '',
+    year_end: data ? data[0]?.year_end : '',
+    power_type: data ? data[0]?.power_type : '',
+    curb: data ? data[0]?.curb_wight : '',
+    wheel: data ? data[0]?.wheel_base : '',
+  });
+
+  const editData = async () => {
+    const response: IAutomobile | undefined = await fetcher(`/api/v1/automobiles/${id}`, {
+      method: 'PATCH',
       body: {
         automobile_manufacture_id: Number(input.manufacture),
         automobile_brand_id: Number(input.brand),
@@ -119,7 +123,11 @@ function AddAutomobile(/*props*/) {
         wheel_base: Number(input.wheel),
       },
     });
-    console.log('Response from API ', response);
+    console.log('Response Edit from API ', response);
+    mutate();
+    if (response) {
+      Router.replace('/automobile');
+    }
   };
 
   return (
@@ -131,6 +139,7 @@ function AddAutomobile(/*props*/) {
         <Grid.Col md={6}>
           <Dropdown
             label="Manufacture"
+            value={input.manufacture.toString()}
             data={AutomobileManufacture?.map(({ ID, name }) => ({ value: ID.toString(), label: name })) || []}
             onChange={handleInput('manufacture', true)}
           />
@@ -138,6 +147,7 @@ function AddAutomobile(/*props*/) {
         <Grid.Col md={6}>
           <Dropdown
             label="Brand"
+            value={input.brand.toString()}
             data={AutomobileBrand?.map(({ ID, name }) => ({ value: ID.toString(), label: name })) || []}
             onChange={handleInput('brand', true)}
           />
@@ -154,6 +164,7 @@ function AddAutomobile(/*props*/) {
         <Grid.Col md={6}>
           <Dropdown
             label="Body Type"
+            value={input.body_type.toString()}
             data={AutomobileBodyType?.map(({ ID, name }) => ({ value: ID.toString(), label: name })) || []}
             onChange={handleInput('body_type', true)}
           />
@@ -177,6 +188,7 @@ function AddAutomobile(/*props*/) {
         <Grid.Col md={6}>
           <Dropdown
             label="Layout"
+            value={input.layout.toString()}
             data={AutomobileLayout?.map(({ ID, name }) => ({ value: ID.toString(), label: name })) || []}
             onChange={handleInput('layout', true)}
           />
@@ -389,7 +401,7 @@ function AddAutomobile(/*props*/) {
           </Button>
         </Grid.Col>
         <Grid.Col md={2}>
-          <Button className="bg-black hover:bg-black w-full h-14" onClick={() => addData()}>
+          <Button className="bg-black hover:bg-black w-full h-14" onClick={() => editData()}>
             Save
           </Button>
         </Grid.Col>
@@ -398,4 +410,4 @@ function AddAutomobile(/*props*/) {
   );
 }
 
-export default AddAutomobile;
+export default EditAutomobile;

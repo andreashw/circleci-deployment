@@ -106,13 +106,7 @@ function Clients() {
 
   return (
     <>
-      <Drawer
-        opened={drawerOpened}
-        onClose={() => toggleDrawer(false)}
-        title="Modify user"
-        padding="xl"
-        size="xl"
-      >
+      <Drawer opened={drawerOpened} onClose={() => toggleDrawer(false)} title="Modify user" padding="xl" size="xl">
         <EditUserForm data={selectedProfileData} submitForm={onSubmitEditForm} />
       </Drawer>
       <div className="px-6 pt-6" style={{ backgroundColor: 'rgba(44, 44, 44, 0.05)' }}>

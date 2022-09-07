@@ -12,12 +12,7 @@ export default function HeaderComponent(props: any) {
         }}
       >
         <MediaQuery largerThan="sm" styles={{ display: 'none' }}>
-          <Burger
-            opened={props.opened}
-            onClick={() => props.setOpened((o: any) => !o)}
-            size="sm"
-            mr="xl"
-          />
+          <Burger opened={props.opened} onClick={() => props.setOpened((o: any) => !o)} size="sm" mr="xl" />
         </MediaQuery>
 
         <Text weight={700}>ARMS</Text>
@@ -30,13 +25,7 @@ export default function HeaderComponent(props: any) {
             justifyContent: 'flex-end',
           }}
         >
-          <ActionIcon
-            title="Szín beállítás"
-            onClick={props.toggleColorScheme}
-            size="lg"
-            radius="md"
-            variant="outline"
-          >
+          <ActionIcon title="Szín beállítás" onClick={props.toggleColorScheme} size="lg" radius="md" variant="outline">
             <Sun />
           </ActionIcon>
         </div>

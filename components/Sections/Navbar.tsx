@@ -66,11 +66,7 @@ export default function NavbarComponent(props: any) {
     <Navbar hidden={!props.opened} width={{ sm: 140, lg: 240 }} style={{ paddingTop: -70 }}>
       {sideMenus.map(({ group, menus }) => (
         <Navbar.Section key={group}>
-          <Text
-            size="xs"
-            weight={500}
-            style={{ padding: '14px', background: 'rgba(44, 44, 44, 0.05)' }}
-          >
+          <Text size="xs" weight={500} style={{ padding: '14px', background: 'rgba(44, 44, 44, 0.05)' }}>
             {group}
           </Text>
           <div>

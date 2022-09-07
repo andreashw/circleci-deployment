@@ -39,12 +39,7 @@ function VendorPage() {
           </Grid.Col>
 
           <Grid.Col md={6}>
-            <Select
-              label="Type"
-              placeholder="Select Type"
-              rightSection={<IconChevronDown size={14} />}
-              data={[]}
-            />
+            <Select label="Type" placeholder="Select Type" rightSection={<IconChevronDown size={14} />} data={[]} />
           </Grid.Col>
 
           <Grid.Col md={6}>
@@ -55,12 +50,7 @@ function VendorPage() {
           </Grid.Col>
 
           <Grid.Col md={6}>
-            <Select
-              label="City"
-              placeholder="Select City"
-              rightSection={<IconChevronDown size={14} />}
-              data={[]}
-            />
+            <Select label="City" placeholder="Select City" rightSection={<IconChevronDown size={14} />} data={[]} />
           </Grid.Col>
           <Grid.Col md={6}>
             <Select

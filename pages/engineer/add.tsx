@@ -67,18 +67,10 @@ function AddEngineerPage() {
         </Text>
         <Grid gutter="xl">
           <Grid.Col md={6}>
-            <TextInput
-              label="Hourly Pay"
-              placeholder="e.g 15.000"
-              rightSection={<RightSection label="Rp" />}
-            />
+            <TextInput label="Hourly Pay" placeholder="e.g 15.000" rightSection={<RightSection label="Rp" />} />
           </Grid.Col>
           <Grid.Col md={6}>
-            <TextInput
-              label="Monthly Equiv"
-              placeholder="e.g 3.000.000"
-              rightSection={<RightSection label="Rp" />}
-            />
+            <TextInput label="Monthly Equiv" placeholder="e.g 3.000.000" rightSection={<RightSection label="Rp" />} />
           </Grid.Col>
         </Grid>
 

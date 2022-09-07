@@ -1,14 +1,5 @@
 import HeadingTop from '@components/TopComponents/Heading';
-import {
-  Button,
-  createStyles,
-  Grid,
-  Radio,
-  Select,
-  Text,
-  Textarea,
-  TextInput,
-} from '@mantine/core';
+import { Button, createStyles, Grid, Radio, Select, Text, Textarea, TextInput } from '@mantine/core';
 import { IconChevronDown } from '@tabler/icons';
 import { useState } from 'react';
 
@@ -53,12 +44,7 @@ function ProjectPage() {
           </Grid.Col>
 
           <Grid.Col md={6}>
-            <Select
-              label="Client"
-              placeholder="Select Client"
-              rightSection={<IconChevronDown size={14} />}
-              data={[]}
-            />
+            <Select label="Client" placeholder="Select Client" rightSection={<IconChevronDown size={14} />} data={[]} />
           </Grid.Col>
 
           <Grid.Col md={6}>
@@ -82,12 +68,7 @@ function ProjectPage() {
           </Grid.Col>
 
           <Grid.Col md={6}>
-            <Select
-              label="Power"
-              placeholder="Select Power"
-              rightSection={<IconChevronDown size={14} />}
-              data={[]}
-            />
+            <Select label="Power" placeholder="Select Power" rightSection={<IconChevronDown size={14} />} data={[]} />
           </Grid.Col>
 
           <Grid.Col md={12}>

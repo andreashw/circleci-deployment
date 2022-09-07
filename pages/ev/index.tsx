@@ -171,18 +171,10 @@ function AddEV(/*props*/) {
       </Text>
       <Grid gutter="xl">
         <Grid.Col md={6}>
-          <TextInput
-            label="Curb Weight"
-            placeholder="Curb Weight"
-            rightSection={<RightSection label="kg" />}
-          />
+          <TextInput label="Curb Weight" placeholder="Curb Weight" rightSection={<RightSection label="kg" />} />
         </Grid.Col>
         <Grid.Col md={6}>
-          <TextInput
-            label="Wheelbase"
-            placeholder="Wheelbase"
-            rightSection={<RightSection label="mm" />}
-          />
+          <TextInput label="Wheelbase" placeholder="Wheelbase" rightSection={<RightSection label="mm" />} />
         </Grid.Col>
       </Grid>
 
@@ -200,20 +192,12 @@ function AddEV(/*props*/) {
         {lengths.map((length, li) => (
           <Fragment key={li}>
             <Grid.Col md={5.5}>
-              <TextInput
-                label={`Length ${li + 1}`}
-                placeholder="Length"
-                rightSection={<RightSection label="mm" />}
-              />
+              <TextInput label={`Length ${li + 1}`} placeholder="Length" rightSection={<RightSection label="mm" />} />
             </Grid.Col>
             <Grid.Col md={6} className="flex flex-row items-center">
               <YearRange label="Production Year" />
             </Grid.Col>
-            <Grid.Col
-              md={0.5}
-              className="flex justify-center items-center"
-              onClick={() => removeLength(li)}
-            >
+            <Grid.Col md={0.5} className="flex justify-center items-center" onClick={() => removeLength(li)}>
               <IconX size={18} />
             </Grid.Col>
           </Fragment>
@@ -234,11 +218,7 @@ function AddEV(/*props*/) {
         {widths.map((width, wi) => (
           <Fragment key={wi}>
             <Grid.Col md={6}>
-              <TextInput
-                label={`Width ${wi + 1}`}
-                placeholder="Width"
-                rightSection={<RightSection label="mm" />}
-              />
+              <TextInput label={`Width ${wi + 1}`} placeholder="Width" rightSection={<RightSection label="mm" />} />
             </Grid.Col>
             <Grid.Col md={6} className="flex flex-row items-center">
               <YearRange label="Production Year" />
@@ -261,11 +241,7 @@ function AddEV(/*props*/) {
         {heights.map((height, hi) => (
           <Fragment key={hi}>
             <Grid.Col md={6}>
-              <TextInput
-                label={`Height ${hi + 1}`}
-                placeholder="Height"
-                rightSection={<RightSection label="mm" />}
-              />
+              <TextInput label={`Height ${hi + 1}`} placeholder="Height" rightSection={<RightSection label="mm" />} />
             </Grid.Col>
             <Grid.Col md={6} className="flex flex-row items-center">
               <YearRange label="Production Year" />

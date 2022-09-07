@@ -91,9 +91,7 @@ function AddEngine(/*props*/) {
                   <Text className="pl-2">Add Displacement</Text>
                 </Anchor>
               )}
-              {di === 0 && displacements.length > 1 && (
-                <div className="flex items-center px-3">|</div>
-              )}
+              {di === 0 && displacements.length > 1 && <div className="flex items-center px-3">|</div>}
               {(displacements.length > 1 || di > 0) && (
                 <Anchor
                   component="button"
@@ -110,11 +108,7 @@ function AddEngine(/*props*/) {
           </div>
           <Grid gutter="xl">
             <Grid.Col md={6}>
-              <TextInput
-                label="Displacement"
-                placeholder="Displacement"
-                rightSection={displacementRight}
-              />
+              <TextInput label="Displacement" placeholder="Displacement" rightSection={displacementRight} />
             </Grid.Col>
             <Grid.Col md={6}>
               <TextInput label="Power" placeholder="Power" rightSection={displacementRight} />
@@ -144,22 +138,12 @@ function AddEngine(/*props*/) {
           />
         </Grid.Col>
         <Grid.Col md={6}>
-          <TextInput
-            label="Cynlinder Bore"
-            placeholder="Cynlinder Bore"
-            rightSection={<RightSection label="mm" />}
-          />
+          <TextInput label="Cynlinder Bore" placeholder="Cynlinder Bore" rightSection={<RightSection label="mm" />} />
         </Grid.Col>
       </Grid>
       <Grid gutter="xl">
         <Grid.Col md={6}>
-          <Radio.Group
-            value={generalType}
-            label="Type"
-            spacing="xl"
-            onChange={setGeneralType}
-            required
-          >
+          <Radio.Group value={generalType} label="Type" spacing="xl" onChange={setGeneralType} required>
             <Radio value="normal" label="Normal" color="dark" />
             <Radio value="turbocharged" label="Turbocharged" color="dark" />
             <Radio value="supercharged" label="Supercharged" color="dark" />

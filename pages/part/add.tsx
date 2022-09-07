@@ -57,12 +57,7 @@ function AddPartPage() {
         </Grid.Col>
 
         <Grid.Col md={6}>
-          <Select
-            label="Req. Pcs"
-            placeholder="e.g 10"
-            rightSection={<IconChevronDown size={14} />}
-            data={[]}
-          />
+          <Select label="Req. Pcs" placeholder="e.g 10" rightSection={<IconChevronDown size={14} />} data={[]} />
         </Grid.Col>
         <Grid.Col md={6} />
 
@@ -73,12 +68,7 @@ function AddPartPage() {
             </Text>
             <Text className="text-red-600">+ Add Vendor</Text>
           </div>
-          <Select
-            label="Vendor"
-            placeholder="Select Vendor"
-            rightSection={<IconChevronDown size={14} />}
-            data={[]}
-          />
+          <Select label="Vendor" placeholder="Select Vendor" rightSection={<IconChevronDown size={14} />} data={[]} />
         </Grid.Col>
         <Grid.Col md={6} />
 
