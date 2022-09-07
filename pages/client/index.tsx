@@ -1,169 +1,92 @@
-import { ScrollArea, Pagination, Drawer, Text, Table, Menu } from '@mantine/core';
+import { ScrollArea, Pagination, Drawer, Text, Table, Menu, Button } from '@mantine/core';
 import { useState, useEffect } from 'react';
 import { IconDotsVertical } from '@tabler/icons';
-import Search from '@components/Forms/Search';
 import { showNotification } from '@mantine/notifications';
 import EditUserForm from '@components/Forms/EditUser';
+import useSWR from 'swr';
+import { fetcher } from '@api/fetcher';
+import { IResponse } from '@contracts/response-interface';
+import { IClient } from '@contracts/client-interface';
+import SearchForm from '@components/Forms/Search';
 import { Edit2 } from 'react-feather';
-
-const MOCKUP_CLIENTS: any = [
-  {
-    Name: 'Ronald Richards',
-    Email: 'ronaldrichards@gmail.com',
-    Address: '4140 Parker Rd. Allentown, New Mexico 31134',
-    PhoneNumber: '(319) 555-0115',
-  },
-  {
-    Name: 'Ronald Richards',
-    Email: 'ronaldrichards@gmail.com',
-    Address: '4140 Parker Rd. Allentown, New Mexico 31134',
-    PhoneNumber: '(319) 555-0115',
-  },
-  {
-    Name: 'Ronald Richards',
-    Email: 'ronaldrichards@gmail.com',
-    Address: '4140 Parker Rd. Allentown, New Mexico 31134',
-    PhoneNumber: '(319) 555-0115',
-  },
-  {
-    Name: 'Ronald Richards',
-    Email: 'ronaldrichards@gmail.com',
-    Address: '4140 Parker Rd. Allentown, New Mexico 31134',
-    PhoneNumber: '(319) 555-0115',
-  },
-  {
-    Name: 'Ronald Richards',
-    Email: 'ronaldrichards@gmail.com',
-    Address: '4140 Parker Rd. Allentown, New Mexico 31134',
-    PhoneNumber: '(319) 555-0115',
-  },
-  {
-    Name: 'Ronald Richards',
-    Email: 'ronaldrichards@gmail.com',
-    Address: '4140 Parker Rd. Allentown, New Mexico 31134',
-    PhoneNumber: '(319) 555-0115',
-  },
-  {
-    Name: 'Ronald Richards',
-    Email: 'ronaldrichards@gmail.com',
-    Address: '4140 Parker Rd. Allentown, New Mexico 31134',
-    PhoneNumber: '(319) 555-0115',
-  },
-  {
-    Name: 'Ronald Richards',
-    Email: 'ronaldrichards@gmail.com',
-    Address: '4140 Parker Rd. Allentown, New Mexico 31134',
-    PhoneNumber: '(319) 555-0115',
-  },
-  {
-    Name: 'Ronald Richards',
-    Email: 'ronaldrichards@gmail.com',
-    Address: '4140 Parker Rd. Allentown, New Mexico 31134',
-    PhoneNumber: '(319) 555-0115',
-  },
-  {
-    Name: 'Ronald Richards',
-    Email: 'ronaldrichards@gmail.com',
-    Address: '4140 Parker Rd. Allentown, New Mexico 31134',
-    PhoneNumber: '(319) 555-0115',
-  },
-  {
-    Name: 'Ronald Richards',
-    Email: 'ronaldrichards@gmail.com',
-    Address: '4140 Parker Rd. Allentown, New Mexico 31134',
-    PhoneNumber: '(319) 555-0115',
-  },
-  {
-    Name: 'Ronald Richards',
-    Email: 'ronaldrichards@gmail.com',
-    Address: '4140 Parker Rd. Allentown, New Mexico 31134',
-    PhoneNumber: '(319) 555-0115',
-  },
-  {
-    Name: 'Ronald Richards',
-    Email: 'ronaldrichards@gmail.com',
-    Address: '4140 Parker Rd. Allentown, New Mexico 31134',
-    PhoneNumber: '(319) 555-0115',
-  },
-  {
-    Name: 'Ronald Richards',
-    Email: 'ronaldrichards@gmail.com',
-    Address: '4140 Parker Rd. Allentown, New Mexico 31134',
-    PhoneNumber: '(319) 555-0115',
-  },
-];
+import Router from 'next/router';
 
 function Clients() {
-  const [clients, setClients] = useState(MOCKUP_CLIENTS);
+  const [clients, setClients] = useState<IClient[]>([]);
   const [drawerOpened, toggleDrawer] = useState(false);
-  const [tableRows, setTableRows] = useState([]);
-  const [searchLoading, setSearchLoading] = useState(false);
   const [selectedProfileData, setSelectedProfileData] = useState({});
   const [activePage, setPage] = useState(1);
 
-  useEffect(
-    () =>
-      setTableRows(
-        clients.map((automobile: any, index: any) => (
-          <tr key={index}>
-            <td>{automobile.Name}</td>
-            <td>{automobile.Email}</td>
-            <td>{automobile.Address}</td>
-            <td>{automobile.PhoneNumber}</td>
-            <td>
-              <Menu>
-                <Menu.Target>
-                  {/* <Button variant="white" color={'red'}>Action</Button> */}
-                  <div
-                    style={{
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      width: '60px',
-                      height: '36px',
-                    }}
-                  >
-                    <IconDotsVertical size={14} />
-                  </div>
-                </Menu.Target>
+  function fetchClient() {
+    const { data, error } = useSWR<IResponse<IClient[]>>('/api/v1/clients/', fetcher);
 
-                <Menu.Dropdown>
-                  <Menu.Label>{automobile.name}</Menu.Label>
-                  <Menu.Item
-                    icon={<Edit2 />}
-                    onClick={() => {
-                      setSelectedProfileData(automobile);
-                      toggleDrawer(true);
-                    }}
-                  >
-                    Edit
-                  </Menu.Item>
-                  {/* <Menu.Item icon={<Send />} onClick={() => sendMessage(automobile)}>
-                  Send Message
-                </Menu.Item>
-                <Divider />
-                <Menu.Item icon={<Save />} onClick={() => copyProfile(automobile)}>
-                  Copy
-                </Menu.Item> */}
-                  {/* <Menu.Item
-                  icon={<Trash2 />}
-                  onClick={() => deleteProfile(user)}
-                  color="red"
-                >
-                  Delete User
-                </Menu.Item> */}
-                </Menu.Dropdown>
-              </Menu>
-            </td>
-          </tr>
-        ))
-      ),
-    [clients]
-  );
+    return {
+      dataClient: data?.data,
+      isLoading: !error && !data,
+      isError: error,
+    };
+  }
 
-  const cancelSearch = () => {
-    setClients(MOCKUP_CLIENTS); // props.clients
-  };
+  const { dataClient } = fetchClient();
+  useEffect(() => {
+    if (dataClient) {
+      setClients(dataClient);
+    }
+  }, [dataClient]);
+
+  const body = () =>
+    clients.map((item: any, index: any) => (
+      <tr key={index}>
+        <td>{item.name}</td>
+        <td>{item.email}</td>
+        <td>{item.address}</td>
+        <td>{item.phone}</td>
+        <td>
+          <Menu>
+            <Menu.Target>
+              {/* <Button variant="white" color={'red'}>Action</Button> */}
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  width: '60px',
+                  height: '36px',
+                }}
+              >
+                <IconDotsVertical size={14} />
+              </div>
+            </Menu.Target>
+            <Menu.Dropdown>
+              <Menu.Label>{item.name}</Menu.Label>
+              <Menu.Item
+                icon={<Edit2 />}
+                onClick={() => {
+                  setSelectedProfileData(item);
+                  toggleDrawer(true);
+                }}
+              >
+                Edit
+              </Menu.Item>
+              {/* <Menu.Item icon={<Send />} onClick={() => sendMessage(automobile)}>
+              Send Message
+            </Menu.Item>
+            <Divider />
+            <Menu.Item icon={<Save />} onClick={() => copyProfile(automobile)}>
+              Copy
+            </Menu.Item> */}
+              {/* <Menu.Item
+              icon={<Trash2 />}
+              onClick={() => deleteProfile(user)}
+              color="red"
+            >
+              Delete User
+            </Menu.Item> */}
+            </Menu.Dropdown>
+          </Menu>
+        </td>
+      </tr>
+    ));
   const onSubmitEditForm = (oldAutomobile: any, newAutomobile: any) => {
     toggleDrawer(false);
 
@@ -181,38 +104,6 @@ function Clients() {
     });
   };
 
-  const onSearch = (search: any) => {
-    setSearchLoading(true);
-
-    const trimmedSearch = search.toLowerCase().trim();
-
-    if (!trimmedSearch) {
-      setClients(MOCKUP_CLIENTS); // props.clients
-      setSearchLoading(false);
-      return;
-    }
-
-    const filteredautomobiles = clients.filter(
-      (automobile: {
-        manufacturer: string;
-        brand: string;
-        model: string;
-        bodytype: string;
-        prodyear: string;
-        powertype: string | any[];
-      }) =>
-        automobile.manufacturer.toLowerCase().includes(search) ||
-        automobile.brand.toLowerCase().includes(search) ||
-        automobile.model.toLowerCase().includes(search) ||
-        automobile.bodytype.toLowerCase().includes(search) ||
-        automobile.prodyear.includes(search) ||
-        automobile.powertype.includes(search)
-    );
-
-    setClients(filteredautomobiles);
-
-    setSearchLoading(false);
-  };
   return (
     <>
       <Drawer
@@ -224,8 +115,21 @@ function Clients() {
       >
         <EditUserForm data={selectedProfileData} submitForm={onSubmitEditForm} />
       </Drawer>
-      <Search loading={searchLoading} onSubmit={onSearch} onCancel={cancelSearch} />
-      {tableRows.length > 0 ? (
+      <div className="px-6 pt-6" style={{ backgroundColor: 'rgba(44, 44, 44, 0.05)' }}>
+        <Text align="left" weight="bold" mb="xs" size="xl">
+          Clients
+        </Text>
+        <div className="flex justify-between">
+          <SearchForm />
+          <Button
+            className="bg-black hover:bg-black px-6"
+            onClick={() => Router.push('/client/add')}
+          >
+            Add New Clients
+          </Button>
+        </div>
+      </div>
+      {clients.length > 0 ? (
         <ScrollArea>
           <Table striped highlightOnHover>
             <thead>
@@ -237,7 +141,7 @@ function Clients() {
                 <th />
               </tr>
             </thead>
-            <tbody>{tableRows}</tbody>
+            <tbody>{body()}</tbody>
           </Table>
         </ScrollArea>
       ) : (
