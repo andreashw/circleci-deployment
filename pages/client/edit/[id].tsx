@@ -1,13 +1,12 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { fetcher } from '@api/fetcher';
 import HeadingTop from '@components/TopComponents/Heading';
 import { IClient, IProvince } from '@contracts/client-interface';
 import useInput from '@hooks/useInput';
 import { Button, createStyles, Grid, Select, Text, Textarea, TextInput } from '@mantine/core';
-import { IconChevronDown } from '@tabler/icons';
-import Router from 'next/router';
-import { useEffect, useState, useTransition } from 'react';
+import Router, { useRouter } from 'next/router';
 import useSWR from 'swr';
+import { IconChevronDown } from '@tabler/icons';
+import { useTransition } from 'react';
+import { fetcher } from '@api/fetcher';
 
 const useStyles = createStyles(() => ({
   label: {
@@ -29,33 +28,30 @@ const useStyles = createStyles(() => ({
     },
   },
 }));
-
-function ClientsPage() {
+function EditClientPage() {
   const { classes } = useStyles();
-  const [province, setProvince] = useState<IProvince[]>([]);
 
-  function fetchProvince() {
-    const { data, error } = useSWR<IProvince[]>('/api/v1/provinces/', fetcher);
-
-    return {
-      dataProvince: data,
-      isLoading: !error && !data,
-      isError: error,
-    };
-  }
+  const router = useRouter();
+  const id = router.query.id as unknown as number;
+  const { data: Client } = useSWR<IClient[]>(`/api/v1/clients/${id}`);
 
   const [input, handleInput] = useInput({
-    name: '',
-    email: '',
-    phone: '',
-    address: '',
-    notes: '',
-    city_id: '',
-    province_id: '',
+    name: Client ? Client[0]?.name : '',
+    email: Client ? Client[0]?.email : '',
+    phone: Client ? Client[0]?.phone : '',
+    address: Client ? Client[0]?.address : '',
+    notes: Client ? Client[0]?.name : '',
+    city_id: Client ? Client[0]?.city_id : '',
+    province_id: Client ? Client[0]?.province_id : '',
   });
+
+  const [, startTransition] = useTransition();
+  const { data: provinces } = useSWR<IProvince[]>(input.province_id !== '' ? '/api/v1/provinces/' : null);
+  const { data: cities } = useSWR<IProvince[]>(input.province_id !== '' ? `/api/v1/cities/${input.province_id}` : null);
+
   const addData = async () => {
-    const response: IClient | undefined = await fetcher('/api/v1/clients/', {
-      method: 'POST',
+    const response: IClient | undefined = await fetcher(`/api/v1/clients/${id}`, {
+      method: 'PATCH',
       body: {
         name: input.name,
         email: input.email,
@@ -69,17 +65,6 @@ function ClientsPage() {
     // eslint-disable-next-line no-console
     console.log('Response from API ', response);
   };
-
-  const { dataProvince } = fetchProvince();
-  const { data: cities } = useSWR<IProvince[]>(input.province_id !== '' ? `/api/v1/cities/${input.province_id}` : null);
-
-  const [, startTransition] = useTransition();
-
-  useEffect(() => {
-    if (dataProvince) {
-      setProvince(dataProvince);
-    }
-  }, [dataProvince]);
 
   return (
     <>
@@ -135,8 +120,8 @@ function ClientsPage() {
                   handleInput('city_id', true)('');
                 });
               }}
-              value={input.province_id}
-              data={province.map((y) => ({ value: y.ID.toString(), label: y.name }))}
+              value={input.province_id.toString()}
+              data={provinces ? provinces.map((y) => ({ value: y.ID.toString(), label: y.name })) : []}
             />
           </Grid.Col>
 
@@ -146,7 +131,7 @@ function ClientsPage() {
               placeholder="Select City"
               rightSection={<IconChevronDown size={14} />}
               onChange={handleInput('city_id', true)}
-              value={input.city_id}
+              value={input.city_id.toString()}
               data={cities ? cities.map((y) => ({ value: y.ID.toString(), label: y.name })) : []}
             />
           </Grid.Col>
@@ -179,4 +164,4 @@ function ClientsPage() {
   );
 }
 
-export default ClientsPage;
+export default EditClientPage;

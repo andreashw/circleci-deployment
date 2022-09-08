@@ -1,41 +1,55 @@
 import { ScrollArea, Pagination, Drawer, Text, Table, Menu, Button } from '@mantine/core';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { IconDotsVertical } from '@tabler/icons';
-import { showNotification } from '@mantine/notifications';
-import EditUserForm from '@components/Forms/EditUser';
 import useSWR from 'swr';
 import { fetcher } from '@api/fetcher';
-import { IResponse } from '@contracts/response-interface';
 import { IClient } from '@contracts/client-interface';
 import SearchForm from '@components/Forms/Search';
-import { Edit2 } from 'react-feather';
+import { Edit2, Trash2 } from 'react-feather';
 import Router from 'next/router';
+import { useModals } from '@mantine/modals';
 
 function Clients() {
-  const [clients, setClients] = useState<IClient[]>([]);
+  const modals = useModals();
   const [drawerOpened, toggleDrawer] = useState(false);
-  const [selectedProfileData, setSelectedProfileData] = useState({});
   const [activePage, setPage] = useState(1);
 
-  function fetchClient() {
-    const { data, error } = useSWR<IResponse<IClient[]>>('/api/v1/clients/', fetcher);
+  const { data: dataClients, mutate } = useSWR('/api/v1/clients/');
 
-    return {
-      dataClient: data?.data,
-      isLoading: !error && !data,
-      isError: error,
-    };
+  const onDeleteData = async (client: IClient) => {
+    console.log(client.ID);
+
+    const response: IClient | undefined = await fetcher(`/api/v1/clients/${client.ID}`, {
+      method: 'DELETE',
+    });
+    console.log('Response Delete from API ', response);
+    if (response) {
+      // Router.reload();
+      mutate();
+    }
+  };
+  function deleteProfile(client: IClient) {
+    console.log('====================================');
+    modals.openConfirmModal({
+      title: 'Delete',
+      children: (
+        <Text size="sm" lineClamp={2}>
+          Delete <b>{client.name}</b> Client Data ?
+        </Text>
+      ),
+      centered: true,
+      labels: { confirm: 'Yes', cancel: 'No' },
+      confirmProps: { className: 'bg-danger', color: 'red' },
+      onConfirm: () => onDeleteData(client),
+    });
+    console.log('====================================');
+    // const response: IClient | undefined = await fetcher('/api/v1/clients/' + id, {
+    //   method: 'DELETE',
+    // });
   }
 
-  const { dataClient } = fetchClient();
-  useEffect(() => {
-    if (dataClient) {
-      setClients(dataClient);
-    }
-  }, [dataClient]);
-
   const body = () =>
-    clients.map((item: any, index: any) => (
+    dataClients.map((item: any, index: any) => (
       <tr key={index}>
         <td>{item.name}</td>
         <td>{item.email}</td>
@@ -59,13 +73,7 @@ function Clients() {
             </Menu.Target>
             <Menu.Dropdown>
               <Menu.Label>{item.name}</Menu.Label>
-              <Menu.Item
-                icon={<Edit2 />}
-                onClick={() => {
-                  setSelectedProfileData(item);
-                  toggleDrawer(true);
-                }}
-              >
+              <Menu.Item icon={<Edit2 />} onClick={() => Router.push(`/client/edit/${item.ID}`)}>
                 Edit
               </Menu.Item>
               {/* <Menu.Item icon={<Send />} onClick={() => sendMessage(automobile)}>
@@ -75,39 +83,19 @@ function Clients() {
             <Menu.Item icon={<Save />} onClick={() => copyProfile(automobile)}>
               Copy
             </Menu.Item> */}
-              {/* <Menu.Item
-              icon={<Trash2 />}
-              onClick={() => deleteProfile(user)}
-              color="red"
-            >
-              Delete User
-            </Menu.Item> */}
+              <Menu.Item icon={<Trash2 />} onClick={() => deleteProfile(item)} color="red">
+                Delete User
+              </Menu.Item>
             </Menu.Dropdown>
           </Menu>
         </td>
       </tr>
     ));
-  const onSubmitEditForm = (oldAutomobile: any, newAutomobile: any) => {
-    toggleDrawer(false);
-
-    // edit data in db
-
-    let tmpautomobiles = clients;
-    tmpautomobiles.splice(tmpautomobiles.indexOf(oldAutomobile), 0, newAutomobile);
-    tmpautomobiles = tmpautomobiles.filter((u: any) => u !== oldAutomobile);
-    setClients(tmpautomobiles);
-
-    showNotification({
-      title: 'Profile',
-      message: `${newAutomobile.manufacturer} Edit Success`,
-      color: 'teal',
-    });
-  };
 
   return (
     <>
       <Drawer opened={drawerOpened} onClose={() => toggleDrawer(false)} title="Modify user" padding="xl" size="xl">
-        <EditUserForm data={selectedProfileData} submitForm={onSubmitEditForm} />
+        {/* <EditUserForm data={selectedProfileData} submitForm={onSubmitEditForm} /> */}
       </Drawer>
       <div className="px-6 pt-6" style={{ backgroundColor: 'rgba(44, 44, 44, 0.05)' }}>
         <Text align="left" weight="bold" mb="xs" size="xl">
@@ -120,7 +108,7 @@ function Clients() {
           </Button>
         </div>
       </div>
-      {clients.length > 0 ? (
+      {dataClients.length > 0 ? (
         <ScrollArea>
           <Table striped highlightOnHover>
             <thead>
