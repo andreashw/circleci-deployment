@@ -1,59 +1,51 @@
-import { useState, useEffect } from 'react';
-import { Table, ScrollArea, Menu, Drawer, Text, Pagination, Button } from '@mantine/core';
-import { showNotification } from '@mantine/notifications';
+import { useState } from 'react';
+import { Table, ScrollArea, Menu, Text, Pagination, Button, Divider } from '@mantine/core';
 
-import { Edit2 } from 'react-feather';
+import { Edit2, Trash2 } from 'react-feather';
 import { IconDotsVertical } from '@tabler/icons';
-
-import EditUserForm from '@components/Forms/EditUser';
 
 import useSWR from 'swr';
 import { IAutomobile } from '@contracts/automobile-interface';
 import SearchForm from '@components/Forms/Search';
 import Router from 'next/router';
+import { useModals } from '@mantine/modals';
+import { fetcher } from '@api/fetcher';
 
 export default function Automobile(/*props*/) {
-  const [automobiles, setAutomobiles] = useState<IAutomobile[]>([]); // props.automobiles
-  const [drawerOpened, toggleDrawer] = useState(false);
+  const modals = useModals();
   const [activePage, setPage] = useState(1);
+  const { data: dataAutomobiles, mutate } = useSWR('/api/v1/automobiles/');
 
-  function fetchAutomobile() {
-    const { data, error } = useSWR<IAutomobile[]>('/api/v1/automobiles/');
+  const onDeleteData = async (automobile: IAutomobile) => {
+    console.log(automobile.ID);
 
-    return {
-      dataAutomobiles: data,
-      isLoading: !error && !data,
-      isError: error,
-    };
-  }
-
-  const { dataAutomobiles } = fetchAutomobile();
-
-  useEffect(() => {
-    if (dataAutomobiles) {
-      setAutomobiles(dataAutomobiles);
+    const response: IAutomobile | undefined = await fetcher(`/api/v1/automobiles/${automobile.ID}`, {
+      method: 'DELETE',
+    });
+    console.log('Response Delete from API ', response);
+    if (response) {
+      // Router.reload();
+      mutate();
     }
-  }, [dataAutomobiles]);
+  };
 
-  const onSubmitEditForm = (oldAutomobile: any, newAutomobile: any) => {
-    toggleDrawer(false);
-
-    // edit data in db
-
-    let tmpautomobiles = automobiles;
-    tmpautomobiles.splice(tmpautomobiles.indexOf(oldAutomobile), 0, newAutomobile);
-    tmpautomobiles = tmpautomobiles.filter((u: any) => u !== oldAutomobile);
-    setAutomobiles(tmpautomobiles);
-
-    showNotification({
-      title: 'Profile',
-      message: `${newAutomobile.manufacturer} Edit Success`,
-      color: 'teal',
+  const deleteData = (automobile: IAutomobile) => {
+    modals.openConfirmModal({
+      title: 'Delete',
+      children: (
+        <Text size="sm" lineClamp={2}>
+          Delete <b>{automobile.AutomobileManufactures.name}</b> Automobile Data ?
+        </Text>
+      ),
+      centered: true,
+      labels: { confirm: 'Yes', cancel: 'No' },
+      confirmProps: { className: 'bg-danger', color: 'red' },
+      onConfirm: () => onDeleteData(automobile),
     });
   };
 
   const body = () =>
-    automobiles.map((item: IAutomobile, index: any) => (
+    dataAutomobiles.map((item: IAutomobile, index: any) => (
       <tr key={index}>
         <td onClick={() => Router.push(`/automobile/${item.ID}`)}>{item.AutomobileManufactures.name}</td>
         <td onClick={() => Router.push(`/automobile/${item.ID}`)}>{item.AutomobileBrands.name}</td>
@@ -82,20 +74,10 @@ export default function Automobile(/*props*/) {
               <Menu.Item icon={<Edit2 />} onClick={() => Router.push(`/automobile/edit/${item.ID}`)}>
                 Edit
               </Menu.Item>
-              {/* <Menu.Item icon={<Send />} onClick={() => sendMessage(automobile)}>
-              Send Message
-            </Menu.Item>
-            <Divider />
-            <Menu.Item icon={<Save />} onClick={() => copyProfile(automobile)}>
-              Copy
-            </Menu.Item> */}
-              {/* <Menu.Item
-              icon={<Trash2 />}
-              onClick={() => deleteProfile(user)}
-              color="red"
-            >
-              Delete User
-            </Menu.Item> */}
+              <Divider />
+              <Menu.Item icon={<Trash2 />} onClick={() => deleteData(item)} color="red">
+                Delete
+              </Menu.Item>
             </Menu.Dropdown>
           </Menu>
         </td>
@@ -104,10 +86,6 @@ export default function Automobile(/*props*/) {
 
   return (
     <>
-      <Drawer opened={drawerOpened} onClose={() => toggleDrawer(false)} title="Modify user" padding="xl" size="xl">
-        <EditUserForm submitForm={onSubmitEditForm} />
-      </Drawer>
-
       <div className="px-6 pt-6" style={{ backgroundColor: 'rgba(44, 44, 44, 0.05)' }}>
         <Text align="left" weight="bold" mb="xs" size="xl">
           Automobile
@@ -120,7 +98,7 @@ export default function Automobile(/*props*/) {
         </div>
       </div>
 
-      {automobiles.length > 0 ? (
+      {dataAutomobiles.length > 0 ? (
         <ScrollArea>
           <Table highlightOnHover>
             <thead>
@@ -152,16 +130,3 @@ export default function Automobile(/*props*/) {
     </>
   );
 }
-
-/*
-export async function getServerSideProps() {
-  const request = await fetch("http://localhost:3000/api/automobiles");
-  const automobiles = await request.json();
-
-  return {
-    props: {
-      automobiles,
-    },
-  };
-}
-*/

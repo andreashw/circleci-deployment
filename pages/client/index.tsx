@@ -115,10 +115,7 @@ function Clients() {
         </Text>
         <div className="flex justify-between">
           <SearchForm />
-          <Button
-            className="bg-black hover:bg-black px-6"
-            onClick={() => Router.push('/client/add')}
-          >
+          <Button className="bg-black hover:bg-black px-6" onClick={() => Router.push('/client/add')}>
             Add New Clients
           </Button>
         </div>

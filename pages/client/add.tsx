@@ -72,10 +72,7 @@ function ClientsPage() {
   };
 
   function fetchCity() {
-    const { data, error } = useSWR<IResponse<IProvince[]>>(
-      `/api/v1/cities/${Number(input.province_id)}`,
-      fetcher
-    );
+    const { data, error } = useSWR<IResponse<IProvince[]>>(`/api/v1/cities/${Number(input.province_id)}`, fetcher);
 
     return {
       dataCities: data?.data,
@@ -114,12 +111,7 @@ function ClientsPage() {
 
         <Grid gutter="xl" className="mb-[48px]">
           <Grid.Col md={6}>
-            <TextInput
-              label="Name"
-              placeholder="e.g Herjanto"
-              value={input.name}
-              onChange={handleInput('name')}
-            />
+            <TextInput label="Name" placeholder="e.g Herjanto" value={input.name} onChange={handleInput('name')} />
           </Grid.Col>
           <Grid.Col md={6}>
             <TextInput

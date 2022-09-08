@@ -120,6 +120,9 @@ function AddAutomobile(/*props*/) {
       },
     });
     console.log('Response from API ', response);
+    if (response) {
+      Router.replace('/automobile');
+    }
   };
 
   return (
