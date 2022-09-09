@@ -8,11 +8,13 @@ function ListDetail({ List = '', IsiList = '' }) {
           {List}
         </Text>
       </Grid.Col>
-      <Grid.Col style={{ paddingTop: 0 }} md={10}>
+      <Grid.Col style={{ paddingTop: 0 }} md={6}>
         <Text color="#2C2C2C" size={16}>
           {IsiList}
         </Text>
       </Grid.Col>
+
+      <Grid.Col md={4} />
     </>
   );
 }

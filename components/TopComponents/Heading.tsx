@@ -1,5 +1,6 @@
 import { IBreadcrumbs } from '@contracts/navigation';
 import { Anchor, Breadcrumbs, Text } from '@mantine/core';
+import Router from 'next/router';
 
 function HeadingTop({ text = '', items = [] }: { items: IBreadcrumbs[]; text?: string }) {
   return (
@@ -12,9 +13,16 @@ function HeadingTop({ text = '', items = [] }: { items: IBreadcrumbs[]; text?: s
             </Anchor>
           ))}
         </Breadcrumbs>
-        <Text align="left" weight="bold" mb="xs" size="xl">
-          {text}
-        </Text>
+        {text && (
+          <div className="flex-row flex pt-2">
+            <div className="pr-5 cursor-pointer" onClick={() => Router.back()}>
+              {'<'}
+            </div>
+            <Text align="left" weight="bold" mb="xs" size="xl">
+              {text}
+            </Text>
+          </div>
+        )}
       </div>
     </>
   );

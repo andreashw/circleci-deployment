@@ -40,7 +40,7 @@ function EditClientPage() {
     email: Client ? Client[0]?.email : '',
     phone: Client ? Client[0]?.phone : '',
     address: Client ? Client[0]?.address : '',
-    notes: Client ? Client[0]?.name : '',
+    notes: Client ? Client[0]?.notes : '',
     city_id: Client ? Client[0]?.city_id : '',
     province_id: Client ? Client[0]?.province_id : '',
   });

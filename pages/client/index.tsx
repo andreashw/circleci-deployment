@@ -51,10 +51,18 @@ function Clients() {
   const body = () =>
     dataClients.map((item: any, index: any) => (
       <tr key={index}>
-        <td>{item.name}</td>
-        <td>{item.email}</td>
-        <td>{item.address}</td>
-        <td>{item.phone}</td>
+        <td className="cursor-pointer" onClick={() => Router.push(`/client/${item.ID}`)}>
+          {item.name}
+        </td>
+        <td className="cursor-pointer" onClick={() => Router.push(`/client/${item.ID}`)}>
+          {item.email}
+        </td>
+        <td className="cursor-pointer" onClick={() => Router.push(`/client/${item.ID}`)}>
+          {item.address}
+        </td>
+        <td className="cursor-pointer" onClick={() => Router.push(`/client/${item.ID}`)}>
+          {item.phone}
+        </td>
         <td>
           <Menu>
             <Menu.Target>
@@ -128,7 +136,7 @@ function Clients() {
           Test.
         </Text>
       )}
-      <div className="flex justify-between my-5">
+      <div className="flex justify-between my-5 p-6">
         <Text color="#828282" size={14}>
           Show 10 from 1020 clients
         </Text>

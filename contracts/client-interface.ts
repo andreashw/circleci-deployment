@@ -7,6 +7,8 @@ export interface IClient {
   notes: string;
   city_id: number;
   province_id: number;
+  City?: IProvince;
+  Province?: IProvince;
 }
 
 export interface IProvince {

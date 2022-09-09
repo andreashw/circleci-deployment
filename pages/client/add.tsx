@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { fetcher } from '@api/fetcher';
+import RegionSelect from '@components/Inputs/RegionSelect';
 import HeadingTop from '@components/TopComponents/Heading';
 import { IClient, IProvince } from '@contracts/client-interface';
 import useInput from '@hooks/useInput';
@@ -124,32 +125,20 @@ function ClientsPage() {
             />
           </Grid.Col>
 
-          <Grid.Col md={6}>
-            <Select
-              label="Province"
-              placeholder="Select Province"
-              rightSection={<IconChevronDown size={14} />}
-              onChange={(v) => {
-                startTransition(() => {
-                  handleInput('province_id', true)(v);
-                  handleInput('city_id', true)('');
-                });
-              }}
-              value={input.province_id}
-              data={province.map((y) => ({ value: y.ID.toString(), label: y.name }))}
-            />
-          </Grid.Col>
+          <RegionSelect
+            onProvinceChange={(v) => {
+              startTransition(() => {
+                handleInput('province_id', true)(v);
+                handleInput('city_id', true)('');
+              });
+            }}
+            valProvince={input.province_id}
+            valCities={input.city_id}
+            onCitiesChange={handleInput('city_id', true)}
+            province={province.map((y) => ({ value: y.ID.toString(), label: y.name }))}
+            cities={cities ? cities.map((y) => ({ value: y.ID.toString(), label: y.name })) : []}
+          />
 
-          <Grid.Col md={6}>
-            <Select
-              label="City"
-              placeholder="Select City"
-              rightSection={<IconChevronDown size={14} />}
-              onChange={handleInput('city_id', true)}
-              value={input.city_id}
-              data={cities ? cities.map((y) => ({ value: y.ID.toString(), label: y.name })) : []}
-            />
-          </Grid.Col>
           <Grid.Col md={12}>
             <Textarea
               styles={{ input: { height: 'unset !important' } }}
