@@ -391,7 +391,7 @@ function EditAutomobile(/*props*/) {
               placeholder="Curb Weight"
               rightSection={<RightSection label="kg" />}
               value={input.curb}
-              onChange={handleInput('curb')}
+              onChange={handleInput('curb', true)}
             />
           </Grid.Col>
           <Grid.Col md={6}>
@@ -400,7 +400,7 @@ function EditAutomobile(/*props*/) {
               placeholder="Wheelbase"
               rightSection={<RightSection label="mm" />}
               value={input.wheel}
-              onChange={handleInput('wheel')}
+              onChange={handleInput('wheel', true)}
             />
           </Grid.Col>
         </Grid>
