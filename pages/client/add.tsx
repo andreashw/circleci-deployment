@@ -33,18 +33,6 @@ const useStyles = createStyles(() => ({
 
 function ClientsPage() {
   const { classes } = useStyles();
-  const [province, setProvince] = useState<IProvince[]>([]);
-
-  function fetchProvince() {
-    const { data, error } = useSWR<IProvince[]>('/api/v1/provinces/', fetcher);
-
-    return {
-      dataProvince: data,
-      isLoading: !error && !data,
-      isError: error,
-    };
-  }
-
   const [input, handleInput] = useInput({
     name: '',
     email: '',
@@ -55,32 +43,34 @@ function ClientsPage() {
     province_id: '',
   });
   const addData = async () => {
-    const response: IClient | undefined = await fetcher('/api/v1/clients/', {
-      method: 'POST',
-      body: {
-        name: input.name,
-        email: input.email,
-        phone: input.phone,
-        address: input.address,
-        notes: input.notes,
-        city_id: Number(input.city_id),
-        province_id: Number(input.province_id),
-      },
-    });
-    // eslint-disable-next-line no-console
-    console.log('Response from API ', response);
+    if (input.name === '' || input.email === '' || input.phone === '' || input.address === '' || input.notes === '') {
+      console.log('====================================');
+      console.log('error');
+      console.log('====================================');
+    } else {
+      const response: IClient | undefined = await fetcher('/api/v1/clients/', {
+        method: 'POST',
+        body: {
+          name: input.name,
+          email: input.email,
+          phone: input.phone,
+          address: input.address,
+          notes: input.notes,
+          city_id: Number(input.city_id),
+          province_id: Number(input.province_id),
+        },
+      });
+      if (response) {
+        Router.replace('/client');
+      }
+      // eslint-disable-next-line no-console
+      console.log('Response from API ', response);
+    }
   };
 
-  const { dataProvince } = fetchProvince();
-  const { data: cities } = useSWR<IProvince[]>(input.province_id !== '' ? `/api/v1/cities/${input.province_id}` : null);
-
   const [, startTransition] = useTransition();
-
-  useEffect(() => {
-    if (dataProvince) {
-      setProvince(dataProvince);
-    }
-  }, [dataProvince]);
+  const { data: provinces } = useSWR<IProvince[]>(input.province_id !== '' ? '/api/v1/provinces/' : null);
+  const { data: cities } = useSWR<IProvince[]>(input.province_id !== '' ? `/api/v1/cities/${input.province_id}` : null);
 
   return (
     <>
@@ -120,6 +110,7 @@ function ClientsPage() {
             <TextInput
               label="Phone Number"
               value={input.phone}
+              styles={{ input: { border: '1px solid #ccc', color: 'red' } }}
               onChange={handleInput('phone')}
               placeholder="e.g 0837xxxxxxxx"
             />
@@ -135,7 +126,7 @@ function ClientsPage() {
             valProvince={input.province_id}
             valCities={input.city_id}
             onCitiesChange={handleInput('city_id', true)}
-            province={province.map((y) => ({ value: y.ID.toString(), label: y.name }))}
+            province={provinces ? provinces.map((y) => ({ value: y.ID.toString(), label: y.name })) : []}
             cities={cities ? cities.map((y) => ({ value: y.ID.toString(), label: y.name })) : []}
           />
 

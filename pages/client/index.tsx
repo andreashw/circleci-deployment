@@ -51,16 +51,18 @@ function Clients() {
   const body = () =>
     dataClients.map((item: any, index: any) => (
       <tr key={index}>
-        <td className="cursor-pointer" onClick={() => Router.push(`/client/${item.ID}`)}>
+        <td className="cursor-pointer w-2/12" onClick={() => Router.push(`/client/${item.ID}`)}>
           {item.name}
         </td>
-        <td className="cursor-pointer" onClick={() => Router.push(`/client/${item.ID}`)}>
+        <td className="cursor-pointer w-2/12" onClick={() => Router.push(`/client/${item.ID}`)}>
           {item.email}
         </td>
-        <td className="cursor-pointer" onClick={() => Router.push(`/client/${item.ID}`)}>
-          {item.address}
+        <td className="cursor-pointer  w-72  " onClick={() => Router.push(`/client/${item.ID}`)}>
+          <p className="truncate w-72">
+            {item.City.name}, {item.address}
+          </p>
         </td>
-        <td className="cursor-pointer" onClick={() => Router.push(`/client/${item.ID}`)}>
+        <td className="cursor-pointer " onClick={() => Router.push(`/client/${item.ID}`)}>
           {item.phone}
         </td>
         <td>

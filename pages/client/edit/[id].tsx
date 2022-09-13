@@ -69,10 +69,10 @@ function EditClientPage() {
   return (
     <>
       <HeadingTop
-        text="Add New Client"
+        text="Edit Client"
         items={[
           { title: 'Client', href: '/client' },
-          { title: 'Add New Client', href: '' },
+          { title: 'Edit Client', href: '' },
         ]}
       />
       <div className="p-6">
