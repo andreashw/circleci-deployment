@@ -14,6 +14,9 @@ export interface IAutomobile {
   power_type: string;
   curb_wight: number;
   wheel_base: number;
+  lengths: IAutomobileDimensionLength[];
+  heights: IAutomobileDimensionHeight[];
+  widths: IAutomobileDimensionWidth[];
 }
 
 export interface IAutomobileManufactures {
@@ -34,4 +37,22 @@ export interface IAutomobileBodyTypes {
 export interface IAutomobileLayouts {
   ID: number;
   name: string;
+}
+
+export interface IAutomobileDimensionLength {
+  length: number;
+  startYear: string;
+  endYear: string;
+}
+
+export interface IAutomobileDimensionWidth {
+  width: number;
+  startYear: string;
+  endYear: string;
+}
+
+export interface IAutomobileDimensionHeight {
+  height: number;
+  startYear: string;
+  endYear: string;
 }

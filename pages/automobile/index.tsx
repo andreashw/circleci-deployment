@@ -34,7 +34,8 @@ export default function Automobile(/*props*/) {
       title: 'Delete',
       children: (
         <Text size="sm" lineClamp={2}>
-          Delete <b>{automobile.AutomobileManufactures.name}</b> Automobile Data ?
+          {/* Delete <b>{automobile.AutomobileManufactures.name}</b> Automobile Data ? */}
+          Apakah Anda yakin menghapus ini?
         </Text>
       ),
       centered: true,
@@ -57,15 +58,7 @@ export default function Automobile(/*props*/) {
           <Menu>
             <Menu.Target>
               {/* <Button variant="white" color={'red'}>Action</Button> */}
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  width: '60px',
-                  height: '36px',
-                }}
-              >
+              <div className="flex content-center items-center w-6 h-9 cursor-pointer">
                 <IconDotsVertical size={14} />
               </div>
             </Menu.Target>
@@ -117,7 +110,7 @@ export default function Automobile(/*props*/) {
         </ScrollArea>
       ) : (
         <Text align="center" weight="bold">
-          Test.
+          Tidak ada data.
         </Text>
       )}
 

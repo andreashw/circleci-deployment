@@ -1,6 +1,7 @@
+/* eslint-disable object-shorthand */
 /* eslint-disable no-console */
-import { Anchor, Button, Grid, Radio, Select, Text, TextInput } from '@mantine/core';
-import { Fragment, useState } from 'react';
+import { Anchor, Button, Grid, NumberInput, Radio, Select, Text, TextInput } from '@mantine/core';
+import { Fragment } from 'react';
 import { RightSection } from '@components/Inputs/RightSection';
 import { YearRange } from '@components/Inputs/YearRange';
 import { IconChevronDown } from '@tabler/icons';
@@ -18,6 +19,7 @@ import {
 import { fetcher } from '@api/fetcher';
 import useSWR from 'swr';
 import { Dropdown } from '@components/Inputs/Dropdown';
+import HeadingTop from '@components/TopComponents/Heading';
 
 function AddAutomobile(/*props*/) {
   const { data: AutomobileBrand } = useSWR<IAutomobileBrands[]>('/api/v1/automobiles-brands/');
@@ -33,36 +35,39 @@ function AddAutomobile(/*props*/) {
     year_start: '',
     year_end: '',
     power_type: 'ICE',
-    curb: '',
-    wheel: '',
+    curb: 0,
+    wheel: 0,
+    lengths: [
+      {
+        length: 0,
+        startYear: '',
+        endYear: '',
+      },
+    ],
+    widths: [
+      {
+        width: 0,
+        startYear: '',
+        endYear: '',
+      },
+    ],
+    heights: [
+      {
+        height: 0,
+        startYear: '',
+        endYear: '',
+      },
+    ],
   });
-  const [lengths, setLengths] = useState([
-    {
-      length: '',
-      startYear: '',
-      endYear: '',
-    },
-  ]);
-  const [widths, setWidths] = useState([
-    {
-      width: '',
-      startYear: '',
-      endYear: '',
-    },
-  ]);
-  const [heights, setHeights] = useState([
-    {
-      height: '',
-      startYear: '',
-      endYear: '',
-    },
-  ]);
 
   const addLength = () => {
-    setLengths((prev) => [
-      ...prev,
+    handleInput(
+      'lengths',
+      true
+    )([
+      ...input.lengths,
       {
-        length: '',
+        length: 0,
         startYear: '',
         endYear: '',
       },
@@ -70,10 +75,13 @@ function AddAutomobile(/*props*/) {
   };
 
   const addWidth = () => {
-    setWidths((prev) => [
-      ...prev,
+    handleInput(
+      'widths',
+      true
+    )([
+      ...input.widths,
       {
-        width: '',
+        width: 0,
         startYear: '',
         endYear: '',
       },
@@ -81,10 +89,13 @@ function AddAutomobile(/*props*/) {
   };
 
   const addHeight = () => {
-    setHeights((prev) => [
-      ...prev,
+    handleInput(
+      'heights',
+      true
+    )([
+      ...input.heights,
       {
-        height: '',
+        height: 0,
         startYear: '',
         endYear: '',
       },
@@ -92,15 +103,168 @@ function AddAutomobile(/*props*/) {
   };
 
   const removeLength = (index: number) => {
-    setLengths((prev) => prev.filter((x, i) => i !== index));
+    handleInput('lengths', true)(input.lengths.filter((_: any, i: number) => i !== index));
   };
 
   const removeWidth = (index: number) => {
-    setWidths((prev) => prev.filter((x, i) => i !== index));
+    handleInput('widths', true)(input.widths.filter((_: any, i: number) => i !== index));
   };
 
   const removeHeight = (index: number) => {
-    setHeights((prev) => prev.filter((x, i) => i !== index));
+    handleInput('heights', true)(input.heights.filter((_: any, i: number) => i !== index));
+  };
+
+  const handleInputLength = (index: number) => (val: any) => {
+    handleInput(
+      'lengths',
+      true
+    )(
+      input.lengths.map((x: any, i: number) => {
+        if (i === index) {
+          return {
+            ...x,
+            length: val,
+          };
+        }
+        return x;
+      })
+    );
+  };
+
+  const handleInputLengthStartYear = (index: number) => (val: any) => {
+    handleInput(
+      'lengths',
+      true
+    )(
+      input.lengths.map((x: any, i: number) => {
+        if (i === index) {
+          return {
+            ...x,
+            startYear: val,
+          };
+        }
+        return x;
+      })
+    );
+  };
+
+  const handleInputLengthEndYear = (index: number) => (val: any) => {
+    handleInput(
+      'lengths',
+      true
+    )(
+      input.lengths.map((x: any, i: number) => {
+        if (i === index) {
+          return {
+            ...x,
+            endYear: val,
+          };
+        }
+        return x;
+      })
+    );
+  };
+
+  const handleInputWidth = (index: number) => (val: any) => {
+    handleInput(
+      'widths',
+      true
+    )(
+      input.widths.map((x: any, i: number) => {
+        if (i === index) {
+          return {
+            ...x,
+            width: val,
+          };
+        }
+        return x;
+      })
+    );
+  };
+
+  const handleInputWidthStartYear = (index: number) => (val: any) => {
+    handleInput(
+      'widths',
+      true
+    )(
+      input.widths.map((x: any, i: number) => {
+        if (i === index) {
+          return {
+            ...x,
+            startYear: val,
+          };
+        }
+        return x;
+      })
+    );
+  };
+
+  const handleInputWidthEndYear = (index: number) => (val: any) => {
+    handleInput(
+      'widths',
+      true
+    )(
+      input.widths.map((x: any, i: number) => {
+        if (i === index) {
+          return {
+            ...x,
+            endYear: val,
+          };
+        }
+        return x;
+      })
+    );
+  };
+
+  const handleInputHeight = (index: number) => (val: any) => {
+    handleInput(
+      'heights',
+      true
+    )(
+      input.heights.map((x: any, i: number) => {
+        if (i === index) {
+          return {
+            ...x,
+            height: val,
+          };
+        }
+        return x;
+      })
+    );
+  };
+
+  const handleInputHeightStartYear = (index: number) => (val: any) => {
+    handleInput(
+      'heights',
+      true
+    )(
+      input.heights.map((x: any, i: number) => {
+        if (i === index) {
+          return {
+            ...x,
+            startYear: val,
+          };
+        }
+        return x;
+      })
+    );
+  };
+
+  const handleInputHeightEndYear = (index: number) => (val: any) => {
+    handleInput(
+      'heights',
+      true
+    )(
+      input.heights.map((x: any, i: number) => {
+        if (i === index) {
+          return {
+            ...x,
+            endYear: val,
+          };
+        }
+        return x;
+      })
+    );
   };
 
   const addData = async () => {
@@ -117,6 +281,9 @@ function AddAutomobile(/*props*/) {
         power_type: input.power_type,
         curb_wight: Number(input.curb),
         wheel_base: Number(input.wheel),
+        lengths: input.lengths,
+        widths: input.widths,
+        heights: input.heights,
       },
     });
     console.log('Response from API ', response);
@@ -126,278 +293,322 @@ function AddAutomobile(/*props*/) {
   };
 
   return (
-    <div className="p-6">
-      <Text className="mt-[1rem] mb-[1rem] text-[20px]" weight={700}>
-        Details
-      </Text>
-      <Grid gutter="xl" className="mb-10">
-        <Grid.Col md={6}>
-          <Dropdown
-            label="Manufacture"
-            data={AutomobileManufacture?.map(({ ID, name }) => ({ value: ID.toString(), label: name })) || []}
-            onChange={handleInput('manufacture', true)}
-          />
-        </Grid.Col>
-        <Grid.Col md={6}>
-          <Dropdown
-            label="Brand"
-            data={AutomobileBrand?.map(({ ID, name }) => ({ value: ID.toString(), label: name })) || []}
-            onChange={handleInput('brand', true)}
-          />
-        </Grid.Col>
+    <>
+      <HeadingTop items={[{ title: 'Automobile', href: '/automobile' }, { title: 'Add Automobile' }]} />
+      <div className="flex flex-row items-center px-6 pb-6" style={{ backgroundColor: 'rgba(44, 44, 44, 0.05)' }}>
+        {/* <div className="flex flex-row items-center px-6 pb-6" style={{ backgroundColor: 'red' }}> */}
+        <div className="pr-5 cursor-pointer" onClick={() => Router.back()}>
+          {'<'}
+        </div>
+        <Text className="cursor-pointer" align="left" weight="bold" size="xl">
+          Automobile
+        </Text>
+      </div>
+      {/* <pre>{JSON.stringify(input.lengths, null, 2)}</pre> */}
+      <div className="p-6">
+        <Text className="mt-[1rem] mb-[1rem] text-[20px]" weight={700}>
+          Details
+        </Text>
+        <Grid gutter="xl" className="mb-10">
+          <Grid.Col md={6}>
+            <Dropdown
+              label="Manufacture"
+              data={AutomobileManufacture?.map(({ ID, name }) => ({ value: ID.toString(), label: name })) || []}
+              onChange={handleInput('manufacture', true)}
+            />
+          </Grid.Col>
+          <Grid.Col md={6}>
+            <Dropdown
+              label="Brand"
+              data={AutomobileBrand?.map(({ ID, name }) => ({ value: ID.toString(), label: name })) || []}
+              onChange={handleInput('brand', true)}
+            />
+          </Grid.Col>
 
-        <Grid.Col md={6}>
-          <TextInput
-            label="Model"
-            placeholder="TextInput with custom styles"
-            value={input.model}
-            onChange={handleInput('model')}
-          />
-        </Grid.Col>
-        <Grid.Col md={6}>
-          <Dropdown
-            label="Body Type"
-            data={AutomobileBodyType?.map(({ ID, name }) => ({ value: ID.toString(), label: name })) || []}
-            onChange={handleInput('body_type', true)}
-          />
-        </Grid.Col>
+          <Grid.Col md={6}>
+            <TextInput label="Model" placeholder="e.g W108" value={input.model} onChange={handleInput('model')} />
+          </Grid.Col>
+          <Grid.Col md={6}>
+            <Dropdown
+              label="Body Type"
+              data={AutomobileBodyType?.map(({ ID, name }) => ({ value: ID.toString(), label: name })) || []}
+              onChange={handleInput('body_type', true)}
+            />
+          </Grid.Col>
 
-        <Grid.Col md={6} className="flex flex-row items-center">
-          <YearRange
-            label="Production Year"
-            valStart={input.year_start}
-            valEnd={input.year_end}
-            onStartChange={handleInput('year_start', true)}
-            onEndChange={handleInput('year_end', true)}
-          />
-        </Grid.Col>
-      </Grid>
+          <Grid.Col md={6} className="flex flex-row items-center">
+            <YearRange
+              label="Production Year"
+              valStart={input.year_start}
+              valEnd={input.year_end}
+              onStartChange={handleInput('year_start', true)}
+              onEndChange={handleInput('year_end', true)}
+            />
+          </Grid.Col>
+        </Grid>
 
-      <Text className="mt-[1rem] mb-[1rem] text-[20px]" size="lg" weight={700}>
-        Body & Chasis
-      </Text>
-      <Grid gutter="xl" className="mb-10">
-        <Grid.Col md={6}>
-          <Dropdown
-            label="Layout"
-            data={AutomobileLayout?.map(({ ID, name }) => ({ value: ID.toString(), label: name })) || []}
-            onChange={handleInput('layout', true)}
-          />
-        </Grid.Col>
-      </Grid>
+        <Text className="mt-[1rem] mb-[1rem] text-[20px]" size="lg" weight={700}>
+          Body & Chasis
+        </Text>
+        <Grid gutter="xl" className="mb-10">
+          <Grid.Col md={6}>
+            <Dropdown
+              label="Layout"
+              data={AutomobileLayout?.map(({ ID, name }) => ({ value: ID.toString(), label: name })) || []}
+              onChange={handleInput('layout', true)}
+            />
+          </Grid.Col>
+        </Grid>
 
-      <Text className="mt-[1rem] mb-[1rem] text-[20px]" size="lg" weight={700}>
-        Power
-      </Text>
-      <Grid gutter="xl">
-        <Grid.Col md={6}>
-          <Radio.Group
-            value={input.power_type}
-            label="Type"
-            spacing="sm"
-            onChange={handleInput('power_type', true)}
-            required
-          >
-            <Radio value="ICE" label="Internal Combustion Engine" color="dark" />
-            <Radio value="EV" label="Electric Vehicle" color="dark" />
-          </Radio.Group>
-        </Grid.Col>
-      </Grid>
-      <Grid gutter="xl" className="mb-10">
-        <Grid.Col md={6}>
-          <Select
-            label="Engine/Motor"
-            placeholder="Engine/Motor"
-            rightSection={<IconChevronDown size={14} />}
-            data={[
-              { value: 'react', label: 'React' },
-              { value: 'ng', label: 'Angular' },
-              { value: 'svelte', label: 'Svelte' },
-              { value: 'vue', label: 'Vue' },
-            ]}
-          />
-        </Grid.Col>
-      </Grid>
+        <Text className="mt-[1rem] mb-[1rem] text-[20px]" size="lg" weight={700}>
+          Power
+        </Text>
+        <Grid gutter="xl">
+          <Grid.Col md={6}>
+            <Radio.Group
+              value={input.power_type}
+              label="Type"
+              spacing="sm"
+              onChange={handleInput('power_type', true)}
+              required
+            >
+              <Radio value="ICE" label="Internal Combustion Engine" color="dark" />
+              <Radio value="EV" label="Electric Vehicle" color="dark" />
+            </Radio.Group>
+          </Grid.Col>
+        </Grid>
+        <Grid gutter="xl" className="mb-10">
+          <Grid.Col md={6}>
+            <Select
+              label="Engine/Motor"
+              placeholder="Engine/Motor"
+              rightSection={<IconChevronDown size={14} />}
+              data={[
+                { value: 'react', label: 'React' },
+                { value: 'ng', label: 'Angular' },
+                { value: 'svelte', label: 'Svelte' },
+                { value: 'vue', label: 'Vue' },
+              ]}
+            />
+          </Grid.Col>
+        </Grid>
 
-      <Text className="mt-[1rem] mb-[1rem] text-[20px]" size="lg" weight={700}>
-        Dimension
-      </Text>
-      <Grid gutter="xl">
-        <Grid.Col md={6}>
-          <TextInput
-            label="Curb Weight"
-            placeholder="Curb Weight"
-            rightSection={<RightSection label="kg" />}
-            value={input.curb}
-            onChange={handleInput('curb')}
-          />
-        </Grid.Col>
-        <Grid.Col md={6}>
-          <TextInput
-            label="Wheelbase"
-            placeholder="Wheelbase"
-            rightSection={<RightSection label="mm" />}
-            value={input.wheel}
-            onChange={handleInput('wheel')}
-          />
-        </Grid.Col>
-      </Grid>
+        <Text className="mt-[1rem] mb-[1rem] text-[20px]" size="lg" weight={700}>
+          Dimension
+        </Text>
+        <Grid gutter="xl">
+          <Grid.Col md={6}>
+            <NumberInput
+              label="Curb Weight"
+              placeholder="Curb Weight"
+              rightSection={<RightSection label="kg" />}
+              value={input.curb}
+              onChange={handleInput('curb', true)}
+            />
+          </Grid.Col>
+          <Grid.Col md={6}>
+            <NumberInput
+              label="Wheelbase"
+              placeholder="Wheelbase"
+              rightSection={<RightSection label="mm" />}
+              value={input.wheel}
+              onChange={handleInput('wheel', true)}
+            />
+          </Grid.Col>
+        </Grid>
 
-      {/* Section Length */}
-      {lengths.map((length, li) => (
-        <Fragment key={li}>
-          <div className="flex justify-between flex-row">
-            <Text className="my-4" weight={700}>
-              {`Length ${li + 1}`}
-            </Text>
+        {/* Section Length */}
+        {input.lengths.map((length: any, li: number) => (
+          <Fragment key={li}>
+            <div className="flex justify-between flex-row">
+              <Text className="my-4" weight={700}>
+                {`Length ${li + 1}`}
+              </Text>
 
-            <div className="flex flex-row" style={{}}>
-              {li === 0 && (
-                <Anchor
-                  component="button"
-                  className="flex my-4 text-sm text-danger items-end justify-center flex-row"
-                  onClick={addLength}
-                >
-                  <div className="flex h-max items-end pb-[3px]">
-                    <Plus color="red" width="16" height="16" />
-                  </div>
-                  <Text className="pl-2">Add length</Text>
-                </Anchor>
-              )}
-              {li === 0 && lengths.length > 1 && <div className="flex items-center px-3">|</div>}
-              {(lengths.length > 1 || li > 0) && (
-                <Anchor
-                  component="button"
-                  className="flex my-4 text-sm text-danger items-end justify-center flex-row"
-                  onClick={() => removeLength(li)}
-                >
-                  <div className="flex h-max items-end pb-[3px]">
-                    <Trash color="red" width="16" height="16" />
-                  </div>
-                  <Text className="pl-2">Delete length</Text>
-                </Anchor>
-              )}
+              <div className="flex flex-row" style={{}}>
+                {li === 0 && (
+                  <Anchor
+                    component="button"
+                    className="flex my-4 text-sm text-danger items-end justify-center flex-row"
+                    onClick={addLength}
+                  >
+                    <div className="flex h-max items-end pb-[3px]">
+                      <Plus color="red" width="16" height="16" />
+                    </div>
+                    <Text className="pl-2">Add length</Text>
+                  </Anchor>
+                )}
+                {li === 0 && input.lengths.length > 1 && <div className="flex items-center px-3">|</div>}
+                {(input.lengths.length > 1 || li > 0) && (
+                  <Anchor
+                    component="button"
+                    className="flex my-4 text-sm text-danger items-end justify-center flex-row"
+                    onClick={() => removeLength(li)}
+                  >
+                    <div className="flex h-max items-end pb-[3px]">
+                      <Trash color="red" width="16" height="16" />
+                    </div>
+                    <Text className="pl-2">Delete length</Text>
+                  </Anchor>
+                )}
+              </div>
             </div>
-          </div>
-          <Grid gutter="xl">
-            <Grid.Col md={6}>
-              <TextInput label="Length" placeholder="Length" rightSection={<RightSection label="mm" />} />
-            </Grid.Col>
-            <Grid.Col md={6} className="flex flex-row items-center">
-              <YearRange label="Production Year" />
-            </Grid.Col>
-          </Grid>
-        </Fragment>
-      ))}
+            <Grid gutter="xl">
+              <Grid.Col md={6}>
+                <NumberInput
+                  label="Length"
+                  placeholder="Length"
+                  rightSection={<RightSection label="mm" />}
+                  value={input.lengths[li].length}
+                  onChange={handleInputLength(li)}
+                />
+              </Grid.Col>
+              <Grid.Col md={6} className="flex flex-row items-center">
+                <YearRange
+                  label="Production Year"
+                  valStart={input.lengths[li].startYear}
+                  valEnd={input.lengths[li].endYear}
+                  onStartChange={handleInputLengthStartYear(li)}
+                  onEndChange={handleInputLengthEndYear(li)}
+                />
+              </Grid.Col>
+            </Grid>
+          </Fragment>
+        ))}
 
-      {/* Section Width */}
-      {widths.map((width, wi) => (
-        <Fragment key={wi}>
-          <div className="flex justify-between flex-row">
-            <Text className="my-4" weight={700}>
-              {`Width ${wi + 1}`}
-            </Text>
+        {/* Section Width */}
+        {input.widths.map((width: any, wi: number) => (
+          <Fragment key={wi}>
+            <div className="flex justify-between flex-row">
+              <Text className="my-4" weight={700}>
+                {`Width ${wi + 1}`}
+              </Text>
 
-            <div className="flex flex-row" style={{}}>
-              {wi === 0 && (
-                <Anchor
-                  component="button"
-                  className="flex my-4 text-sm text-danger items-end justify-center flex-row"
-                  onClick={addWidth}
-                >
-                  <div className="flex h-max items-end pb-[3px]">
-                    <Plus color="red" width="16" height="16" />
-                  </div>
-                  <Text className="pl-2">Add width</Text>
-                </Anchor>
-              )}
-              {wi === 0 && widths.length > 1 && <div className="flex items-center px-3">|</div>}
-              {(widths.length > 1 || wi > 0) && (
-                <Anchor
-                  component="button"
-                  className="flex my-4 text-sm text-danger items-end justify-center flex-row"
-                  onClick={() => removeWidth(wi)}
-                >
-                  <div className="flex h-max items-end pb-[3px]">
-                    <Trash color="red" width="16" height="16" />
-                  </div>
-                  <Text className="pl-2">Delete width</Text>
-                </Anchor>
-              )}
+              <div className="flex flex-row" style={{}}>
+                {wi === 0 && (
+                  <Anchor
+                    component="button"
+                    className="flex my-4 text-sm text-danger items-end justify-center flex-row"
+                    onClick={addWidth}
+                  >
+                    <div className="flex h-max items-end pb-[3px]">
+                      <Plus color="red" width="16" height="16" />
+                    </div>
+                    <Text className="pl-2">Add width</Text>
+                  </Anchor>
+                )}
+                {wi === 0 && input.widths.length > 1 && <div className="flex items-center px-3">|</div>}
+                {(input.widths.length > 1 || wi > 0) && (
+                  <Anchor
+                    component="button"
+                    className="flex my-4 text-sm text-danger items-end justify-center flex-row"
+                    onClick={() => removeWidth(wi)}
+                  >
+                    <div className="flex h-max items-end pb-[3px]">
+                      <Trash color="red" width="16" height="16" />
+                    </div>
+                    <Text className="pl-2">Delete width</Text>
+                  </Anchor>
+                )}
+              </div>
             </div>
-          </div>
-          <Grid gutter="xl">
-            <Grid.Col md={6}>
-              <TextInput label="Length" placeholder="Length" rightSection={<RightSection label="mm" />} />
-            </Grid.Col>
-            <Grid.Col md={6} className="flex flex-row items-center">
-              <YearRange label="Production Year" />
-            </Grid.Col>
-          </Grid>
-        </Fragment>
-      ))}
+            <Grid gutter="xl">
+              <Grid.Col md={6}>
+                <NumberInput
+                  label="Width"
+                  placeholder="Width"
+                  rightSection={<RightSection label="mm" />}
+                  value={input.widths[wi].width}
+                  onChange={handleInputWidth(wi)}
+                />
+              </Grid.Col>
+              <Grid.Col md={6} className="flex flex-row items-center">
+                <YearRange
+                  label="Production Year"
+                  valStart={input.widths[wi].startYear}
+                  valEnd={input.widths[wi].endYear}
+                  onStartChange={handleInputWidthStartYear(wi)}
+                  onEndChange={handleInputWidthEndYear(wi)}
+                />
+              </Grid.Col>
+            </Grid>
+          </Fragment>
+        ))}
 
-      {/* Section Height */}
-      {heights.map((height, hi) => (
-        <Fragment key={hi}>
-          <div className="flex justify-between flex-row">
-            <Text className="my-4" weight={700}>
-              {`Height ${hi + 1}`}
-            </Text>
+        {/* Section Height */}
+        {input.heights.map((height: any, hi: number) => (
+          <Fragment key={hi}>
+            <div className="flex justify-between flex-row">
+              <Text className="my-4" weight={700}>
+                {`Height ${hi + 1}`}
+              </Text>
 
-            <div className="flex flex-row" style={{}}>
-              {hi === 0 && (
-                <Anchor
-                  component="button"
-                  className="flex my-4 text-sm text-danger items-end justify-center flex-row"
-                  onClick={addHeight}
-                >
-                  <div className="flex h-max items-end pb-[3px]">
-                    <Plus color="red" width="16" height="16" />
-                  </div>
-                  <Text className="pl-2">Add height</Text>
-                </Anchor>
-              )}
-              {hi === 0 && heights.length > 1 && <div className="flex items-center px-3">|</div>}
-              {(heights.length > 1 || hi > 0) && (
-                <Anchor
-                  component="button"
-                  className="flex my-4 text-sm text-danger items-end justify-center flex-row"
-                  onClick={() => removeHeight(hi)}
-                >
-                  <div className="flex h-max items-end pb-[3px]">
-                    <Trash color="red" width="16" height="16" />
-                  </div>
-                  <Text className="pl-2">Delete height</Text>
-                </Anchor>
-              )}
+              <div className="flex flex-row" style={{}}>
+                {hi === 0 && (
+                  <Anchor
+                    component="button"
+                    className="flex my-4 text-sm text-danger items-end justify-center flex-row"
+                    onClick={addHeight}
+                  >
+                    <div className="flex h-max items-end pb-[3px]">
+                      <Plus color="red" width="16" height="16" />
+                    </div>
+                    <Text className="pl-2">Add height</Text>
+                  </Anchor>
+                )}
+                {hi === 0 && input.heights.length > 1 && <div className="flex items-center px-3">|</div>}
+                {(input.heights.length > 1 || hi > 0) && (
+                  <Anchor
+                    component="button"
+                    className="flex my-4 text-sm text-danger items-end justify-center flex-row"
+                    onClick={() => removeHeight(hi)}
+                  >
+                    <div className="flex h-max items-end pb-[3px]">
+                      <Trash color="red" width="16" height="16" />
+                    </div>
+                    <Text className="pl-2">Delete height</Text>
+                  </Anchor>
+                )}
+              </div>
             </div>
-          </div>
-          <Grid gutter="xl" className="mb-20">
-            <Grid.Col md={6}>
-              <TextInput label="Length" placeholder="Length" rightSection={<RightSection label="mm" />} />
-            </Grid.Col>
-            <Grid.Col md={6} className="flex flex-row items-center">
-              <YearRange label="Production Year" />
-            </Grid.Col>
-          </Grid>
-        </Fragment>
-      ))}
+            <Grid gutter="xl">
+              <Grid.Col md={6}>
+                <NumberInput
+                  label="Height"
+                  placeholder="Height"
+                  rightSection={<RightSection label="mm" />}
+                  value={input.heights[hi].height}
+                  onChange={handleInputHeight(hi)}
+                />
+              </Grid.Col>
+              <Grid.Col md={6} className="flex flex-row items-center">
+                <YearRange
+                  label="Production Year"
+                  valStart={input.heights[hi].startYear}
+                  valEnd={input.heights[hi].endYear}
+                  onStartChange={handleInputHeightStartYear(hi)}
+                  onEndChange={handleInputHeightEndYear(hi)}
+                />
+              </Grid.Col>
+            </Grid>
+          </Fragment>
+        ))}
 
-      <Grid>
-        <Grid.Col md={8} />
-        <Grid.Col md={2}>
-          <Button className="bg-black hover:bg-black w-full h-14" onClick={() => Router.back()}>
-            Cancel
-          </Button>
-        </Grid.Col>
-        <Grid.Col md={2}>
-          <Button className="bg-black hover:bg-black w-full h-14" onClick={() => addData()}>
-            Save
-          </Button>
-        </Grid.Col>
-      </Grid>
-    </div>
+        <Grid className="mt-10">
+          <Grid.Col md={8} />
+          <Grid.Col md={2}>
+            <Button className="bg-black hover:bg-black w-full h-14" onClick={() => Router.back()}>
+              Cancel
+            </Button>
+          </Grid.Col>
+          <Grid.Col md={2}>
+            <Button className="bg-black hover:bg-black w-full h-14" onClick={() => addData()}>
+              Save
+            </Button>
+          </Grid.Col>
+        </Grid>
+      </div>
+    </>
   );
 }
 

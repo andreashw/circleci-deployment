@@ -1,5 +1,7 @@
 import { IBreadcrumbs } from '@contracts/navigation';
 import { Anchor, Breadcrumbs, Text } from '@mantine/core';
+
+import Link from 'next/link';
 import Router from 'next/router';
 
 function HeadingTop({ text = '', items = [] }: { items: IBreadcrumbs[]; text?: string }) {
@@ -8,9 +10,9 @@ function HeadingTop({ text = '', items = [] }: { items: IBreadcrumbs[]; text?: s
       <div className=" mb-0 px-6 pt-6 pb-2 bg-[#2c2c2c0d]">
         <Breadcrumbs separator=">">
           {items.map((item, index) => (
-            <Anchor style={{ color: index === 0 ? '#828282' : '#2C2C2C' }} href={item.href} key={index}>
-              {item.title}
-            </Anchor>
+            <Link href={item.href ? item.href : '/'} passHref key={index}>
+              <Anchor style={{ color: index === 0 ? '#828282' : '#2C2C2C' }}>{item.title}</Anchor>
+            </Link>
           ))}
         </Breadcrumbs>
         {text && (

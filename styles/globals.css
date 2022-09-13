@@ -28,8 +28,6 @@
     border-top-left-radius: 0px;
 }
 
-/* .mantine-Select-wrapper .mantine-Select-rightSection {
-    border-top-right-radius: 8px;
-    border-bottom-right-radius: 8px;
-    background-color: #F5F5F5;
-} */
+.mantine-NumberInput-rightSection {
+    right: 10px;
+}

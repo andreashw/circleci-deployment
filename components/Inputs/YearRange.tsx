@@ -2,7 +2,7 @@ import { Select } from '@mantine/core';
 import { IconChevronDown } from '@tabler/icons';
 
 const years: number[] = [];
-for (let i = 1990; i <= 2030; i++) {
+for (let i = 1900; i <= 1987; i++) {
   years.push(i);
 }
 interface YearRangProps {
