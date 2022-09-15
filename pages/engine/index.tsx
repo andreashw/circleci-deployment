@@ -1,264 +1,120 @@
 import { useState } from 'react';
-import { Table, ScrollArea, Menu, Drawer, Text, Pagination, Button, Divider } from '@mantine/core';
-import { showNotification } from '@mantine/notifications';
+import { Table, ScrollArea, Menu, Text, Pagination, Button, Divider } from '@mantine/core';
 
 import { Edit2, Trash2 } from 'react-feather';
 import { IconDotsVertical } from '@tabler/icons';
 
-import Search from '@components/Forms/Search';
-import EditUserForm from '@components/Forms/EditUser';
-
-const MOCKUP_ENGINE: any = [
-  {
-    name: 'AJ-V6',
-    manufacturer: 'Mercedes',
-    prodyear: '1950-1980',
-    layout: 'V6',
-    type: 'Turbocharged',
-    fueltype: 'Gasoline',
-    transmission: 'AT',
-  },
-  {
-    name: 'AJ-V6',
-    manufacturer: 'Jaguar',
-    prodyear: '1950-1980',
-    layout: 'V6',
-    type: 'Turbocharged',
-    fueltype: 'Gasoline',
-    transmission: 'AT',
-  },
-  {
-    name: 'AJ-V6',
-    manufacturer: 'Jaguar',
-    prodyear: '1950-1980',
-    layout: 'V6',
-    type: 'Turbocharged',
-    fueltype: 'Gasoline',
-    transmission: 'AT',
-  },
-  {
-    name: 'AJ-V6',
-    manufacturer: 'Jaguar',
-    prodyear: '1950-1980',
-    layout: 'V6',
-    type: 'Turbocharged',
-    fueltype: 'Gasoline',
-    transmission: 'AT',
-  },
-  {
-    name: 'AJ-V6',
-    manufacturer: 'Jaguar',
-    prodyear: '1950-1980',
-    layout: 'V6',
-    type: 'Turbocharged',
-    fueltype: 'Gasoline',
-    transmission: 'AT',
-  },
-  {
-    name: 'AJ-V6',
-    manufacturer: 'Jaguar',
-    prodyear: '1950-1980',
-    layout: 'V6',
-    type: 'Turbocharged',
-    fueltype: 'Gasoline',
-    transmission: 'AT',
-  },
-  {
-    name: 'AJ-V6',
-    manufacturer: 'Jaguar',
-    prodyear: '1950-1980',
-    layout: 'V6',
-    type: 'Turbocharged',
-    fueltype: 'Gasoline',
-    transmission: 'AT',
-  },
-  {
-    name: 'AJ-V6',
-    manufacturer: 'Jaguar',
-    prodyear: '1950-1980',
-    layout: 'V6',
-    type: 'Turbocharged',
-    fueltype: 'Gasoline',
-    transmission: 'AT',
-  },
-  {
-    name: 'AJ-V6',
-    manufacturer: 'Jaguar',
-    prodyear: '1950-1980',
-    layout: 'V6',
-    type: 'Turbocharged',
-    fueltype: 'Gasoline',
-    transmission: 'AT',
-  },
-  {
-    name: 'AJ-V6',
-    manufacturer: 'Jaguar',
-    prodyear: '1950-1980',
-    layout: 'V6',
-    type: 'Turbocharged',
-    fueltype: 'Gasoline',
-    transmission: 'AT',
-  },
-];
+import useSWR from 'swr';
+import SearchForm from '@components/Forms/Search';
+import Router from 'next/router';
+import { useModals } from '@mantine/modals';
+import { fetcher } from '@api/fetcher';
+import { IEngine } from '@contracts/engine-interface';
 
 export default function Automobile(/*props*/) {
-  const [engines, setEngines] = useState(MOCKUP_ENGINE); // props.automobiles
-  const [drawerOpened, toggleDrawer] = useState(false);
-  const [selectedProfileData, setSelectedProfileData] = useState({});
-  const [searchLoading, setSearchLoading] = useState(false);
+  const modals = useModals();
   const [activePage, setPage] = useState(1);
+  const { data: dataEngines, mutate } = useSWR('/api/v1/engines/');
 
-  const onSearch = (search: any) => {
-    setSearchLoading(true);
+  const onDeleteData = async (automobile: IEngine) => {
+    console.log(automobile.ID);
 
-    const trimmedSearch = search.toLowerCase().trim();
-
-    if (!trimmedSearch) {
-      setEngines(MOCKUP_ENGINE); // props.automobiles
-      setSearchLoading(false);
-      return;
+    const response: IEngine | undefined = await fetcher(`/api/v1/automobiles/${automobile.ID}`, {
+      method: 'DELETE',
+    });
+    console.log('Response Delete from API ', response);
+    if (response) {
+      // Router.reload();
+      mutate();
     }
-
-    const filteredengines = engines.filter(
-      (engine: {
-        name: string;
-        manufacturer: string;
-        prodyear: string;
-        layout: string;
-        type: string;
-        fueltype: string;
-        transmission: string | any[];
-      }) =>
-        engine.name.toLowerCase().includes(search) ||
-        engine.manufacturer.toLowerCase().includes(search) ||
-        engine.prodyear.toLowerCase().includes(search) ||
-        engine.layout.toLowerCase().includes(search) ||
-        engine.prodyear.includes(search) ||
-        engine.type.includes(search) ||
-        engine.fueltype.includes(search) ||
-        engine.transmission.includes(search)
-    );
-
-    setEngines(filteredengines);
-
-    setSearchLoading(false);
   };
 
-  const cancelSearch = () => {
-    setEngines(MOCKUP_ENGINE); // props.automobiles
-  };
-
-  const onSubmitEditForm = (oldEngine: any, newEngine: any) => {
-    toggleDrawer(false);
-
-    // edit data in db
-
-    let tmpengines = engines;
-    tmpengines.splice(tmpengines.indexOf(oldEngine), 0, newEngine);
-    tmpengines = tmpengines.filter((u: any) => u !== oldEngine);
-    setEngines(tmpengines);
-
-    showNotification({
-      title: 'Profile',
-      message: `${newEngine.manufacturer} Edit Success`,
-      color: 'teal',
+  const deleteData = (automobile: IEngine) => {
+    modals.openConfirmModal({
+      title: 'Delete',
+      children: (
+        <Text size="sm" lineClamp={2}>
+          {/* Delete <b>{automobile.AutomobileManufactures.name}</b> Automobile Data ? */}
+          Apakah Anda yakin menghapus ini?
+        </Text>
+      ),
+      centered: true,
+      labels: { confirm: 'Yes', cancel: 'No' },
+      confirmProps: { className: 'bg-danger', color: 'red' },
+      onConfirm: () => onDeleteData(automobile),
     });
   };
 
+  const body = () =>
+    dataEngines.map((item: IEngine, index: any) => (
+      <tr key={index}>
+        <td onClick={() => Router.push(`/automobile/${item.ID}`)}>{item.name}</td>
+        <td onClick={() => Router.push(`/automobile/${item.ID}`)}>{item.EngineManufactures.name}</td>
+        <td onClick={() => Router.push(`/automobile/${item.ID}`)}>{`${item.year_start} - ${item.year_end}`}</td>
+        <td onClick={() => Router.push(`/automobile/${item.ID}`)}>{item.EngineLayouts.name}</td>
+        <td onClick={() => Router.push(`/automobile/${item.ID}`)}>{item.engine_type}</td>
+        <td onClick={() => Router.push(`/automobile/${item.ID}`)}>{item.fuel_type}</td>
+        <td>
+          <Menu>
+            <Menu.Target>
+              {/* <Button variant="white" color={'red'}>Action</Button> */}
+              <div className="flex content-center items-center w-6 h-9 cursor-pointer">
+                <IconDotsVertical size={14} />
+              </div>
+            </Menu.Target>
+            <Menu.Dropdown>
+              <Menu.Label>{item.name}</Menu.Label>
+              <Menu.Item icon={<Edit2 />} onClick={() => Router.push(`/automobile/edit/${item.ID}`)}>
+                Edit
+              </Menu.Item>
+              <Divider />
+              <Menu.Item icon={<Trash2 />} onClick={() => deleteData(item)} color="red">
+                Delete
+              </Menu.Item>
+            </Menu.Dropdown>
+          </Menu>
+        </td>
+      </tr>
+    ));
+
   return (
     <>
-      <Drawer opened={drawerOpened} onClose={() => toggleDrawer(false)} title="Modify Engine" padding="xl" size="xl">
-        <EditUserForm data={selectedProfileData} submitForm={onSubmitEditForm} />
-      </Drawer>
-
-      <div className="p-6" style={{ backgroundColor: 'rgba(44, 44, 44, 0.05)' }}>
+      <div className="px-6 pt-6" style={{ backgroundColor: 'rgba(44, 44, 44, 0.05)' }}>
         <Text align="left" weight="bold" mb="xs" size="xl">
           Engine
         </Text>
         <div className="flex justify-between">
-          <Search loading={searchLoading} onSubmit={onSearch} onCancel={cancelSearch} />
-          <Button className="bg-black hover:bg-black px-6">Add New Engine</Button>
+          <SearchForm searchName="Engine" />
+          <Button className="bg-black hover:bg-black px-6" onClick={() => Router.push('/automobile/add')}>
+            Add New Engine
+          </Button>
         </div>
       </div>
 
-      {MOCKUP_ENGINE.length > 0 ? (
+      {dataEngines.length > 0 ? (
         <ScrollArea>
           <Table highlightOnHover>
             <thead>
               <tr>
-                <th>Engine</th>
+                <th>Engine Name</th>
                 <th>Manufacturer</th>
-                <th>Prod. Year</th>
+                <th>Prod. year</th>
                 <th>Layout</th>
                 <th>Type</th>
                 <th>Fuel Type</th>
-                <th>Transmission</th>
                 <th />
               </tr>
             </thead>
-            <tbody>
-              {engines.map((engine: any, index: any) => (
-                <tr key={index}>
-                  <td>{engine.name}</td>
-                  <td>{engine.manufacturer}</td>
-                  <td>{engine.prodyear}</td>
-                  <td>{engine.layout}</td>
-                  <td>{engine.type}</td>
-                  <td>{engine.fueltype}</td>
-                  <td>{engine.transmission}</td>
-                  <td>
-                    <Menu>
-                      <Menu.Target>
-                        <div
-                          style={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            width: '60px',
-                            height: '36px',
-                          }}
-                        >
-                          <IconDotsVertical size={14} />
-                        </div>
-                      </Menu.Target>
-
-                      <Menu.Dropdown>
-                        <Menu.Label>{engine.name}</Menu.Label>
-                        <Menu.Item
-                          icon={<Edit2 />}
-                          onClick={() => {
-                            setSelectedProfileData(engine);
-                            toggleDrawer(true);
-                          }}
-                        >
-                          Edit
-                        </Menu.Item>
-                        <Divider />
-                        <Menu.Item
-                          icon={<Trash2 />}
-                          onClick={() => {
-                            setSelectedProfileData(engine);
-                            toggleDrawer(true);
-                          }}
-                          color="red"
-                        >
-                          Delete
-                        </Menu.Item>
-                      </Menu.Dropdown>
-                    </Menu>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
+            <tbody>{body()}</tbody>
           </Table>
         </ScrollArea>
       ) : (
         <Text align="center" weight="bold">
-          Test.
+          Tidak ada data.
         </Text>
       )}
 
-      <div className="flex justify-between my-5">
+      <div className="flex justify-between my-5 p-6">
         <Text color="#828282" size={14}>
           Show 10 from 1020 automobiles
         </Text>
@@ -267,16 +123,3 @@ export default function Automobile(/*props*/) {
     </>
   );
 }
-
-/*
-export async function getServerSideProps() {
-  const request = await fetch("http://localhost:3000/api/automobiles");
-  const automobiles = await request.json();
-
-  return {
-    props: {
-      automobiles,
-    },
-  };
-}
-*/

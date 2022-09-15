@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Group, TextInput, Button, Loader } from '@mantine/core';
-import { X } from 'react-feather';
+// import { X } from 'react-feather';
 import { IconFilter } from '@tabler/icons';
 
 export default function SearchForm(props: any) {
@@ -10,15 +10,15 @@ export default function SearchForm(props: any) {
     props.onSubmit(search);
   };
 
-  const cancelSearch = () => {
-    setSearch('');
-    props.onCancel();
-  };
+  // const cancelSearch = () => {
+  //   setSearch('');
+  //   props.onCancel();
+  // };
 
   return (
     <Group mb={20}>
       <TextInput
-        placeholder="Search Automobile"
+        placeholder={`Search ${props.searchName}`}
         style={{ minWidth: 395, flexGrow: 0 }}
         rightSection={props.loading && <Loader size="xs" />}
         value={search}
@@ -27,9 +27,9 @@ export default function SearchForm(props: any) {
       <Button rightIcon={<IconFilter />} variant="white" color="black" onClick={submitForm}>
         Filter
       </Button>
-      <Button onClick={cancelSearch} className="bg-gray-500 hover:bg-gray-500">
+      {/* <Button onClick={cancelSearch} className="bg-gray-500 hover:bg-gray-500">
         <X />
-      </Button>
+      </Button> */}
     </Group>
   );
 }
