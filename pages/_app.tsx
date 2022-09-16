@@ -71,6 +71,11 @@ function Application({ Component, pageProps }: { Component: any; pageProps: any 
                 input: 'bg-red',
               },
             },
+            DatePicker: {
+              classNames: {
+                wrapper: 'flex-grow',
+              },
+            },
             Table: {
               styles: {
                 root: {
@@ -85,6 +90,11 @@ function Application({ Component, pageProps }: { Component: any; pageProps: any 
                     padding: '24px',
                   },
                 },
+              },
+            },
+            Navbar: {
+              classNames: {
+                root: 'min-w-[240px]',
               },
             },
           },
