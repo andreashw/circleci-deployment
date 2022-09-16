@@ -1,6 +1,7 @@
 import { fetcher } from '@api/fetcher';
 import HeadingTop from '@components/TopComponents/Heading';
 import { IProvince } from '@contracts/client-interface';
+import { IVendor } from '@contracts/vendor-interface';
 import useInput from '@hooks/useInput';
 import { Button, createStyles, Grid, Select, Text, Textarea, TextInput } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
@@ -23,25 +24,28 @@ const useStyles = createStyles(() => ({
     height: '56px',
   },
 }));
-function VendorPage() {
+function EditVendorPage() {
   const { classes } = useStyles();
-  const router = useRouter();
   const [, startTransition] = useTransition();
 
+  const router = useRouter();
+  const id = router.query.id as unknown as number;
+  const { data: Vendor } = useSWR<IVendor[]>(`/api/v1/vendors/${id}`);
+
   const [input, handleInput] = useInput({
-    name: '',
-    email: '',
-    phone: '',
-    address: '',
-    type: '',
-    url_website: '',
-    country_id: '',
-    description: '',
+    name: Vendor ? Vendor[0]?.name : '',
+    email: Vendor ? Vendor[0]?.email : '',
+    phone: Vendor ? Vendor[0]?.phone : '',
+    address: Vendor ? Vendor[0]?.address : '',
+    type: Vendor ? Vendor[0]?.type?.toString() : '',
+    url_website: Vendor ? Vendor[0]?.url_website : '',
+    country_id: Vendor ? Vendor[0]?.country_id : '',
+    description: Vendor ? Vendor[0]?.description : '',
   });
   const doSubmit = async (e: any) => {
     e.preventDefault();
-    const response = await fetcher('/api/v1/vendors/', {
-      method: 'POST',
+    const response = await fetcher(`/api/v1/vendors/${id}`, {
+      method: 'PATCH',
       body: {
         name: input.name,
         email: input.email,
@@ -54,41 +58,36 @@ function VendorPage() {
       },
     });
 
+    // eslint-disable-next-line no-console
+    console.log('Response from API ', response);
     if (response) {
       showNotification({
         title: 'Success',
-        message: 'Vendor berhasil ditambahkan',
+        message: 'Vendor berhasil diubah',
         color: 'teal',
       });
       router.replace('/vendor');
     }
   };
-
   const { data: country } = useSWR<IProvince[]>('/api/v1/countries/');
   return (
     <>
       <HeadingTop
-        text="Add New Vendor"
+        text="Edit Vendor"
         items={[
           { title: 'Vendor', href: '/vendor' },
-          { title: 'Add New Vendor', href: '' },
+          { title: 'Edit Vendor', href: '' },
         ]}
       />
       <form onSubmit={doSubmit}>
-        <div className="mx-5">
+        <div className="p-6">
           <Text className="mt-[1rem] mb-[1rem] text-[20px]" weight={700}>
             Details
           </Text>
 
           <Grid gutter="xl" className="mb-[48px]">
             <Grid.Col md={6}>
-              <TextInput
-                label="Name"
-                placeholder="e.g Herjanto"
-                value={input.name}
-                onChange={handleInput('name')}
-                required
-              />
+              <TextInput label="Name" placeholder="e.g Herjanto" value={input.name} onChange={handleInput('name')} />
             </Grid.Col>
 
             <Grid.Col md={6}>
@@ -96,17 +95,17 @@ function VendorPage() {
                 label="Type"
                 placeholder="Select Type"
                 rightSection={<IconChevronDown size={14} />}
-                data={[
-                  { value: 'type 1', label: 'Type 1' },
-                  { value: 'type 2', label: 'Type 2' },
-                  { value: 'type 3', label: 'Type 3' },
-                ]}
+                value={input.type?.toString()}
                 onChange={(v) => {
                   startTransition(() => {
                     handleInput('type', true)(v);
                   });
                 }}
-                value={input.type}
+                data={[
+                  { value: 'Type 1', label: 'Type 1' },
+                  { value: 'Type 2', label: 'Type 2' },
+                  { value: 'Type 3', label: 'Type 3' },
+                ]}
               />
             </Grid.Col>
 
@@ -129,7 +128,7 @@ function VendorPage() {
                     handleInput('country_id', true)(v);
                   });
                 }}
-                value={input.country_id}
+                value={input.country_id?.toString()}
                 data={country ? country.map((y) => ({ value: y.ID.toString(), label: y.name })) : []}
               />
             </Grid.Col>
@@ -188,4 +187,4 @@ function VendorPage() {
   );
 }
 
-export default VendorPage;
+export default EditVendorPage;

@@ -1,3 +1,5 @@
+import { IProvince } from './client-interface';
+
 export interface IVendor {
   ID: number;
   name: string;
@@ -7,5 +9,6 @@ export interface IVendor {
   type: string;
   url_website: string;
   country_id: number;
+  Country?: IProvince;
   description: string;
 }
