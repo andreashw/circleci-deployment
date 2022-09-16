@@ -85,7 +85,7 @@ export default function Automobile(/*props*/) {
         </Text>
         <div className="flex justify-between">
           <SearchForm searchName="Engine" />
-          <Button className="bg-black hover:bg-black px-6" onClick={() => Router.push('/automobile/add')}>
+          <Button className="bg-black hover:bg-black px-6" onClick={() => Router.push('/engine/add')}>
             Add New Engine
           </Button>
         </div>

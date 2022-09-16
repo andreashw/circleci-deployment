@@ -296,7 +296,6 @@ function AddAutomobile(/*props*/) {
     <>
       <HeadingTop items={[{ title: 'Automobile', href: '/automobile' }, { title: 'Add Automobile' }]} />
       <div className="flex flex-row items-center px-6 pb-6" style={{ backgroundColor: 'rgba(44, 44, 44, 0.05)' }}>
-        {/* <div className="flex flex-row items-center px-6 pb-6" style={{ backgroundColor: 'red' }}> */}
         <div className="pr-5 cursor-pointer" onClick={() => Router.back()}>
           {'<'}
         </div>
