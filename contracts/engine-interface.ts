@@ -8,8 +8,8 @@ export interface IEngine {
   fuel_type: string;
   EngineManufactures: IEngineManufacture;
   EngineLayouts: IEngineLayouts;
-  displacement: IDisplacement[];
-  transmission: ITransmission[];
+  displacements: IDisplacement[];
+  transmissions: ITransmission[];
 }
 
 export interface IEngineManufacture {
@@ -29,6 +29,6 @@ export interface IDisplacement {
 }
 
 export interface ITransmission {
-  no_gear: string;
   transmission: string;
+  no_gear: string;
 }

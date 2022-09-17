@@ -7,7 +7,7 @@ import Router, { useRouter } from 'next/router';
 import { Fragment, Suspense } from 'react';
 import useSWR from 'swr';
 
-function DetailAutoMobile() {
+function Detail() {
   const router = useRouter();
   const id = router.query.id as unknown as number;
   const { data } = useSWR<IAutomobile[]>(`/api/v1/automobiles/${id}`);
@@ -99,17 +99,17 @@ function DetailAutoMobile() {
     </>
   );
 }
-function AddAutomobile(/*props*/) {
+function DetailAutomobile(/*props*/) {
   return (
     <>
       <HeadingTop items={[{ title: 'Automobile', href: '/automobile' }, { title: 'Detail Automobile' }]} />
       <ErrorBoundary fallback={<div>Something Wrong</div>}>
         <Suspense fallback={<div>Loading...</div>}>
-          <DetailAutoMobile />
+          <Detail />
         </Suspense>
       </ErrorBoundary>
     </>
   );
 }
 
-export default AddAutomobile;
+export default DetailAutomobile;
