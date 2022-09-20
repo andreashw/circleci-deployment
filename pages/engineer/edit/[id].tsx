@@ -1,53 +1,58 @@
 import { RightSection } from '@components/Inputs/RightSection';
 import HeadingTop from '@components/TopComponents/Heading';
 import useInput from '@hooks/useInput';
-import { Button, Grid, NumberInput, Select, Text, Textarea, TextInput } from '@mantine/core';
-import { IconChevronDown } from '@tabler/icons';
+import { Button, Grid, NumberInput, Text, Textarea, TextInput } from '@mantine/core';
 import banks from '@config/banks.json';
 import { useRouter } from 'next/router';
 import { DatePicker } from '@mantine/dates';
 import { fetcher } from '@api/fetcher';
 import { showNotification } from '@mantine/notifications';
+import useSWR from 'swr';
+import { IEngineer } from '@contracts/enginers-interface';
+import { Dropdown } from '@components/Inputs/Dropdown';
 
-function AddEngineerPage() {
+function EditEngineer() {
   const router = useRouter();
+  const { id } = router.query;
+  const { data: engineer, mutate } = useSWR<IEngineer[]>(`/api/v1/workers/${id}`);
   const optionBanks = banks.map((bank) => ({
     value: bank,
     label: bank,
   }));
   const [input, handleInput] = useInput({
-    name: '',
-    phone: '',
-    bank_name: '',
-    account_name: '',
-    account_number: '',
-    hourly_pay: '',
-    monthly_pay: '',
-    first_work_date: null,
-    note: '',
+    name: engineer?.[0]?.name,
+    phone: engineer?.[0]?.phone,
+    bank_name: engineer?.[0]?.bank_name,
+    account_name: engineer?.[0]?.account_name,
+    account_number: engineer?.[0]?.account_number,
+    hourly_pay: engineer?.[0]?.hourly_pay,
+    monthly_pay: engineer?.[0]?.monthly_pay,
+    first_work_date: engineer?.[0]?.first_work_date,
+    note: engineer?.[0]?.note,
   });
 
   const doSubmit = (e: any) => {
     e.preventDefault();
-    fetcher('/api/v1/workers/', {
-      method: 'POST',
+    fetcher(`/api/v1/workers/${id}`, {
+      method: 'PATCH',
       body: input,
     }).then(() => {
       showNotification({
         title: 'Success',
-        message: 'Engineer berhasil ditambahkan',
+        message: 'Engineer berhasil diedit',
         color: 'teal',
       });
+      mutate();
       router.replace('/engineer');
     });
   };
   return (
     <>
       <HeadingTop
-        text="Add New Engineers"
+        text="Edit Engineer"
         items={[
           { title: 'Engineers', href: '/engineer' },
-          { title: 'Add New Engineers', href: '#' },
+          { title: 'Edit Engineer', href: '#' },
         ]}
       />
 
@@ -82,10 +87,9 @@ function AddEngineerPage() {
           </Text>
           <Grid gutter="xl">
             <Grid.Col md={6}>
-              <Select
+              <Dropdown
                 label="Bank Name"
                 placeholder="Select Bank"
-                rightSection={<IconChevronDown size={14} />}
                 data={optionBanks}
                 onChange={handleInput('bank_name', true)}
                 value={input.bank_name}
@@ -125,7 +129,7 @@ function AddEngineerPage() {
             <Grid.Col md={6}>
               <NumberInput
                 label="Monthly Equiv"
-                placeholder="e.g 3.000.000"
+                placeholder="e.g 4.000.000"
                 rightSection={<RightSection label="Rp" />}
                 value={input.monthly_pay}
                 onChange={handleInput('monthly_pay', true)}
@@ -176,4 +180,4 @@ function AddEngineerPage() {
   );
 }
 
-export default AddEngineerPage;
+export default EditEngineer;

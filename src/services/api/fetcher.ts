@@ -1,4 +1,3 @@
-import { HOSTNAME } from '@helper/environments';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
@@ -8,11 +7,11 @@ export interface IPayload {
   params?: object;
 }
 
-export async function fetcher(url: string, payload?: IPayload) {
+export async function fetcher<T>(url: string, payload?: IPayload): Promise<T> {
   const token = Cookies.get('token');
   try {
     const fetchData = await axios({
-      baseURL: HOSTNAME,
+      baseURL: process.env.NEXT_PUBLIC_HOST,
       url,
       method: payload?.method,
       data: payload?.body,

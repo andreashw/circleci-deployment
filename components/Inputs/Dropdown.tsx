@@ -11,19 +11,18 @@ interface DropdownProps {
   data: IData[];
   value?: string;
   onChange?: (val: any) => void;
+  placeholder?: string;
 }
 
-export function Dropdown({ label = 'label', data, value, onChange }: DropdownProps) {
+export function Dropdown({ label = 'label', data, value, onChange, placeholder }: DropdownProps) {
   return (
-    <>
-      <Select
-        label={label}
-        placeholder={label}
-        rightSection={<IconChevronDown size={14} />}
-        value={value}
-        data={data}
-        onChange={onChange}
-      />
-    </>
+    <Select
+      label={label}
+      placeholder={placeholder || label}
+      rightSection={<IconChevronDown size={14} />}
+      value={value}
+      data={data}
+      onChange={onChange}
+    />
   );
 }

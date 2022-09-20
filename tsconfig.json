@@ -19,7 +19,7 @@
       "@components/*": ["components/*"],
       "@contracts/*": ["contracts/*"],
       "@api/*": ["src/services/api/*"],
-      "@helper/*": ["src/services/helper/*"],
+      "@support/*": ["src/support/*"],
       "@hooks/*": ["src/hooks/*"],
       "@config/*": ["src/config/*"]
     }
