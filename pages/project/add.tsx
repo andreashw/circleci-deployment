@@ -26,11 +26,10 @@ function ProjectPage() {
   return (
     <>
       <HeadingTop
-        text="Create Project"
+        text="Add New Project"
         items={[
-          { title: 'Mantine', href: '#' },
-          { title: 'Mantine hooks', href: '#' },
-          { title: 'use-id', href: '#' },
+          { title: 'Project', href: '/project' },
+          { title: 'Add New Project', href: '#' },
         ]}
       />
       <div className="mx-5">
