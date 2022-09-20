@@ -3,42 +3,64 @@ import { Fragment } from 'react';
 import { RightSection } from '@components/Inputs/RightSection';
 import { YearRange } from '@components/Inputs/YearRange';
 import { IconChevronDown } from '@tabler/icons';
-import Plus from 'icons/Plus';
-import Trash from 'icons/Trash';
-import HeadingTop from '@components/TopComponents/Heading';
-import Router from 'next/router';
 import useInput from '@hooks/useInput';
-import { IAutomobileLayouts, IAutomobileManufactures } from '@contracts/automobile-interface';
+import Trash from 'icons/Trash';
+import Plus from 'icons/Plus';
+import Router, { useRouter } from 'next/router';
+import { fetcher } from '@api/fetcher';
 import useSWR from 'swr';
 import { Dropdown } from '@components/Inputs/Dropdown';
-import { fetcher } from '@api/fetcher';
+import HeadingTop from '@components/TopComponents/Heading';
+import { IEngine } from '@contracts/engine-interface';
+import { IAutomobileLayouts, IAutomobileManufactures } from '@contracts/automobile-interface';
 import { showNotification } from '@mantine/notifications';
 
-function AddEngine(/*props*/) {
+function EditEngine(/*props*/) {
+  const router = useRouter();
+  const id = router.query.id as unknown as number;
+  const { data, mutate } = useSWR<IEngine[]>(`/api/v1/engines/${id}`);
   const { data: AutomobileManufacture } = useSWR<IAutomobileManufactures[]>('/api/v1/automobiles-manufactures/');
   const { data: AutomobileLayout } = useSWR<IAutomobileLayouts[]>('/api/v1/automobiles-layouts/');
+
   const [input, handleInput] = useInput({
-    engine_name: '',
-    manufacture: '',
-    layout: '',
-    year_start: '',
-    year_end: '',
-    engine_type: 'Normal',
-    fuel_type: 'Gasoline',
-    displacements: [
-      {
-        displacement: 0,
-        torque_output: 0,
-        power: 0,
-      },
-    ],
-    transmissions: [
-      {
-        transmission: '',
-        no_gear: '',
-      },
-    ],
+    engine_name: data ? data[0].name : '',
+    manufacture: data ? data[0]?.engine_manufacture_id : '',
+    layout: data ? data[0]?.engine_layout_id : '',
+    year_start: data ? data[0]?.year_start : '',
+    year_end: data ? data[0]?.year_end : '',
+    engine_type: data ? data[0]?.engine_type : '',
+    fuel_type: data ? data[0]?.fuel_type : '',
+    displacements: data ? data[0]?.displacements : [],
+    transmissions: data ? data[0]?.transmissions : [],
   });
+
+  const doSubmit = async (e: any) => {
+    e.preventDefault();
+    const response: IEngine | undefined = await fetcher(`/api/v1/engines/${id}`, {
+      method: 'PATCH',
+      body: {
+        name: input.engine_name,
+        engine_manufacture_id: Number(input.manufacture),
+        engine_layout_id: Number(input.layout),
+        displacements: input.displacements,
+        transmissions: input.transmissions,
+        year_start: Number(input.year_start),
+        year_end: Number(input.year_end),
+        engine_type: input.engine_type,
+        fuel_type: input.fuel_type,
+      },
+    });
+    console.log('Response Edit from API ', response);
+    mutate();
+    if (response) {
+      showNotification({
+        title: 'Success',
+        message: 'Engine berhasil diubah',
+        color: 'teal',
+      });
+      Router.replace('/engine');
+    }
+  };
 
   const addDisplacement = () => {
     handleInput(
@@ -171,36 +193,9 @@ function AddEngine(/*props*/) {
     />
   );
 
-  const doSubmit = async (e: any) => {
-    e.preventDefault();
-    const response = await fetcher('/api/v1/engines/', {
-      method: 'POST',
-      body: {
-        name: input.engine_name,
-        engine_manufacture_id: Number(input.manufacture),
-        engine_layout_id: Number(input.layout),
-        displacements: input.displacements,
-        transmissions: input.transmissions,
-        year_start: Number(input.year_start),
-        year_end: Number(input.year_end),
-        engine_type: input.engine_type,
-        fuel_type: input.fuel_type,
-      },
-    });
-
-    if (response) {
-      showNotification({
-        title: 'Success',
-        message: 'Engine berhasil ditambahkan',
-        color: 'teal',
-      });
-      Router.replace('/engine');
-    }
-  };
-
   return (
     <>
-      <HeadingTop items={[{ title: 'Engine', href: '/engine' }, { title: 'Add Engine' }]} />
+      <HeadingTop items={[{ title: 'Edit Engine', href: '/engine' }, { title: 'Edit Engine' }]} />
       <div className="flex flex-row items-center px-6 pb-6" style={{ backgroundColor: 'rgba(44, 44, 44, 0.05)' }}>
         <div className="pr-5 cursor-pointer" onClick={() => Router.back()}>
           {'<'}
@@ -227,6 +222,7 @@ function AddEngine(/*props*/) {
             <Grid.Col md={6}>
               <Dropdown
                 label="Manufacture"
+                value={input.manufacture.toString()}
                 data={AutomobileManufacture?.map(({ ID, name }) => ({ value: ID.toString(), label: name })) || []}
                 onChange={handleInput('manufacture', true)}
               />
@@ -317,6 +313,7 @@ function AddEngine(/*props*/) {
             <Grid.Col md={6}>
               <Dropdown
                 label="Layout"
+                value={input.layout.toString()}
                 data={AutomobileLayout?.map(({ ID, name }) => ({ value: ID.toString(), label: name })) || []}
                 onChange={handleInput('layout', true)}
               />
@@ -339,8 +336,8 @@ function AddEngine(/*props*/) {
                 required
               >
                 <Radio value="Normal" label="Normal" color="dark" />
-                <Radio value="turbocharged" label="Turbocharged" color="dark" />
-                <Radio value="supercharged" label="Supercharged" color="dark" />
+                <Radio value="Turbocharged" label="Turbocharged" color="dark" />
+                <Radio value="Supercharged" label="Supercharged" color="dark" />
               </Radio.Group>
             </Grid.Col>
           </Grid>
@@ -417,7 +414,7 @@ function AddEngine(/*props*/) {
                     label="No. of Gear"
                     placeholder="No. of Gear"
                     rightSection={<IconChevronDown size={14} />}
-                    value={input.transmissions[ti].no_gear}
+                    value={input.transmissions[ti].no_gear.toString()}
                     onChange={handleInputGear(ti)}
                     data={[
                       { value: '0', label: '0' },
@@ -455,4 +452,4 @@ function AddEngine(/*props*/) {
   );
 }
 
-export default AddEngine;
+export default EditEngine;

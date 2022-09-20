@@ -16,32 +16,30 @@ export default function Automobile(/*props*/) {
   const [activePage, setPage] = useState(1);
   const { data: dataEngines, mutate } = useSWR('/api/v1/engines/');
 
-  const onDeleteData = async (automobile: IEngine) => {
-    console.log(automobile.ID);
+  const onDeleteData = async (engine: IEngine) => {
+    console.log(engine.ID);
 
-    const response: IEngine | undefined = await fetcher(`/api/v1/automobiles/${automobile.ID}`, {
+    const response: IEngine | undefined = await fetcher(`/api/v1/engines/${engine.ID}`, {
       method: 'DELETE',
     });
     console.log('Response Delete from API ', response);
     if (response) {
-      // Router.reload();
       mutate();
     }
   };
 
-  const deleteData = (automobile: IEngine) => {
+  const deleteData = (engine: IEngine) => {
     modals.openConfirmModal({
       title: 'Delete',
       children: (
         <Text size="sm" lineClamp={2}>
-          {/* Delete <b>{automobile.AutomobileManufactures.name}</b> Automobile Data ? */}
           Apakah Anda yakin menghapus ini?
         </Text>
       ),
       centered: true,
       labels: { confirm: 'Yes', cancel: 'No' },
       confirmProps: { className: 'bg-danger', color: 'red' },
-      onConfirm: () => onDeleteData(automobile),
+      onConfirm: () => onDeleteData(engine),
     });
   };
 

@@ -2,6 +2,7 @@ export interface IEngine {
   ID: number;
   name: string;
   engine_manufacture_id: number;
+  engine_layout_id: number;
   year_start: number;
   year_end: number;
   engine_type: string;
