@@ -13,5 +13,6 @@ export interface IClient {
 
 export interface IProvince {
   ID: number;
-  name: string;
+  name?: string;
+  Name?: string;
 }

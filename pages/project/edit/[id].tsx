@@ -1,6 +1,7 @@
 import { fetcher } from '@api/fetcher';
 import HeadingTop from '@components/TopComponents/Heading';
 import { IProvince } from '@contracts/client-interface';
+import { IProject } from '@contracts/project-interface';
 import useInput from '@hooks/useInput';
 import { Button, createStyles, Grid, Radio, Select, Text, Textarea, TextInput } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
@@ -25,27 +26,29 @@ const useStyles = createStyles(() => ({
     height: '56px',
   },
 }));
-function ProjectAddPage() {
+function ProjectEditPage() {
   const { classes } = useStyles();
 
+  const id = Router.query.id as unknown as number;
+  const { data: Project } = useSWR<IProject[]>(`/api/v1/projects/${id}`);
   const { data: dataPic } = useSWR<IProvince[]>('/api/v1/projects/pic/');
   const { data: dataAutomobile } = useSWR<IProvince[]>('/api/v1/projects/automobiles/');
   const { data: dataClient } = useSWR<IProvince[]>('/api/v1/projects/clients/');
   const { data: dataPower } = useSWR<IProvince[]>('/api/v1/projects/powers/');
 
   const [input, handleInput] = useInput({
-    name: '',
-    pic_id: '',
-    client_id: '',
-    automobile_id: '',
-    notes: '',
-    engine_id: '',
-    power_type: 'EV',
+    name: Project ? Project[0].name : '',
+    pic_id: Project ? Project[0].pic_id : '',
+    client_id: Project ? Project[0].client_id : '',
+    automobile_id: Project ? Project[0].automobile_id : '',
+    notes: Project ? Project[0].notes : '',
+    engine_id: Project ? Project[0].engine_id : '',
+    power_type: Project ? Project[0].power_type : '',
   });
   const doSubmit = async (e: any) => {
     e.preventDefault();
-    const response = await fetcher('/api/v1/projects/', {
-      method: 'POST',
+    const response = await fetcher(`/api/v1/projects/${id}`, {
+      method: 'PATCH',
       body: {
         name: input.name,
         client_id: Number(input.client_id),
@@ -60,7 +63,7 @@ function ProjectAddPage() {
     if (response) {
       showNotification({
         title: 'Success',
-        message: 'Project berhasil ditambahkan',
+        message: 'Project berhasil diubah',
         color: 'teal',
       });
       Router.replace('/project');
@@ -69,10 +72,10 @@ function ProjectAddPage() {
   return (
     <>
       <HeadingTop
-        text="Add New Project"
+        text="Edit Project"
         items={[
           { title: 'Project', href: '/project' },
-          { title: 'Add New Project', href: '#' },
+          { title: 'Edit Project', href: '#' },
         ]}
       />
 
@@ -179,4 +182,4 @@ function ProjectAddPage() {
   );
 }
 
-export default ProjectAddPage;
+export default ProjectEditPage;

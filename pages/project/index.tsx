@@ -7,19 +7,23 @@ import SearchForm from '@components/Forms/Search';
 import { Edit2, Trash2 } from 'react-feather';
 import Router from 'next/router';
 import { useModals } from '@mantine/modals';
-import { IVendor } from '@contracts/vendor-interface';
+import { IProject } from '@contracts/project-interface';
+import { IProvince } from '@contracts/client-interface';
 
 function ProjectPage() {
   const modals = useModals();
   const [drawerOpened, toggleDrawer] = useState(false);
   const [activePage, setPage] = useState(1);
 
-  const { data: dataVendor, mutate } = useSWR('/api/v1/vendors/');
+  const { data: dataVendor, mutate } = useSWR('/api/v1/projects/');
+  const { data: dataPic } = useSWR<IProvince[]>('/api/v1/projects/pic/');
+  const { data: dataAutomobile } = useSWR<IProvince[]>('/api/v1/projects/automobiles/');
+  const { data: dataClient } = useSWR<IProvince[]>('/api/v1/projects/clients/');
 
-  const onDeleteData = async (vendor: IVendor) => {
-    console.log(vendor.ID);
+  const onDeleteData = async (project: IProject) => {
+    console.log(project.ID);
 
-    const response: IVendor | undefined = await fetcher(`/api/v1/vendors/${vendor.ID}`, {
+    const response: IProject | undefined = await fetcher(`/api/v1/projects/${project.ID}`, {
       method: 'DELETE',
     });
     console.log('Response Delete from API ', response);
@@ -28,25 +32,28 @@ function ProjectPage() {
       mutate();
     }
   };
-  function deleteProfile(vendor: IVendor) {
+  function deleteProfile(project: IProject) {
     console.log('====================================');
     modals.openConfirmModal({
       title: 'Delete',
       children: (
         <Text size="sm" lineClamp={2}>
-          Delete <b>{vendor.name}</b> Client Data ?
+          Delete <b>{project.name}</b> Project Data ?
         </Text>
       ),
       centered: true,
       labels: { confirm: 'Yes', cancel: 'No' },
       confirmProps: { className: 'bg-danger', color: 'red' },
-      onConfirm: () => onDeleteData(vendor),
+      onConfirm: () => onDeleteData(project),
     });
     console.log('====================================');
-    // const response: IVendor | undefined = await fetcher('/api/v1/clients/' + id, {
+    // const response: IProject | undefined = await fetcher('/api/v1/clients/' + id, {
     //   method: 'DELETE',
     // });
   }
+  console.log('====================================');
+  console.log(dataPic?.filter((a) => a.ID === 2)[0].Name);
+  console.log('====================================');
 
   const body = () =>
     dataVendor.map((item: any, index: any) => (
@@ -54,20 +61,18 @@ function ProjectPage() {
         <td className="cursor-pointer w-2/12" onClick={() => Router.push(`/project/${item.ID}`)}>
           {item.name}
         </td>
-        <td className="cursor-pointer w-2/12" onClick={() => Router.push(`/project/${item.ID}`)}>
-          {item.type}
+        <td className="cursor-pointer " onClick={() => Router.push(`/project/${item.ID}`)}>
+          {dataClient?.filter((a) => a.ID === item.client_id)[0].Name}
         </td>
-        <td className="cursor-pointer  w-72 " onClick={() => Router.push(`/project/${item.ID}`)}>
-          <p className="truncate w-72">
-            {item.Country.name}, {item.address}
-          </p>
+        <td className="cursor-pointer w-2/12 " onClick={() => Router.push(`/project/${item.ID}`)}>
+          {dataPic?.filter((a) => a.ID === item.pic_id)[0].Name}
         </td>
-        <td className="cursor-pointer w-2/12" onClick={() => Router.push(`/project/${item.ID}`)}>
-          {item.email}
+        <td className="cursor-pointer " onClick={() => Router.push(`/project/${item.ID}`)}>
+          {dataAutomobile?.filter((a) => a.ID === item.automobile_id)[0].Name}
         </td>
 
-        <td className="cursor-pointer " onClick={() => Router.push(`/project/${item.ID}`)}>
-          {item.phone}
+        <td className="cursor-pointer w-2/12" onClick={() => Router.push(`/project/${item.ID}`)}>
+          {item.power_type}
         </td>
         <td>
           <Menu>
@@ -88,7 +93,7 @@ function ProjectPage() {
             <Menu.Dropdown>
               <Menu.Label>{item.name}</Menu.Label>
               <Menu.Item icon={<Edit2 />} onClick={() => Router.push(`/project/edit/${item.ID}`)}>
-                Edit
+                Edit Project
               </Menu.Item>
               {/* <Menu.Item icon={<Send />} onClick={() => sendMessage(automobile)}>
               Send Message
@@ -98,7 +103,7 @@ function ProjectPage() {
               Copy
             </Menu.Item> */}
               <Menu.Item icon={<Trash2 />} onClick={() => deleteProfile(item)} color="red">
-                Delete User
+                Delete Project
               </Menu.Item>
             </Menu.Dropdown>
           </Menu>
@@ -113,12 +118,12 @@ function ProjectPage() {
       </Drawer>
       <div className="px-6 pt-6" style={{ backgroundColor: 'rgba(44, 44, 44, 0.05)' }}>
         <Text align="left" weight="bold" mb="xs" size="xl">
-          Vendor
+          Project
         </Text>
         <div className="flex justify-between">
           <SearchForm />
           <Button className="bg-black hover:bg-black px-6" onClick={() => Router.push('/project/add')}>
-            Add New Clients
+            Add New Project
           </Button>
         </div>
       </div>
@@ -145,7 +150,7 @@ function ProjectPage() {
       )}
       <div className="flex justify-between my-5 p-6">
         <Text color="#828282" size={14}>
-          Show 10 from 1020 clients
+          Show 10 from 1020 Project
         </Text>
         <Pagination page={activePage} onChange={setPage} total={10} />
       </div>
