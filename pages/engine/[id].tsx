@@ -46,9 +46,9 @@ function Detail() {
                   {`Displacement ${di + 1}`}
                 </Text>
                 <Grid gutter="xl">
-                  <ListDetail List="Displacement" IsiList={`${displacement.displacement} cc`} />
-                  <ListDetail List="Power" IsiList={`${displacement.power} Nm`} />
-                  <ListDetail List="Torque Output" IsiList={`${displacement.torque_output} HP`} />
+                  <ListDetail List="Displacement" IsiList={`${displacement.displacement}`} />
+                  <ListDetail List="Power" IsiList={`${displacement.power}`} />
+                  <ListDetail List="Torque Output" IsiList={`${displacement.torque_output}`} />
                 </Grid>
                 <Divider my="sm" className="my-5" />
               </Fragment>
@@ -60,8 +60,22 @@ function Detail() {
         </Text>
         <Grid gutter="xl">
           <ListDetail List="Layout" IsiList={data ? data[0]?.EngineLayouts.name : undefined} />
-          <ListDetail List="Cylinder Bore" IsiList="80 mm" />
+          <ListDetail List="Engine Type" IsiList={data ? data[0]?.engine_type : undefined} />
           <ListDetail List="Fuel Type" IsiList={data ? data[0]?.fuel_type : undefined} />
+        </Grid>
+        <Divider my="sm" className="my-5" />
+
+        {/* CYLINDER BORE SECTION */}
+        <Text className="mt-[1rem] mb-[1rem] text-[20px]" weight={700}>
+          Cylinder Bore
+        </Text>
+        <Grid gutter="xl">
+          {data
+            ? data[0]?.cylinder_bores &&
+              data[0]?.cylinder_bores.map((cylinderBore: any, ci: number) => (
+                <ListDetail key={ci} List="Cylinder Bore" IsiList={`${cylinderBore.cylinder_bore}`} />
+              ))
+            : undefined}
         </Grid>
         <Divider my="sm" className="my-5" />
 
@@ -74,8 +88,8 @@ function Detail() {
                   {`Transmission ${ti + 1}`}
                 </Text>
                 <Grid gutter="xl">
-                  <ListDetail List="Transmission" IsiList={`${transmission.transmission} cc`} />
-                  <ListDetail List="No. of Gear" IsiList={`${transmission.no_gear} Nm`} />
+                  <ListDetail List="Transmission" IsiList={`${transmission.transmission}`} />
+                  <ListDetail List="No. of Gear" IsiList={`${transmission.no_gear}`} />
                 </Grid>
                 <Divider my="sm" className="my-5" />
               </Fragment>

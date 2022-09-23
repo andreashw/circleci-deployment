@@ -39,9 +39,33 @@ function EditAutomobile(/*props*/) {
     power_type: data ? data[0]?.power_type : '',
     curb: data ? data[0]?.curb_wight : '',
     wheel: data ? data[0]?.wheel_base : '',
-    lengths: data ? data[0]?.lengths : [],
-    widths: data ? data[0]?.widths : [],
-    heights: data ? data[0]?.heights : [],
+    lengths: data
+      ? data[0]?.lengths
+      : [
+          {
+            length: 0,
+            startYear: '',
+            endYear: '',
+          },
+        ],
+    widths: data
+      ? data[0]?.widths
+      : [
+          {
+            width: 0,
+            startYear: '',
+            endYear: '',
+          },
+        ],
+    heights: data
+      ? data[0]?.heights
+      : [
+          {
+            height: 0,
+            startYear: '',
+            endYear: '',
+          },
+        ],
   });
 
   const editData = async () => {

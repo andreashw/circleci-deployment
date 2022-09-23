@@ -12,13 +12,20 @@ interface YearRangProps {
   onStartChange?: (val: any) => void;
   onEndChange?: (val: any) => void;
 }
+
+const RightSection = () => (
+  <div className="flex bg-inactive h-full rounded-r-md px-4">
+    <IconChevronDown className="self-center" size={14} />
+  </div>
+);
+
 export function YearRange({ label = 'label', onStartChange, onEndChange, valStart = '', valEnd = '' }: YearRangProps) {
   return (
     <>
       <div className="w-28 max-width-[45%] text-[14px]">{label}</div>
       <Select
         placeholder="Select Year"
-        rightSection={<IconChevronDown size={14} />}
+        rightSection={<RightSection />}
         data={years.map((y) => ({
           value: y.toString(),
           label: y.toString(),
@@ -29,7 +36,7 @@ export function YearRange({ label = 'label', onStartChange, onEndChange, valStar
       <span className="px-4">-</span>
       <Select
         placeholder="Select Year"
-        rightSection={<IconChevronDown size={14} />}
+        rightSection={<RightSection />}
         data={years.map((y) => ({
           value: y.toString(),
           label: y.toString(),

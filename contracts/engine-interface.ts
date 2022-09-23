@@ -10,6 +10,7 @@ export interface IEngine {
   EngineManufactures: IEngineManufacture;
   EngineLayouts: IEngineLayouts;
   displacements: IDisplacement[];
+  cylinder_bores: ICylinderBore[];
   transmissions: ITransmission[];
 }
 
@@ -27,6 +28,10 @@ export interface IDisplacement {
   power: number;
   displacement: number;
   torque_output: number;
+}
+
+export interface ICylinderBore {
+  cylinder_bore: number;
 }
 
 export interface ITransmission {

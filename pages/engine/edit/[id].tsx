@@ -23,15 +23,35 @@ function EditEngine(/*props*/) {
   const { data: AutomobileLayout } = useSWR<IAutomobileLayouts[]>('/api/v1/automobiles-layouts/');
 
   const [input, handleInput] = useInput({
-    engine_name: data ? data[0].name : '',
-    manufacture: data ? data[0]?.engine_manufacture_id : '',
-    layout: data ? data[0]?.engine_layout_id : '',
-    year_start: data ? data[0]?.year_start : '',
-    year_end: data ? data[0]?.year_end : '',
-    engine_type: data ? data[0]?.engine_type : '',
-    fuel_type: data ? data[0]?.fuel_type : '',
-    displacements: data ? data[0]?.displacements : [],
-    transmissions: data ? data[0]?.transmissions : [],
+    engine_name: data?.[0].name,
+    manufacture: data?.[0]?.engine_manufacture_id,
+    layout: data?.[0]?.engine_layout_id,
+    year_start: data?.[0]?.year_start,
+    year_end: data?.[0]?.year_end,
+    engine_type: data?.[0]?.engine_type,
+    fuel_type: data?.[0]?.fuel_type,
+    cylinder_bores: data?.[0]?.cylinder_bores || [
+      {
+        cylinder_bore: 0,
+      },
+    ],
+    displacements: data
+      ? data[0]?.displacements
+      : [
+          {
+            displacement: 0,
+            torque_output: 0,
+            power: 0,
+          },
+        ],
+    transmissions: data
+      ? data[0]?.transmissions
+      : [
+          {
+            transmission: '',
+            no_gear: '',
+          },
+        ],
   });
 
   const doSubmit = async (e: any) => {
@@ -48,6 +68,7 @@ function EditEngine(/*props*/) {
         year_end: Number(input.year_end),
         engine_type: input.engine_type,
         fuel_type: input.fuel_type,
+        cylinder_bores: input.cylinder_bores,
       },
     });
     console.log('Response Edit from API ', response);
@@ -124,6 +145,39 @@ function EditEngine(/*props*/) {
           return {
             ...x,
             torque_output: val,
+          };
+        }
+        return x;
+      })
+    );
+  };
+
+  const addCylinderBore = () => {
+    handleInput(
+      'cylinder_bores',
+      true
+    )([
+      ...input.cylinder_bores,
+      {
+        cylinder_bore: 0,
+      },
+    ]);
+  };
+
+  const removeCylinderBore = (index: number) => {
+    handleInput('cylinder_bores', true)(input.cylinder_bores.filter((_: any, i: number) => i !== index));
+  };
+
+  const handleInputCylinderBore = (index: number) => (val: any) => {
+    handleInput(
+      'cylinder_bores',
+      true
+    )(
+      input.cylinder_bores.map((x: any, i: number) => {
+        if (i === index) {
+          return {
+            ...x,
+            cylinder_bore: val,
           };
         }
         return x;
@@ -318,13 +372,6 @@ function EditEngine(/*props*/) {
                 onChange={handleInput('layout', true)}
               />
             </Grid.Col>
-            <Grid.Col md={6}>
-              <TextInput
-                label="Cynlinder Bore"
-                placeholder="Cynlinder Bore"
-                rightSection={<RightSection label="mm" />}
-              />
-            </Grid.Col>
           </Grid>
           <Grid gutter="xl">
             <Grid.Col md={6}>
@@ -355,6 +402,59 @@ function EditEngine(/*props*/) {
               </Radio.Group>
             </Grid.Col>
           </Grid>
+
+          <Text className="mt-[1rem] text-[20px]" size="lg" weight={700}>
+            Cylinder Bore
+          </Text>
+          {/* Section Cylinder Bores */}
+          {input.cylinder_bores.map((cylinderBore: any, ci: number) => (
+            <Fragment key={ci}>
+              <Grid>
+                <Grid.Col md={6}>
+                  <div className="flex justify-end">
+                    <div className="flex flex-row">
+                      {ci === 0 && (
+                        <Anchor
+                          component="button"
+                          className="flex my-4 text-sm text-danger items-end justify-center flex-row"
+                          onClick={addCylinderBore}
+                        >
+                          <div className="flex h-max items-end pb-[3px]">
+                            <Plus color="red" width="16" height="16" />
+                          </div>
+                          <Text className="pl-2">Add Cylinder Bore</Text>
+                        </Anchor>
+                      )}
+                      {ci === 0 && input.cylinder_bores.length > 1 && <div className="flex items-center px-3">|</div>}
+                      {(input.cylinder_bores.length > 1 || ci > 0) && (
+                        <Anchor
+                          component="button"
+                          className="flex my-4 text-sm text-danger items-end justify-center flex-row"
+                          onClick={() => removeCylinderBore(ci)}
+                        >
+                          <div className="flex h-max items-end pb-[3px]">
+                            <Trash color="red" width="16" height="16" />
+                          </div>
+                          <Text className="pl-2">Delete Cylinder Bore</Text>
+                        </Anchor>
+                      )}
+                    </div>
+                  </div>
+                </Grid.Col>
+              </Grid>
+              <Grid gutter="xl">
+                <Grid.Col md={6}>
+                  <NumberInput
+                    label="Cylinder Bore"
+                    placeholder="Cylinder Bore"
+                    rightSection={<RightSection label="mm" />}
+                    value={input.cylinder_bores[ci].cylinder_bore}
+                    onChange={handleInputCylinderBore(ci)}
+                  />
+                </Grid.Col>
+              </Grid>
+            </Fragment>
+          ))}
 
           <Text className="mt-[1rem] mb-[1rem] text-[20px]" size="lg" weight={700}>
             Transmission

@@ -79,7 +79,7 @@ export default function LinksGroup({ icon, label, sub, link }: ILinkGroup) {
     <>
       <UnstyledButton onClick={() => setOpened((o) => !o)} className={classes.control}>
         <Group position="apart" spacing={0}>
-          <NavLink label={label} icon={icon} link={link} active={link === router.asPath} />
+          <NavLink label={label} icon={icon} link={link} active={link ? router.asPath.includes(link || '') : false} />
           {hasLinks && (
             <ChevronIcon
               className={classes.chevron}
@@ -95,7 +95,7 @@ export default function LinksGroup({ icon, label, sub, link }: ILinkGroup) {
       {hasLinks ? (
         <Collapse in={opened}>
           {sub.map((menu) => (
-            <NavLink key={menu.label} active={menu.link === router.asPath} {...menu} />
+            <NavLink key={menu.label} active={menu.link ? router.asPath.includes(menu.link) : false} {...menu} />
           ))}
         </Collapse>
       ) : null}

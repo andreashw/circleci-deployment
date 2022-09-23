@@ -7,6 +7,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        inactive: "var(--c-inactive)",
         danger: '#f00'
       }
     },

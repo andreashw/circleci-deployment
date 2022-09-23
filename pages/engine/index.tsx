@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { Table, ScrollArea, Menu, Text, Pagination, Button, Divider } from '@mantine/core';
+import { Table, ScrollArea, Menu, Text, Button, Divider } from '@mantine/core';
 
 import { Edit2, Trash2 } from 'react-feather';
 import { IconDotsVertical } from '@tabler/icons';
@@ -13,7 +12,6 @@ import { IEngine } from '@contracts/engine-interface';
 
 export default function Automobile(/*props*/) {
   const modals = useModals();
-  const [activePage, setPage] = useState(1);
   const { data: dataEngines, mutate } = useSWR('/api/v1/engines/');
 
   const onDeleteData = async (engine: IEngine) => {
@@ -112,12 +110,12 @@ export default function Automobile(/*props*/) {
         </Text>
       )}
 
-      <div className="flex justify-between my-5 p-6">
+      {/* <div className="flex justify-between my-5 p-6">
         <Text color="#828282" size={14}>
           Show 10 from 1020 automobiles
         </Text>
         <Pagination page={activePage} onChange={setPage} total={10} />
-      </div>
+      </div> */}
     </>
   );
 }
