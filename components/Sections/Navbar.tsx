@@ -7,6 +7,7 @@ import Client from 'icons/Client';
 import Vendor from 'icons/Vendor';
 import Part from 'icons/Part';
 import Project from 'icons/Project';
+import Payroll from 'icons/Payroll';
 
 export default function NavbarComponent(props: any) {
   const sideMenus: ISidebar[] = [
@@ -57,6 +58,16 @@ export default function NavbarComponent(props: any) {
           label: 'Projects',
           link: '/project',
           icon: (color: string) => <Project color={color} width="20" height="20" />,
+        },
+      ],
+    },
+    {
+      group: 'Finance',
+      menus: [
+        {
+          label: 'Payroll',
+          link: '/payroll',
+          icon: (color: string) => <Payroll color={color} width="20" height="20" />,
         },
       ],
     },
