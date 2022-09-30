@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Group, TextInput, Button, Loader } from '@mantine/core';
+import { Group, TextInput, Loader, Anchor } from '@mantine/core';
 // import { X } from 'react-feather';
 import { IconFilter } from '@tabler/icons';
 
@@ -24,9 +24,16 @@ export default function SearchForm(props: any) {
         value={search}
         onChange={(event) => setSearch(event.currentTarget.value)}
       />
-      <Button rightIcon={<IconFilter />} variant="white" color="black" onClick={submitForm}>
-        Filter
-      </Button>
+      <Anchor
+        component="button"
+        className="flex text-sm text-black items-end justify-center flex-row"
+        onClick={submitForm}
+      >
+        <div className="flex bg-red mx-5">
+          <IconFilter />
+          Filter
+        </div>
+      </Anchor>
       {/* <Button onClick={cancelSearch} className="bg-gray-500 hover:bg-gray-500">
         <X />
       </Button> */}

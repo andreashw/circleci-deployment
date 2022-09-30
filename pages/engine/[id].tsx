@@ -3,7 +3,7 @@ import ListDetail from '@components/ListDetail';
 import HeadingTop from '@components/TopComponents/Heading';
 import { IEngine } from '@contracts/engine-interface';
 import { Divider, Grid, Text } from '@mantine/core';
-import Router, { useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 import { Fragment, Suspense } from 'react';
 import useSWR from 'swr';
 
@@ -16,7 +16,7 @@ function Detail() {
     <>
       <div className="flex flex-row items-center px-6 pb-6" style={{ backgroundColor: 'rgba(44, 44, 44, 0.05)' }}>
         {/* <div className="flex flex-row items-center px-6 pb-6" style={{ backgroundColor: 'red' }}> */}
-        <div className="pr-5 cursor-pointer" onClick={() => Router.back()}>
+        <div className="pr-5 cursor-pointer" onClick={() => router.back()}>
           {'<'}
         </div>
         <Text className="cursor-pointer" align="left" weight="bold" size="xl">

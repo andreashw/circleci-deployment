@@ -1,4 +1,4 @@
-import { Navbar, Text } from '@mantine/core';
+import { Navbar, ScrollArea, Text } from '@mantine/core';
 import LinksGroup from '@components/NavbarLinksGroup/NavbarLinksGroup';
 import { ISidebar } from '@contracts/navigation';
 import Automobile from 'icons/Automobile';
@@ -7,6 +7,8 @@ import Client from 'icons/Client';
 import Vendor from 'icons/Vendor';
 import Part from 'icons/Part';
 import Project from 'icons/Project';
+
+import JobReport from 'icons/JobReport';
 import Payroll from 'icons/Payroll';
 
 export default function NavbarComponent(props: any) {
@@ -59,6 +61,14 @@ export default function NavbarComponent(props: any) {
           link: '/project',
           icon: (color: string) => <Project color={color} width="20" height="20" />,
         },
+        {
+          label: 'Job Report',
+          icon: (color: string) => <JobReport color={color} width="20" height="20" />,
+          sub: [
+            { label: 'Hourly', link: '/jobreport/hourly', isSubMenu: true },
+            { label: 'Daily', link: '/jobreport/daily', isSubMenu: true },
+          ],
+        },
       ],
     },
     {
@@ -75,18 +85,20 @@ export default function NavbarComponent(props: any) {
 
   return (
     <Navbar hidden={!props.opened} width={{ sm: 140, lg: 240 }} style={{ paddingTop: -70 }}>
-      {sideMenus.map(({ group, menus }) => (
-        <Navbar.Section key={group}>
-          <Text size="xs" weight={500} style={{ padding: '14px', background: 'rgba(44, 44, 44, 0.05)' }}>
-            {group}
-          </Text>
-          <div>
-            {menus.map((item) => (
-              <LinksGroup key={item.label} {...item} />
-            ))}
-          </div>
-        </Navbar.Section>
-      ))}
+      <ScrollArea>
+        {sideMenus.map(({ group, menus }) => (
+          <Navbar.Section key={group}>
+            <Text size="xs" weight={500} style={{ padding: '14px', background: 'rgba(44, 44, 44, 0.05)' }}>
+              {group}
+            </Text>
+            <div>
+              {menus.map((item) => (
+                <LinksGroup key={item.label} {...item} />
+              ))}
+            </div>
+          </Navbar.Section>
+        ))}
+      </ScrollArea>
     </Navbar>
   );
 }

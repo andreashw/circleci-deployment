@@ -10,7 +10,7 @@ import { useModals } from '@mantine/modals';
 import { fetcher } from '@api/fetcher';
 import { IEngine } from '@contracts/engine-interface';
 
-export default function Automobile(/*props*/) {
+export default function Engine(/*props*/) {
   const modals = useModals();
   const { data: dataEngines, mutate } = useSWR('/api/v1/engines/');
 
