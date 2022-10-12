@@ -7,6 +7,7 @@ export interface IReportHourly {
   worker_id: number;
   Worker: IEngineer;
   start_hour: string;
+  end_hour: string;
   project_id: number;
   Project: IProject;
   department_id: number;
@@ -14,4 +15,6 @@ export interface IReportHourly {
   job_id: number;
   job_description: string;
   task: string;
+  title: string;
+  message: string;
 }

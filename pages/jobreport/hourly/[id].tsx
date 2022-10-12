@@ -11,7 +11,7 @@ import useSWR from 'swr';
 function Detail() {
   const router = useRouter();
   const id = router.query.id as unknown as number;
-  const { data } = useSWR<IReportHourly[]>(`/api/v1/jobs/${id}`);
+  const { data } = useSWR<IReportHourly>(`/api/v1/jobs/${id}`);
 
   return (
     <>
@@ -29,14 +29,14 @@ function Detail() {
           Details
         </Text>
         <Grid gutter="xl">
-          <ListDetail List="Date" IsiList={dayjs(data?.[0]?.date).format('ddd, DD MMM YYYY')} />
-          <ListDetail List="Worker" IsiList={data?.[0]?.Worker.name} />
-          <ListDetail List="Status Kerja" IsiList={data?.[0]?.status} />
-          <ListDetail List="Project" IsiList={data?.[0]?.Project.name} />
-          <ListDetail List="Department" IsiList={data?.[0]?.department_id as unknown as string} />
-          <ListDetail List="Hour" IsiList={data?.[0]?.start_hour} />
-          <ListDetail List="Job" IsiList={data?.[0]?.job_description} />
-          <ListDetail List="Task" IsiList={data?.[0]?.task} />
+          <ListDetail List="Date" IsiList={dayjs(data?.date).format('ddd, DD MMM YYYY')} />
+          <ListDetail List="Worker" IsiList={data?.Worker.name} />
+          <ListDetail List="Status Kerja" IsiList={data?.status} />
+          <ListDetail List="Project" IsiList={data?.Project.name} />
+          <ListDetail List="Department" IsiList={data?.department_id as unknown as string} />
+          <ListDetail List="Hour" IsiList={data?.start_hour} />
+          <ListDetail List="Job" IsiList={data?.job_description} />
+          <ListDetail List="Task" IsiList={data?.task} />
         </Grid>
       </div>
     </>

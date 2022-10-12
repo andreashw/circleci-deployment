@@ -1,7 +1,4 @@
-import { Table, ScrollArea, Menu, Text, Button, Divider } from '@mantine/core';
-
-import { Edit2, Trash2 } from 'react-feather';
-import { IconDotsVertical } from '@tabler/icons';
+import { Table, ScrollArea, Text, Button } from '@mantine/core';
 
 import dayjs from 'dayjs';
 import useSWR from 'swr';
@@ -34,26 +31,6 @@ export default function ReportDaily(/*props*/) {
         <td onClick={() => goToDetailPage(item)}>{dayjs(item.date).format('ddd, DD MMM YYYY')}</td>
         <td onClick={() => goToDetailPage(item)}>{item.worker}</td>
         <td onClick={() => goToDetailPage(item)}>{item.department}</td>
-        <td>
-          <Menu>
-            <Menu.Target>
-              {/* <Button variant="white" color={'red'}>Action</Button> */}
-              <div className="flex content-center items-center w-6 h-9 cursor-pointer">
-                <IconDotsVertical size={14} />
-              </div>
-            </Menu.Target>
-            <Menu.Dropdown>
-              <Menu.Label>{item.worker}</Menu.Label>
-              <Menu.Item icon={<Edit2 />} onClick={() => console.log('Flow Edit belum ada')}>
-                Edit
-              </Menu.Item>
-              <Divider />
-              <Menu.Item icon={<Trash2 />} onClick={() => console.log('Flow Delete belum ada')} color="red">
-                Delete
-              </Menu.Item>
-            </Menu.Dropdown>
-          </Menu>
-        </td>
       </tr>
     ));
 
@@ -79,7 +56,6 @@ export default function ReportDaily(/*props*/) {
                 <th className="w-80">Date</th>
                 <th className="w-[400px]">Worker</th>
                 <th className="w-[400px]">Department</th>
-                <th />
               </tr>
             </thead>
             <tbody>{body()}</tbody>

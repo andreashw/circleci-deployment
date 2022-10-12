@@ -10,6 +10,7 @@ import { showNotification } from '@mantine/notifications';
 import useSWR from 'swr';
 import { IEngineer } from '@contracts/enginers-interface';
 import { Dropdown } from '@components/Inputs/Dropdown';
+import dayjs from 'dayjs';
 
 function EditEngineer() {
   const router = useRouter();
@@ -27,7 +28,7 @@ function EditEngineer() {
     account_number: engineer?.[0]?.account_number,
     hourly_pay: engineer?.[0]?.hourly_pay,
     monthly_pay: engineer?.[0]?.monthly_pay,
-    first_work_date: engineer?.[0]?.first_work_date,
+    first_work_date: dayjs(engineer?.[0]?.first_work_date).toDate(),
     note: engineer?.[0]?.note,
   });
 
