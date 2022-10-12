@@ -1,10 +1,10 @@
 import { Grid, Text } from '@mantine/core';
 
-function ListDetail({ List = '', IsiList = '' }) {
+function ListDetail({ List = '', IsiList = '', classname = '' }) {
   return (
     <>
       <Grid.Col style={{ paddingTop: 0 }} md={2}>
-        <Text className="m-0" color="#828282" size={16}>
+        <Text className={`${classname} m-0`} color="#828282" size={16}>
           {List}
         </Text>
       </Grid.Col>

@@ -1,61 +1,58 @@
-import { ScrollArea, Drawer, Text, Table, Grid, Button } from '@mantine/core';
+import { ScrollArea, Drawer, Text, Table, Grid, Button, Select } from '@mantine/core';
 import { useState, useTransition } from 'react';
 import useSWR from 'swr';
-import Router from 'next/router';
+import { useRouter } from 'next/router';
 import { DatePicker } from '@mantine/dates';
 import HeadingTop from '@components/TopComponents/Heading';
+import { IPayroll } from '@contracts/payroll-interface';
+import { rp } from '@support/formatter';
+import { IconChevronDown } from '@tabler/icons';
 import useInput from '@hooks/useInput';
 import dayjs from 'dayjs';
-import { rp } from '@support/formatter';
 import { fetcher } from '@api/fetcher';
 import { showNotification } from '@mantine/notifications';
 
-function AddPayrollPage() {
+function EditPayrollPage() {
+  const router = useRouter();
+  const id = router.query.id as unknown as number;
+  const { data: Payroll } = useSWR<IPayroll>(`/api/v1/payrolls/${id}`);
   const [drawerOpened, toggleDrawer] = useState(false);
   const [, startTransition] = useTransition();
-
   const [input, handleInput] = useInput({
-    payroll_date: '',
-    start_date: '',
-    end_date: '',
-    status: 'New',
+    payroll_date: Payroll ? dayjs(Payroll.payroll_date).toDate() : '',
+    start_date: Payroll ? dayjs(Payroll.start_date).toDate() : '',
+    end_date: Payroll ? dayjs(Payroll.end_date).toDate() : '',
+    status: Payroll ? Payroll.status : '',
   });
-  const { data: dataPayroll } = useSWR(
-    input.start_date && input.end_date
-      ? `/api/v1/payrolls/get-data?start_date=${dayjs(input.start_date).format('YYYY-MM-DD')}&end_date=${dayjs(
-          input.end_date
-        ).format('YYYY-MM-DD')}`
-      : null
-  );
 
-  console.log('tes', dataPayroll, input.start_date);
+  // const { data: dataClients } = useSWR('/api/v1/clients/');
+
   const body = () =>
-    dataPayroll.payrolls.map((item: any, index: any) => (
+    Payroll?.payrolls.map((item: any, index: any) => (
       <tr key={index}>
-        <td className="cursor-pointer w-2/12" onClick={() => Router.push(`/client/${item.ID}`)}>
+        <td className="cursor-pointer w-2/12" onClick={() => router.push(`/client/${item.ID}`)}>
           {item.worker}
         </td>
-        <td className="cursor-pointer w-2/12" onClick={() => Router.push(`/client/${item.ID}`)}>
+        <td className="cursor-pointer w-2/12" onClick={() => router.push(`/client/${item.ID}`)}>
           {item.total_hm}
         </td>
-        <td className="cursor-pointer   w-2/12" onClick={() => Router.push(`/client/${item.ID}`)}>
+        <td className="cursor-pointer   w-2/12" onClick={() => router.push(`/client/${item.ID}`)}>
           {rp(item.hourly_pay)}
         </td>
-        <td className="cursor-pointer  text-right  w-2/12" onClick={() => Router.push(`/client/${item.ID}`)}>
+        <td className="cursor-pointer  w-2/12" onClick={() => router.push(`/client/${item.ID}`)}>
           {rp(item.total_pay)}
         </td>
       </tr>
     ));
-
   const clientPay = () =>
-    dataPayroll?.clients.map((item: any, index: any) => (
+    Payroll?.clients.map((item: any, index: any) => (
       <tr key={index}>
         <td />
         <td />
-        <td className="cursor-pointer   w-2/12" onClick={() => Router.push(`/client/${item.ID}`)}>
+        <td className="cursor-pointer   w-2/12" onClick={() => router.push(`/client/${item.ID}`)}>
           {item.name}
         </td>
-        <td className="cursor-pointer  text-right  w-2/12" onClick={() => Router.push(`/client/${item.ID}`)}>
+        <td className="cursor-pointer  w-2/12" onClick={() => router.push(`/client/${item.ID}`)}>
           {rp(item.total_pay)}
         </td>
       </tr>
@@ -63,14 +60,12 @@ function AddPayrollPage() {
 
   const doSubmit = async (e: any) => {
     e.preventDefault();
-    const response = await fetcher(
-      `/api/v1/payrolls/generate?start_date=${dayjs(input.start_date).format('YYYY-MM-DD')}&end_date=${dayjs(
-        input.end_date
-      ).format('YYYY-MM-DD')}&payroll_date=${dayjs(input.payroll_date).format('YYYY-MM-DD')}`,
-      {
-        method: 'POST',
-      }
-    );
+    const response = await fetcher(`/api/v1/payrolls/${id}`, {
+      method: 'PATCH',
+      body: {
+        status: input.status,
+      },
+    });
 
     if (response) {
       showNotification({
@@ -78,9 +73,10 @@ function AddPayrollPage() {
         message: 'Status payroll berhasil diubah',
         color: 'teal',
       });
-      Router.replace('/payroll');
+      router.replace('/payroll');
     }
   };
+  console.log('tes', input.start_date, handleInput('start_date', true));
 
   return (
     <>
@@ -94,8 +90,8 @@ function AddPayrollPage() {
           { title: 'Add New Payroll', href: '' },
         ]}
       />
-      <ScrollArea>
-        <form onSubmit={doSubmit}>
+      <form onSubmit={doSubmit}>
+        <ScrollArea>
           <div className="p-6">
             <Grid gutter="xl">
               <Grid.Col md={6}>
@@ -103,62 +99,80 @@ function AddPayrollPage() {
                   <DatePicker
                     placeholder="Select Date"
                     value={input.start_date}
-                    onChange={(v) => {
-                      startTransition(() => {
-                        handleInput('start_date', true)(v);
-                      });
-                    }}
+                    disabled
+                    onChange={handleInput('start_date', true)}
                     label="Periode"
                   />
                   <p className="p-3">-</p>
                   <DatePicker
-                    value={input.end_date}
-                    onChange={(v) => {
-                      startTransition(() => {
-                        handleInput('end_date', true)(v);
-                      });
-                    }}
                     placeholder="Select Date"
+                    value={input.end_date}
+                    disabled
+                    onChange={handleInput('end_date', true)}
                   />
                 </div>
               </Grid.Col>
               <Grid.Col md={6}>
-                <DatePicker placeholder="Select Date" label="Periode" />
+                <DatePicker
+                  placeholder="Select Date"
+                  value={input.payroll_date}
+                  disabled
+                  onChange={handleInput('payroll_date', true)}
+                  label="Periode"
+                />
+              </Grid.Col>
+            </Grid>
+            <Grid gutter="xl">
+              <Grid.Col md={6}>
+                <Select
+                  label="Status"
+                  placeholder="Select Status"
+                  rightSection={<IconChevronDown size={14} />}
+                  data={[
+                    { value: 'New', label: 'New' },
+                    { value: 'Done', label: 'Done' },
+                    { value: 'Pending', label: 'Pending' },
+                  ]}
+                  onChange={(v) => {
+                    startTransition(() => {
+                      handleInput('status', true)(v);
+                    });
+                  }}
+                  value={input.status}
+                />
               </Grid.Col>
             </Grid>
           </div>
-          {dataPayroll && dataPayroll.payrolls.length > 0 ? (
+          {Payroll && Payroll?.payrolls.length > 0 ? (
             <Table striped highlightOnHover>
               <thead>
                 <tr>
                   <th>Worker</th>
                   <th>Total MH</th>
                   <th>Hourly Pay</th>
-                  <th style={{ textAlign: 'end' }}>Total Pay</th>
+                  <th>Total Pay</th>
                 </tr>
               </thead>
               <tbody>
                 {body()}
                 <tr>
                   <td className="p-6 font-bold">Total</td>
-                  <td className="p-6">
-                    {dataPayroll.payrolls.reduce((prev: any, curr: any) => prev + curr.total_hm, 0)}
-                  </td>
+                  <td className="p-6">{Payroll.payrolls.reduce((prev, curr) => prev + curr.total_hm, 0)}</td>
                   <td />
-                  <td className="font-bold  text-right">{rp(dataPayroll?.total)}</td>
+                  <td className="font-bold">{rp(Payroll?.total)}</td>
                 </tr>
                 <tr>
                   <td className="p-6"> </td>
                   <td className="p-6"> </td>
                   <td className=" font-bold">Payment By </td>
-                  <td className="font-bold" />
+                  <td className="font-bold">{rp(Payroll?.total)}</td>
                 </tr>
                 {clientPay()}
                 <tr>
                   <td className="p-6"> </td>
                   <td className="p-6"> </td>
                   <td className=" font-bold">Total </td>
-                  <td className="font-bold text-right ">{rp(dataPayroll?.total)}</td>
+                  <td className="font-bold">{rp(Payroll?.total)}</td>
                 </tr>
                 <tr>
                   <td className="p-6"> </td>
@@ -177,10 +191,10 @@ function AddPayrollPage() {
               Test.
             </Text>
           )}
-        </form>
-      </ScrollArea>
+        </ScrollArea>
+      </form>
     </>
   );
 }
 
-export default AddPayrollPage;
+export default EditPayrollPage;

@@ -1,32 +1,50 @@
 import ListDetail from '@components/ListDetail';
 import HeadingTop from '@components/TopComponents/Heading';
+import { IPayroll } from '@contracts/payroll-interface';
 // import { IClient } from '@contracts/client-interface';
 import { Grid, ScrollArea, Table, Text } from '@mantine/core';
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
+import dayjs from 'dayjs';
+import { rp } from '@support/formatter';
 
 function DetilPatrollPage() {
   const router = useRouter();
-  // const id = router.query.id as unknown as number;
-  // const { data: Client } = useSWR<IClient[]>(`/api/v1/clients/${id}`);
-  const { data: dataClients } = useSWR('/api/v1/clients/');
+  const id = router.query.id as unknown as number;
+  const { data: Payroll } = useSWR<IPayroll>(`/api/v1/payrolls/${id}`);
+  console.log(Payroll?.payroll_date, 'tes');
+
   const body = () =>
-    dataClients.map((item: any, index: any) => (
+    Payroll?.payrolls.map((item: any, index: any) => (
       <tr key={index}>
         <td className="cursor-pointer w-2/12" onClick={() => router.push(`/client/${item.ID}`)}>
-          {item.name}
+          {item.worker}
         </td>
         <td className="cursor-pointer w-2/12" onClick={() => router.push(`/client/${item.ID}`)}>
-          {item.email}
+          {item.total_hm}
         </td>
         <td className="cursor-pointer   w-2/12" onClick={() => router.push(`/client/${item.ID}`)}>
-          {item.City.name}
+          {rp(item.hourly_pay)}
         </td>
-        <td className="cursor-pointer text-end  w-2/12" onClick={() => router.push(`/client/${item.ID}`)}>
-          {item.phone}
+        <td className="cursor-pointer  w-2/12" onClick={() => router.push(`/client/${item.ID}`)}>
+          {rp(item.total_pay)}
         </td>
       </tr>
     ));
+  const clientPay = () =>
+    Payroll?.clients.map((item: any, index: any) => (
+      <tr key={index}>
+        <td />
+        <td />
+        <td className="cursor-pointer   w-2/12" onClick={() => router.push(`/client/${item.ID}`)}>
+          {item.name}
+        </td>
+        <td className="cursor-pointer  w-2/12" onClick={() => router.push(`/client/${item.ID}`)}>
+          {rp(item.total_pay)}
+        </td>
+      </tr>
+    ));
+
   return (
     <>
       <HeadingTop
@@ -36,13 +54,25 @@ function DetilPatrollPage() {
           { title: 'Details Payroll', href: '' },
         ]}
       />
+      <div className="w-full p-6">
+        <Grid gutter="xl" className="mt-10">
+          <ListDetail
+            List="Periode Payroll"
+            classname=" font-bold text-black"
+            IsiList={`${dayjs(Payroll?.start_date).format('ddd, DD MMM YYYY')} - ${dayjs(Payroll?.end_date).format(
+              'ddd, DD MMM YYYY'
+            )}`}
+          />
+          <ListDetail
+            List="Payroll Date"
+            classname=" font-bold text-black"
+            IsiList={dayjs(Payroll?.payroll_date).format('ddd, DD MMM YYYY')}
+          />
+          <ListDetail List="Status" classname=" font-bold text-black" IsiList={Payroll?.status} />
+        </Grid>
+      </div>
 
-      <Grid gutter="xl" className="mt-10">
-        <ListDetail List="Periode Payroll" IsiList="Fri,29 Jul 22 - Thu,4 Aug 22" />
-        <ListDetail List="Payroll Date" IsiList="Sat, 6 Aug 22" />
-        <ListDetail List="Status" IsiList="Pending" />
-      </Grid>
-      {dataClients.length > 0 ? (
+      {Payroll && Payroll?.payrolls.length > 0 ? (
         <ScrollArea>
           <Table striped highlightOnHover>
             <thead>
@@ -50,56 +80,31 @@ function DetilPatrollPage() {
                 <th>Worker</th>
                 <th>Total MH</th>
                 <th>Hourly Pay</th>
-                <th style={{ textAlign: 'end' }} className=" text-end ">
-                  Total Pay
-                </th>
+                <th>Total Pay</th>
               </tr>
             </thead>
-            <tbody>{body()}</tbody>
-            <tfoot>
+            <tbody>
+              {body()}
               <tr>
                 <td className="p-6 font-bold">Total</td>
-                <td className="p-6">Total MH</td>
-                <th> </th>
-                <th style={{ textAlign: 'end' }} className=" text-end ">
-                  Rp 30.000.000
-                </th>
+                <td className="p-6">{Payroll.payrolls.reduce((prev, curr) => prev + curr.total_hm, 0)}</td>
+                <td />
+                <td className="font-bold">{rp(Payroll?.total)}</td>
               </tr>
-            </tfoot>
-          </Table>
-          <Table>
-            <tr>
-              <td className="p-6 font-bold"> </td>
-              <td className="p-6"> </td>
-              <th>Payment By </th>
-              <th style={{ textAlign: 'end' }} className=" text-end ">
-                {' '}
-              </th>
-            </tr>
-            <tr>
-              <td className="p-6 font-bold"> </td>
-              <td className="p-6"> </td>
-              <th>DS</th>
-              <th style={{ textAlign: 'end' }} className=" text-end ">
-                Rp 10.000.000
-              </th>
-            </tr>
-            <tr>
-              <td className="p-6 font-bold"> </td>
-              <td className="p-6"> </td>
-              <th>Kuno ID</th>
-              <th style={{ textAlign: 'end' }} className=" text-end ">
-                Rp 10.000.000
-              </th>
-            </tr>
-            <tr>
-              <td className="p-6 font-bold"> </td>
-              <td className="p-6"> </td>
-              <th>Total</th>
-              <th style={{ textAlign: 'end' }} className=" text-end ">
-                Rp 30.000.000
-              </th>
-            </tr>
+              <tr>
+                <td className="p-6"> </td>
+                <td className="p-6"> </td>
+                <td className=" font-bold">Payment By </td>
+                <td className="font-bold">{rp(Payroll?.total)}</td>
+              </tr>
+              {clientPay()}
+              <tr>
+                <td className="p-6"> </td>
+                <td className="p-6"> </td>
+                <td className=" font-bold">Total </td>
+                <td className="font-bold">{rp(Payroll?.total)}</td>
+              </tr>
+            </tbody>
           </Table>
         </ScrollArea>
       ) : (

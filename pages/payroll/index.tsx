@@ -3,64 +3,33 @@ import { useState } from 'react';
 import useSWR from 'swr';
 import SearchForm from '@components/Forms/Search';
 import Router from 'next/router';
-import { Edit2, Trash2 } from 'react-feather';
+import { Edit2 } from 'react-feather';
 import { IconDotsVertical } from '@tabler/icons';
-import { useModals } from '@mantine/modals';
-import { IClient } from '@contracts/client-interface';
-import { fetcher } from '@api/fetcher';
+import dayjs from 'dayjs';
+import { rp } from '@support/formatter';
 
 function PayrollPage() {
-  const modals = useModals();
   const [drawerOpened, toggleDrawer] = useState(false);
   const [activePage, setPage] = useState(1);
 
-  const { data: dataClients, mutate } = useSWR('/api/v1/clients/');
-  const onDeleteData = async (client: IClient) => {
-    console.log(client.ID);
-
-    const response: IClient | undefined = await fetcher(`/api/v1/clients/${client.ID}`, {
-      method: 'DELETE',
-    });
-    console.log('Response Delete from API ', response);
-    if (response) {
-      // Router.reload();
-      mutate();
-    }
-  };
-  function deleteProfile(client: IClient) {
-    console.log('====================================');
-    modals.openConfirmModal({
-      title: 'Delete',
-      children: (
-        <Text size="sm" lineClamp={2}>
-          Delete <b>{client.name}</b> Client Data ?
-        </Text>
-      ),
-      centered: true,
-      labels: { confirm: 'Yes', cancel: 'No' },
-      confirmProps: { className: 'bg-danger', color: 'red' },
-      onConfirm: () => onDeleteData(client),
-    });
-    console.log('====================================');
-    // const response: IClient | undefined = await fetcher('/api/v1/clients/' + id, {
-    //   method: 'DELETE',
-    // });
-  }
+  const { data: dataPayroll } = useSWR('/api/v1/payrolls/');
 
   const body = () =>
-    dataClients.map((item: any, index: any) => (
+    dataPayroll.map((item: any, index: any) => (
       <tr key={index}>
-        <td className="cursor-pointer w-2/12" onClick={() => Router.push(`/client/${item.ID}`)}>
-          {item.name}
+        <td className="cursor-pointer w-2/12" onClick={() => Router.push(`/payroll/${item.ID}`)}>
+          {dayjs(item?.payroll_date).format('ddd, DD MMM YYYY')}
         </td>
-        <td className="cursor-pointer w-2/12" onClick={() => Router.push(`/client/${item.ID}`)}>
-          {item.email}
+        <td className="cursor-pointer " onClick={() => Router.push(`/payroll/${item.ID}`)}>
+          {`${dayjs(item?.start_date).format('ddd, DD MMM YYYY')} - ${dayjs(item?.end_date).format(
+            'ddd, DD MMM YYYY'
+          )}`}
         </td>
-        <td className="cursor-pointer   w-2/12" onClick={() => Router.push(`/client/${item.ID}`)}>
-          {item.City.name}
+        <td className="cursor-pointer   w-2/12" onClick={() => Router.push(`/payroll/${item.ID}`)}>
+          {rp(item?.total)}
         </td>
-        <td className="cursor-pointer   w-2/12" onClick={() => Router.push(`/client/${item.ID}`)}>
-          {item.phone}
+        <td className="cursor-pointer   w-2/12" onClick={() => Router.push(`/payroll/${item.ID}`)}>
+          {item?.status}
         </td>
         <td className="cursor-pointer   w-2/12">
           <Menu>
@@ -80,7 +49,7 @@ function PayrollPage() {
             </Menu.Target>
             <Menu.Dropdown>
               <Menu.Label>{item.name}</Menu.Label>
-              <Menu.Item icon={<Edit2 />} onClick={() => Router.push(`/client/edit/${item.ID}`)}>
+              <Menu.Item icon={<Edit2 />} onClick={() => Router.push(`/payroll/edit/${item.ID}`)}>
                 Edit
               </Menu.Item>
               {/* <Menu.Item icon={<Send />} onClick={() => sendMessage(automobile)}>
@@ -90,9 +59,6 @@ function PayrollPage() {
             <Menu.Item icon={<Save />} onClick={() => copyProfile(automobile)}>
               Copy
             </Menu.Item> */}
-              <Menu.Item icon={<Trash2 />} onClick={() => deleteProfile(item)} color="red">
-                Delete User
-              </Menu.Item>
             </Menu.Dropdown>
           </Menu>
         </td>
@@ -115,7 +81,7 @@ function PayrollPage() {
           </Button>
         </div>
       </div>
-      {dataClients.length > 0 ? (
+      {dataPayroll.length > 0 ? (
         <ScrollArea>
           <Table striped highlightOnHover>
             <thead>
