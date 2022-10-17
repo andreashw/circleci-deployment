@@ -32,18 +32,10 @@ function AddPayrollPage() {
   const body = () =>
     dataPayroll.payrolls.map((item: any, index: any) => (
       <tr key={index}>
-        <td className="cursor-pointer w-2/12" onClick={() => Router.push(`/client/${item.ID}`)}>
-          {item.worker}
-        </td>
-        <td className="cursor-pointer w-2/12" onClick={() => Router.push(`/client/${item.ID}`)}>
-          {item.total_hm}
-        </td>
-        <td className="cursor-pointer   w-2/12" onClick={() => Router.push(`/client/${item.ID}`)}>
-          {rp(item.hourly_pay)}
-        </td>
-        <td className="cursor-pointer  text-right  w-2/12" onClick={() => Router.push(`/client/${item.ID}`)}>
-          {rp(item.total_pay)}
-        </td>
+        <td className=" w-2/12">{item.worker}</td>
+        <td className=" w-2/12">{item.total_hm}</td>
+        <td className="   w-2/12">{rp(item.hourly_pay)}</td>
+        <td className="  text-right  w-2/12">{rp(item.total_pay)}</td>
       </tr>
     ));
 
@@ -52,12 +44,8 @@ function AddPayrollPage() {
       <tr key={index}>
         <td />
         <td />
-        <td className="cursor-pointer   w-2/12" onClick={() => Router.push(`/client/${item.ID}`)}>
-          {item.name}
-        </td>
-        <td className="cursor-pointer  text-right  w-2/12" onClick={() => Router.push(`/client/${item.ID}`)}>
-          {rp(item.total_pay)}
-        </td>
+        <td className="   w-2/12">{item.name}</td>
+        <td className="  text-right  w-2/12">{rp(item.total_pay)}</td>
       </tr>
     ));
 
@@ -123,7 +111,16 @@ function AddPayrollPage() {
                 </div>
               </Grid.Col>
               <Grid.Col md={6}>
-                <DatePicker placeholder="Select Date" label="Periode" />
+                <DatePicker
+                  value={input.payroll_date}
+                  onChange={(v) => {
+                    startTransition(() => {
+                      handleInput('payroll_date', true)(v);
+                    });
+                  }}
+                  placeholder="Select Date"
+                  label="Payroll Date"
+                />
               </Grid.Col>
             </Grid>
           </div>

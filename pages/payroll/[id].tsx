@@ -17,18 +17,10 @@ function DetilPatrollPage() {
   const body = () =>
     Payroll?.payrolls.map((item: any, index: any) => (
       <tr key={index}>
-        <td className="cursor-pointer w-2/12" onClick={() => router.push(`/client/${item.ID}`)}>
-          {item.worker}
-        </td>
-        <td className="cursor-pointer w-2/12" onClick={() => router.push(`/client/${item.ID}`)}>
-          {item.total_hm}
-        </td>
-        <td className="cursor-pointer   w-2/12" onClick={() => router.push(`/client/${item.ID}`)}>
-          {rp(item.hourly_pay)}
-        </td>
-        <td className="cursor-pointer  w-2/12" onClick={() => router.push(`/client/${item.ID}`)}>
-          {rp(item.total_pay)}
-        </td>
+        <td className=" w-2/12">{item.worker}</td>
+        <td className=" w-2/12">{item.total_hm}</td>
+        <td className="   w-2/12">{rp(item.hourly_pay)}</td>
+        <td className="  w-2/12">{rp(item.total_pay)}</td>
       </tr>
     ));
   const clientPay = () =>
@@ -36,12 +28,8 @@ function DetilPatrollPage() {
       <tr key={index}>
         <td />
         <td />
-        <td className="cursor-pointer   w-2/12" onClick={() => router.push(`/client/${item.ID}`)}>
-          {item.name}
-        </td>
-        <td className="cursor-pointer  w-2/12" onClick={() => router.push(`/client/${item.ID}`)}>
-          {rp(item.total_pay)}
-        </td>
+        <td className="   w-2/12">{item.name}</td>
+        <td className="  w-2/12">{rp(item.total_pay)}</td>
       </tr>
     ));
 
