@@ -88,7 +88,7 @@ function VendorPage() {
             <Menu.Dropdown>
               <Menu.Label>{item.name}</Menu.Label>
               <Menu.Item icon={<Edit2 />} onClick={() => Router.push(`/vendor/edit/${item.ID}`)}>
-                Edit
+                Edit Vendor
               </Menu.Item>
               {/* <Menu.Item icon={<Send />} onClick={() => sendMessage(automobile)}>
               Send Message
@@ -98,7 +98,7 @@ function VendorPage() {
               Copy
             </Menu.Item> */}
               <Menu.Item icon={<Trash2 />} onClick={() => deleteProfile(item)} color="red">
-                Delete User
+                Delete Vendor
               </Menu.Item>
             </Menu.Dropdown>
           </Menu>
@@ -118,7 +118,7 @@ function VendorPage() {
         <div className="flex justify-between">
           <SearchForm />
           <Button className="bg-black hover:bg-black px-6" onClick={() => Router.push('/vendor/add')}>
-            Add New Clients
+            Add New Vendor
           </Button>
         </div>
       </div>
@@ -145,7 +145,7 @@ function VendorPage() {
       )}
       <div className="flex justify-between my-5 p-6">
         <Text color="#828282" size={14}>
-          Show 10 from 1020 clients
+          Show 10 from 1020 vendor
         </Text>
         <Pagination page={activePage} onChange={setPage} total={10} />
       </div>

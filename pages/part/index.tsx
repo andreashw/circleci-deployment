@@ -3,23 +3,23 @@ import { useState } from 'react';
 import { IconDotsVertical } from '@tabler/icons';
 import useSWR from 'swr';
 import { fetcher } from '@api/fetcher';
-import { IClient } from '@contracts/client-interface';
 import SearchForm from '@components/Forms/Search';
 import { Edit2, Trash2 } from 'react-feather';
 import Router from 'next/router';
 import { useModals } from '@mantine/modals';
+import { IParts } from '@contracts/parts-interface';
 
-function Clients() {
+function PartsPage() {
   const modals = useModals();
   const [drawerOpened, toggleDrawer] = useState(false);
   const [activePage, setPage] = useState(1);
 
-  const { data: dataClients, mutate } = useSWR('/api/v1/clients/');
+  const { data: dataParts, mutate } = useSWR('/api/v1/parts/');
 
-  const onDeleteData = async (client: IClient) => {
-    console.log(client.ID);
+  const onDeleteData = async (part: IParts) => {
+    console.log(part.ID);
 
-    const response: IClient | undefined = await fetcher(`/api/v1/clients/${client.ID}`, {
+    const response: IParts | undefined = await fetcher(`/api/v1/parts/${part.ID}`, {
       method: 'DELETE',
     });
     console.log('Response Delete from API ', response);
@@ -28,42 +28,41 @@ function Clients() {
       mutate();
     }
   };
-  function deleteProfile(client: IClient) {
+  function deleteProfile(part: IParts) {
     console.log('====================================');
     modals.openConfirmModal({
       title: 'Delete',
       children: (
         <Text size="sm" lineClamp={2}>
-          Delete <b>{client.name}</b> Client Data ?
+          Delete <b>{part.name_input}</b> Part Data ?
         </Text>
       ),
       centered: true,
       labels: { confirm: 'Yes', cancel: 'No' },
       confirmProps: { className: 'bg-danger', color: 'red' },
-      onConfirm: () => onDeleteData(client),
+      onConfirm: () => onDeleteData(part),
     });
     console.log('====================================');
-    // const response: IClient | undefined = await fetcher('/api/v1/clients/' + id, {
+    // const response: IParts | undefined = await fetcher('/api/v1/clients/' + id, {
     //   method: 'DELETE',
     // });
   }
 
   const body = () =>
-    dataClients.map((item: any, index: any) => (
+    dataParts.map((item: any, index: any) => (
       <tr key={index}>
-        <td className="cursor-pointer w-2/12" onClick={() => Router.push(`/client/${item.ID}`)}>
-          {item.name}
+        <td className="cursor-pointer w-2/12" onClick={() => Router.push(`/part/${item.ID}`)}>
+          {item.name_input}
         </td>
-        <td className="cursor-pointer w-2/12" onClick={() => Router.push(`/client/${item.ID}`)}>
-          {item.email}
+        <td className="cursor-pointer w-2/12" onClick={() => Router.push(`/part/${item.ID}`)}>
+          {item.brand_input}
         </td>
-        <td className="cursor-pointer  w-72  " onClick={() => Router.push(`/client/${item.ID}`)}>
-          <p className="truncate w-72">
-            {item.City.name}, {item.address}
-          </p>
+        <td className="cursor-pointer  w-72 " onClick={() => Router.push(`/part/${item.ID}`)}>
+          <p className="truncate w-72">{item.category}</p>
         </td>
-        <td className="cursor-pointer " onClick={() => Router.push(`/client/${item.ID}`)}>
-          {item.phone}
+
+        <td className="cursor-pointer " onClick={() => Router.push(`/part/${item.ID}`)}>
+          {item.material_input}
         </td>
         <td>
           <Menu>
@@ -83,8 +82,8 @@ function Clients() {
             </Menu.Target>
             <Menu.Dropdown>
               <Menu.Label>{item.name}</Menu.Label>
-              <Menu.Item icon={<Edit2 />} onClick={() => Router.push(`/client/edit/${item.ID}`)}>
-                Edit Client
+              <Menu.Item icon={<Edit2 />} onClick={() => Router.push(`/part/edit/${item.ID}`)}>
+                Edit Part
               </Menu.Item>
               {/* <Menu.Item icon={<Send />} onClick={() => sendMessage(automobile)}>
               Send Message
@@ -94,7 +93,7 @@ function Clients() {
               Copy
             </Menu.Item> */}
               <Menu.Item icon={<Trash2 />} onClick={() => deleteProfile(item)} color="red">
-                Delete Client
+                Delete Part
               </Menu.Item>
             </Menu.Dropdown>
           </Menu>
@@ -109,24 +108,24 @@ function Clients() {
       </Drawer>
       <div className="px-6 pt-6" style={{ backgroundColor: 'rgba(44, 44, 44, 0.05)' }}>
         <Text align="left" weight="bold" mb="xs" size="xl">
-          Clients
+          Parts
         </Text>
         <div className="flex justify-between">
           <SearchForm />
-          <Button className="bg-black hover:bg-black px-6" onClick={() => Router.push('/client/add')}>
-            Add New Clients
+          <Button className="bg-black hover:bg-black px-6" onClick={() => Router.push('/part/add')}>
+            Add New Parts
           </Button>
         </div>
       </div>
-      {dataClients.length > 0 ? (
+      {dataParts.length > 0 ? (
         <ScrollArea>
           <Table striped highlightOnHover>
             <thead>
               <tr>
                 <th>Name</th>
-                <th>Email</th>
-                <th>Address</th>
-                <th>Phone Number</th>
+                <th>Part Brand</th>
+                <th>Category</th>
+                <th>Part Material</th>
                 <th />
               </tr>
             </thead>
@@ -140,7 +139,7 @@ function Clients() {
       )}
       <div className="flex justify-between my-5 p-6">
         <Text color="#828282" size={14}>
-          Show 10 from 1020 clients
+          Show 10 from 1020 parts
         </Text>
         <Pagination page={activePage} onChange={setPage} total={10} />
       </div>
@@ -148,4 +147,4 @@ function Clients() {
   );
 }
 
-export default Clients;
+export default PartsPage;

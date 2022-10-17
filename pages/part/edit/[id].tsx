@@ -8,6 +8,7 @@ import { useRouter } from 'next/router';
 import Plus from 'icons/Plus';
 import Trash from 'icons/Trash';
 import useSWR from 'swr';
+import { IParts } from '@contracts/parts-interface';
 import { IVendor } from '@contracts/vendor-interface';
 
 const useStyles = createStyles(() => ({
@@ -24,30 +25,26 @@ const useStyles = createStyles(() => ({
     height: '56px',
   },
 }));
-function AddPartPage() {
+function EditPartPage() {
   const { classes } = useStyles();
   const router = useRouter();
+  const id = router.query.id as unknown as number;
+  const { data: Part } = useSWR<IParts[]>(`/api/v1/parts/${id}`);
+  const { data: dataVendor } = useSWR<IVendor[]>('/api/v1/vendors/');
 
   const [input, handleInput] = useInput({
-    name_input: '',
-    brand_input: '',
-    category: '',
-    material_input: '',
-    req_pcs_input: '',
-    req_unit: 'Pcs',
-    vendor: [
-      {
-        vendor_id: '',
-      },
-    ],
-    vendor_id: '',
+    name_input: Part ? Part[0]?.name_input : '',
+    brand_input: Part ? Part[0]?.brand_input : '',
+    category: Part ? Part[0]?.category : '',
+    material_input: Part ? Part[0]?.material_input : '',
+    req_pcs_input: Part ? Part[0]?.req_pcs_input : '',
+    req_unit: Part ? Part[0]?.req_unit : '',
+    vendor: Part ? Part[0]?.vendor_id : [],
   });
-
-  const { data: dataVendor } = useSWR<IVendor[]>('/api/v1/vendors/');
   const doSubmit = async (e: any) => {
     e.preventDefault();
-    const response = await fetcher('/api/v1/parts/', {
-      method: 'POST',
+    const response = await fetcher(`/api/v1/parts/${id}`, {
+      method: 'PATCH',
       body: {
         name_input: input.name_input,
         brand_input: input.brand_input,
@@ -62,7 +59,7 @@ function AddPartPage() {
     if (response) {
       showNotification({
         title: 'Success',
-        message: 'Part berhasil ditambahkan',
+        message: 'Part berhasil diubah',
         color: 'teal',
       });
       router.replace('/part');
@@ -90,6 +87,9 @@ function AddPartPage() {
       },
     ]);
   };
+  const removeVendor = (index: number) => {
+    handleInput('vendor', true)(input.vendor.filter((_: any, i: number) => i !== index));
+  };
   const handleInputVendor = (index: number) => (val: any) => {
     handleInput(
       'vendor',
@@ -106,12 +106,7 @@ function AddPartPage() {
       })
     );
   };
-  const removeVendor = (index: number) => {
-    handleInput('vendor', true)(input.vendor.filter((_: any, i: number) => i !== index));
-  };
-  console.log('====================================');
-  console.log(input, input.vendor[0].vendor_id);
-  console.log('====================================');
+
   return (
     <>
       <HeadingTop
@@ -218,7 +213,7 @@ function AddPartPage() {
                           <div className="flex h-max items-end pb-[3px]">
                             <Trash color="red" width="16" height="16" />
                           </div>
-                          <Text className="pl-2">Delete transmission</Text>
+                          <Text className="pl-2">Delete Vendor</Text>
                         </Anchor>
                       )}
                     </div>
@@ -228,7 +223,7 @@ function AddPartPage() {
                     placeholder="Select Vendor"
                     rightSection={<IconChevronDown size={14} />}
                     data={dataVendor ? dataVendor.map((y) => ({ value: y.ID.toString(), label: y.name })) : []}
-                    value={input.vendor[ti].vendor_id.toString()}
+                    value={input.vendor?.[ti].vendor_id.toString()}
                     onChange={handleInputVendor(ti)}
                   />
                 </>
@@ -254,4 +249,4 @@ function AddPartPage() {
   );
 }
 
-export default AddPartPage;
+export default EditPartPage;
