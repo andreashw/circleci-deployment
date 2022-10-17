@@ -28,8 +28,8 @@ function DetilClientPage() {
           <ListDetail List="Email" IsiList={Client ? Client[0]?.email : ''} />
           <ListDetail List="Address" IsiList={Client ? Client[0]?.phone : ''} />
           <ListDetail List="Phone Number" IsiList={Client ? Client[0]?.address : ''} />
-          <ListDetail List="City" IsiList={Client ? Client[0]?.City?.name.toString() : ''} />
-          <ListDetail List="Province" IsiList={Client ? Client[0]?.Province?.name.toString() : ''} />
+          <ListDetail List="City" IsiList={Client ? Client[0]?.City?.name?.toString() : ''} />
+          <ListDetail List="Province" IsiList={Client ? Client[0]?.Province?.name?.toString() : ''} />
           <ListDetail List="Notes" IsiList={Client ? Client[0]?.notes : ''} />
         </Grid>
       </div>
