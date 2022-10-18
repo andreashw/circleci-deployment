@@ -18,7 +18,8 @@
     "storybook": "start-storybook -p 7001",
     "storybook:build": "build-storybook",
     "format": "npm run prettier:write && npm run lint",
-	"deploy_dev_Win": "service/.\\deploy_dev.sh"
+	"deploy_dev_win": "service/.\\deploy_dev.sh",
+	"deploy_win": "service/.\\deploy.sh"
   },
   "dependencies": {
     "@emotion/react": "^11.10.0",

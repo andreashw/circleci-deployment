@@ -40,5 +40,8 @@ service/*
 # storybook
 storybook-static
 
-#env
+# env
 .env
+
+# zip
+armsbuild.zip
