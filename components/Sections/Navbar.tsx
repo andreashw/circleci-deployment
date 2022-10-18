@@ -26,7 +26,7 @@ export default function NavbarComponent(props: any) {
           icon: (color: string) => <Power color={color} width="20" height="20" />,
           sub: [
             { label: 'Engine', link: '/engine', isSubMenu: true },
-            { label: 'EV', link: '/ev', isSubMenu: true },
+            { label: 'EV', link: '#', isSubMenu: true },
           ],
         },
 

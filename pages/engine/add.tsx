@@ -15,8 +15,8 @@ import { fetcher } from '@api/fetcher';
 import { showNotification } from '@mantine/notifications';
 
 function AddEngine(/*props*/) {
-  const { data: AutomobileManufacture } = useSWR<IAutomobileManufactures[]>('/api/v1/automobiles-manufactures/');
-  const { data: AutomobileLayout } = useSWR<IAutomobileLayouts[]>('/api/v1/automobiles-layouts/');
+  const { data: EngineManufacture } = useSWR<IAutomobileManufactures[]>('/api/v1/engine-manufactures/');
+  const { data: EngineLayout } = useSWR<IAutomobileLayouts[]>('/api/v1/engine-layouts/');
   const [input, handleInput] = useInput({
     engine_name: '',
     manufacture: '',
@@ -266,7 +266,7 @@ function AddEngine(/*props*/) {
             <Grid.Col md={6}>
               <Dropdown
                 label="Manufacture"
-                data={AutomobileManufacture?.map(({ ID, name }) => ({ value: ID.toString(), label: name })) || []}
+                data={EngineManufacture?.map(({ ID, name }) => ({ value: ID.toString(), label: name })) || []}
                 onChange={handleInput('manufacture', true)}
               />
             </Grid.Col>
@@ -356,7 +356,7 @@ function AddEngine(/*props*/) {
             <Grid.Col md={6}>
               <Dropdown
                 label="Layout"
-                data={AutomobileLayout?.map(({ ID, name }) => ({ value: ID.toString(), label: name })) || []}
+                data={EngineLayout?.map(({ ID, name }) => ({ value: ID.toString(), label: name })) || []}
                 onChange={handleInput('layout', true)}
               />
             </Grid.Col>

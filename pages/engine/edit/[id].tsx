@@ -19,8 +19,8 @@ function EditEngine(/*props*/) {
   const router = useRouter();
   const id = router.query.id as unknown as number;
   const { data, mutate } = useSWR<IEngine[]>(`/api/v1/engines/${id}`);
-  const { data: AutomobileManufacture } = useSWR<IAutomobileManufactures[]>('/api/v1/automobiles-manufactures/');
-  const { data: AutomobileLayout } = useSWR<IAutomobileLayouts[]>('/api/v1/automobiles-layouts/');
+  const { data: EngineManufacture } = useSWR<IAutomobileManufactures[]>('/api/v1/engine-manufactures/');
+  const { data: EngineLayout } = useSWR<IAutomobileLayouts[]>('/api/v1/engine-layouts/');
 
   const [input, handleInput] = useInput({
     engine_name: data?.[0].name,
@@ -277,7 +277,7 @@ function EditEngine(/*props*/) {
               <Dropdown
                 label="Manufacture"
                 value={input.manufacture.toString()}
-                data={AutomobileManufacture?.map(({ ID, name }) => ({ value: ID.toString(), label: name })) || []}
+                data={EngineManufacture?.map(({ ID, name }) => ({ value: ID.toString(), label: name })) || []}
                 onChange={handleInput('manufacture', true)}
               />
             </Grid.Col>
@@ -368,7 +368,7 @@ function EditEngine(/*props*/) {
               <Dropdown
                 label="Layout"
                 value={input.layout.toString()}
-                data={AutomobileLayout?.map(({ ID, name }) => ({ value: ID.toString(), label: name })) || []}
+                data={EngineLayout?.map(({ ID, name }) => ({ value: ID.toString(), label: name })) || []}
                 onChange={handleInput('layout', true)}
               />
             </Grid.Col>
