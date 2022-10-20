@@ -1,4 +1,4 @@
-import { ScrollArea, Pagination, Drawer, Text, Table, Menu, Button } from '@mantine/core';
+import { ScrollArea, Drawer, Text, Table, Menu, Button } from '@mantine/core';
 import { useState } from 'react';
 import { IconDotsVertical } from '@tabler/icons';
 import useSWR from 'swr';
@@ -12,7 +12,6 @@ import { IVendor } from '@contracts/vendor-interface';
 function VendorPage() {
   const modals = useModals();
   const [drawerOpened, toggleDrawer] = useState(false);
-  const [activePage, setPage] = useState(1);
 
   const { data: dataVendor, mutate } = useSWR('/api/v1/vendors/');
 
@@ -111,7 +110,7 @@ function VendorPage() {
       <Drawer opened={drawerOpened} onClose={() => toggleDrawer(false)} title="Modify user" padding="xl" size="xl">
         {/* <EditUserForm data={selectedProfileData} submitForm={onSubmitEditForm} /> */}
       </Drawer>
-      <div className="px-6 pt-6" style={{ backgroundColor: 'rgba(44, 44, 44, 0.05)' }}>
+      <div className="px-6 pt-6">
         <Text align="left" weight="bold" mb="xs" size="xl">
           Vendor
         </Text>
@@ -139,16 +138,16 @@ function VendorPage() {
           </Table>
         </ScrollArea>
       ) : (
-        <Text align="center" weight="bold">
-          Test.
+        <Text className="my-5" align="center" weight="bold">
+          Tidak ada data.
         </Text>
       )}
-      <div className="flex justify-between my-5 p-6">
+      {/* <div className="flex justify-between my-5 p-6">
         <Text color="#828282" size={14}>
           Show 10 from 1020 vendor
         </Text>
         <Pagination page={activePage} onChange={setPage} total={10} />
-      </div>
+      </div> */}
     </>
   );
 }

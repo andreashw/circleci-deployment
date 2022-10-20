@@ -1,4 +1,4 @@
-import { ScrollArea, Pagination, Drawer, Text, Table, Button, Menu } from '@mantine/core';
+import { ScrollArea, Drawer, Text, Table, Button, Menu } from '@mantine/core';
 import { useState } from 'react';
 import useSWR from 'swr';
 import SearchForm from '@components/Forms/Search';
@@ -10,7 +10,6 @@ import { rp } from '@support/formatter';
 
 function PayrollPage() {
   const [drawerOpened, toggleDrawer] = useState(false);
-  const [activePage, setPage] = useState(1);
 
   const { data: dataPayroll } = useSWR('/api/v1/payrolls/');
 
@@ -70,7 +69,7 @@ function PayrollPage() {
       <Drawer opened={drawerOpened} onClose={() => toggleDrawer(false)} title="Modify user" padding="xl" size="xl">
         {/* <EditUserForm data={selectedProfileData} submitForm={onSubmitEditForm} /> */}
       </Drawer>
-      <div className="px-6 pt-6" style={{ backgroundColor: 'rgba(44, 44, 44, 0.05)' }}>
+      <div className="px-6 pt-6">
         <Text align="left" weight="bold" mb="xs" size="xl">
           Payroll
         </Text>
@@ -97,16 +96,16 @@ function PayrollPage() {
           </Table>
         </ScrollArea>
       ) : (
-        <Text align="center" weight="bold">
-          Test.
+        <Text className="my-5" align="center" weight="bold">
+          Tidak ada data.
         </Text>
       )}
-      <div className="flex justify-between my-5 p-6">
+      {/* <div className="flex justify-between my-5 p-6">
         <Text color="#828282" size={14}>
           Show 10 from 1020 clients
         </Text>
         <Pagination page={activePage} onChange={setPage} total={10} />
-      </div>
+      </div> */}
     </>
   );
 }

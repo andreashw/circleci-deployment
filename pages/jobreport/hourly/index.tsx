@@ -145,7 +145,7 @@ export default function ReportHourly(/*props*/) {
           </Table>
         </ScrollArea>
       ) : (
-        <Text align="center" weight="bold">
+        <Text className="my-5" align="center" weight="bold">
           Tidak ada data.
         </Text>
       )}
