@@ -157,6 +157,13 @@ function AddJobReportPage() {
                 data={[
                   { value: '1', label: 'Metalwork' },
                   { value: '2', label: 'Body' },
+				  { value: '3', label: 'Mechanical' },
+				  { value: '4', label: 'Electrical' },
+				  { value: '5', label: 'Upholstery' },
+				  { value: '6', label: 'General' },
+				  { value: '7', label: 'Blasting' },
+				  { value: '8', label: 'Powder Coating' },
+				  { value: '9', label: 'Electroplating' },
                 ]}
               />
             </Grid.Col>
