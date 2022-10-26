@@ -13,6 +13,7 @@ import { useModals } from '@mantine/modals';
 import useInput from '@hooks/useInput';
 import { useEffect, useTransition } from 'react';
 import { showNotification } from '@mantine/notifications';
+import Lock from 'icons/Lock';
 
 export default function ReportHourly(/*props*/) {
   const router = useRouter();
@@ -53,8 +54,26 @@ export default function ReportHourly(/*props*/) {
     const response: IReportHourly | undefined = await fetcher(`/api/v1/jobs/${item.ID}`, {
       method: 'DELETE',
     });
-    if (response) {
+    console.log(response);
+    if (response?.title === 'Not Deletable') {
+      showNotification({
+        title: 'Delete Failed',
+        message: response?.message,
+        color: 'red',
+      });
+    } else if (response?.title === 'Deletable') {
+      showNotification({
+        title: 'Delete Success',
+        message: response?.message,
+        color: 'teal',
+      });
       mutate();
+    } else {
+      showNotification({
+        title: 'Error',
+        message: 'Oops! something went wrong.',
+        color: 'red',
+      });
     }
   };
 
@@ -82,33 +101,66 @@ export default function ReportHourly(/*props*/) {
   const body = () =>
     dataReportHourly.map((item: IReportHourly, index: any) => (
       <tr key={index}>
-        <td onClick={() => router.push(`/jobreport/hourly/${item.ID}`)}>
+        <td
+          onClick={() => router.push(`/jobreport/hourly/${item.ID}`)}
+          style={{ color: item.paid === true ? '#828282' : 'black' }}
+        >
           {dayjs(item.date).format('ddd, DD MMM YYYY')}
         </td>
-        <td onClick={() => router.push(`/jobreport/hourly/${item.ID}`)}>{item.Worker.name}</td>
-        <td onClick={() => router.push(`/jobreport/hourly/${item.ID}`)}>{item.Project.name}</td>
-        <td onClick={() => router.push(`/jobreport/hourly/${item.ID}`)}>{item.department_id}</td>
-        <td onClick={() => router.push(`/jobreport/hourly/${item.ID}`)}>{item.start_hour}</td>
-        <td onClick={() => router.push(`/jobreport/hourly/${item.ID}`)}>{item.task}</td>
+        <td
+          onClick={() => router.push(`/jobreport/hourly/${item.ID}`)}
+          style={{ color: item.paid === true ? '#828282' : 'black' }}
+        >
+          {item.Worker.name}
+        </td>
+        <td
+          onClick={() => router.push(`/jobreport/hourly/${item.ID}`)}
+          style={{ color: item.paid === true ? '#828282' : 'black' }}
+        >
+          {item.Project.name}
+        </td>
+        <td
+          onClick={() => router.push(`/jobreport/hourly/${item.ID}`)}
+          style={{ color: item.paid === true ? '#828282' : 'black' }}
+        >
+          {item.department_id}
+        </td>
+        <td
+          onClick={() => router.push(`/jobreport/hourly/${item.ID}`)}
+          style={{ color: item.paid === true ? '#828282' : 'black' }}
+        >
+          {item.start_hour}
+        </td>
+        <td
+          onClick={() => router.push(`/jobreport/hourly/${item.ID}`)}
+          style={{ color: item.paid === true ? '#828282' : 'black' }}
+        >
+          {item.task}
+        </td>
         <td>
-          <Menu>
-            <Menu.Target>
-              {/* <Button variant="white" color={'red'}>Action</Button> */}
-              <div className="flex content-center items-center w-6 h-9 cursor-pointer">
-                <IconDotsVertical size={14} />
-              </div>
-            </Menu.Target>
-            <Menu.Dropdown>
-              <Menu.Label>{item.Worker.name}</Menu.Label>
-              <Menu.Item icon={<Edit2 />} onClick={() => checkEditable(item)}>
-                Edit
-              </Menu.Item>
-              <Divider />
-              <Menu.Item icon={<Trash2 />} onClick={() => deleteData(item)} color="red">
-                Delete
-              </Menu.Item>
-            </Menu.Dropdown>
-          </Menu>
+          {item.paid === true ? (
+            <div className="flex content-center items-center w-6 h-9">
+              <Lock color="#828282" width="20" height="20" />
+            </div>
+          ) : (
+            <Menu>
+              <Menu.Target>
+                <div className="flex content-center items-center w-6 h-9 cursor-pointer">
+                  <IconDotsVertical size={14} />
+                </div>
+              </Menu.Target>
+              <Menu.Dropdown>
+                <Menu.Label>{item.Worker.name}</Menu.Label>
+                <Menu.Item icon={<Edit2 />} onClick={() => checkEditable(item)}>
+                  Edit
+                </Menu.Item>
+                <Divider />
+                <Menu.Item icon={<Trash2 />} onClick={() => deleteData(item)} color="red">
+                  Delete
+                </Menu.Item>
+              </Menu.Dropdown>
+            </Menu>
+          )}
         </td>
       </tr>
     ));
@@ -145,7 +197,7 @@ export default function ReportHourly(/*props*/) {
           </Table>
         </ScrollArea>
       ) : (
-        <Text align="center" weight="bold">
+        <Text className="my-5" align="center" weight="bold">
           Tidak ada data.
         </Text>
       )}

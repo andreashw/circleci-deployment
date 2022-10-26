@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { Table, ScrollArea, Menu, Text, Pagination, Button, Divider } from '@mantine/core';
+import { Table, ScrollArea, Menu, Text, Button, Divider } from '@mantine/core';
 
 import { Edit2, Trash2 } from 'react-feather';
 import { IconDotsVertical } from '@tabler/icons';
@@ -15,7 +14,6 @@ import { showNotification } from '@mantine/notifications';
 
 export default function Engineer(/*props*/) {
   const modals = useModals();
-  const [activePage, setPage] = useState(1);
   const { data: dataEngineers, mutate } = useSWR('/api/v1/workers/');
 
   const onDeleteData = (engineer: IEngineer) => {
@@ -80,7 +78,7 @@ export default function Engineer(/*props*/) {
 
   return (
     <>
-      <div className="px-6 pt-6" style={{ backgroundColor: 'rgba(44, 44, 44, 0.05)' }}>
+      <div className="px-6 pt-6">
         <Text align="left" weight="bold" mb="xs" size="xl">
           Engineer
         </Text>
@@ -109,17 +107,17 @@ export default function Engineer(/*props*/) {
           </Table>
         </ScrollArea>
       ) : (
-        <Text align="center" weight="bold">
+        <Text className="my-5" align="center" weight="bold">
           Tidak ada data.
         </Text>
       )}
 
-      <div className="flex justify-between my-5 p-6">
+      {/* <div className="flex justify-between my-5 p-6">
         <Text color="#828282" size={14}>
           Show {dataEngineers.length} from {dataEngineers.length} engineers
         </Text>
         <Pagination page={activePage} onChange={setPage} total={10} />
-      </div>
+      </div> */}
     </>
   );
 }

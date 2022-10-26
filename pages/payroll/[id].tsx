@@ -96,8 +96,8 @@ function DetilPatrollPage() {
           </Table>
         </ScrollArea>
       ) : (
-        <Text align="center" weight="bold">
-          Test.
+        <Text className="my-5" align="center" weight="bold">
+          Tidak ada data.
         </Text>
       )}
     </>

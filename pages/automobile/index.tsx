@@ -77,7 +77,7 @@ export default function Automobile(/*props*/) {
 
   return (
     <>
-      <div className="px-6 pt-6" style={{ backgroundColor: 'rgba(44, 44, 44, 0.05)' }}>
+      <div className="px-6 pt-6">
         <Text align="left" weight="bold" mb="xs" size="xl">
           Automobile
         </Text>
@@ -107,7 +107,7 @@ export default function Automobile(/*props*/) {
           </Table>
         </ScrollArea>
       ) : (
-        <Text align="center" weight="bold">
+        <Text className="my-5" align="center" weight="bold">
           Tidak ada data.
         </Text>
       )}
