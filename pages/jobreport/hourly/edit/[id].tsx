@@ -23,7 +23,7 @@ function EditHourly() {
   const { data: hourly, mutate } = useSWR<IReportHourly>(`/api/v1/jobs/${id}`);
   const [input, handleInput] = useInput({
     report_date: dayjs(hourly?.date).toDate(),
-    worker: hourly?.worker_id,
+    engineer: hourly?.worker_id,
     start_hour: hourly?.start_hour,
     end_hour: hourly?.end_hour,
     project: hourly?.project_id,
@@ -108,7 +108,7 @@ function EditHourly() {
             <Grid.Col md={6}>
               <Dropdown
                 label="Engineer"
-                value={input.worker?.toString()}
+                value={input.engineer?.toString()}
                 data={dataEngineers?.map(({ ID, name }) => ({ value: ID.toString(), label: name })) || []}
                 onChange={handleInput('engineer', true)}
               />

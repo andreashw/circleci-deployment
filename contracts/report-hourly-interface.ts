@@ -15,6 +15,7 @@ export interface IReportHourly {
   job_id: number;
   job_description: string;
   task: string;
+  paid: boolean;
   title: string;
   message: string;
 }
