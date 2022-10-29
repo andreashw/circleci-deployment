@@ -12,7 +12,7 @@ import { fetcher } from '@api/fetcher';
 import ErrorBoundary from '@components/ErrorBoundary';
 
 function Application({ Component, pageProps }: { Component: any; pageProps: any }) {
-  const [opened, setOpened] = useState(false);
+  const [opened, showMenu] = useState(false);
   const [colorScheme, setColorScheme] = useState('dark');
   const [isLoading, setLoading] = useState(true);
 
@@ -104,8 +104,8 @@ function Application({ Component, pageProps }: { Component: any; pageProps: any 
           <ModalsProvider>
             <AppShell
               // padding="lg"
-              header={<Header opened={opened} setOpened={setOpened} toggleColorScheme={toggleColorScheme} />}
-              navbar={<Navbar opened={opened} />}
+              header={<Header opened={opened} setOpened={showMenu} toggleColorScheme={toggleColorScheme} />}
+              navbar={<Navbar opened={opened} showMenu={showMenu} />}
               styles={() => ({
                 main: {
                   backgroundColor: '#FFFFFF',

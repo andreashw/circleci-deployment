@@ -16,10 +16,10 @@ export default function SearchForm(props: any) {
   // };
 
   return (
-    <Group mb={20}>
+    <Group mb={20} className="w-full">
       <TextInput
-        placeholder={`Search ${props.searchName}`}
-        style={{ minWidth: 395, flexGrow: 0 }}
+        className="max-w-sm"
+        placeholder={`Search ${props.searchName ? props.searchName : ''}`}
         rightSection={props.loading && <Loader size="xs" />}
         value={search}
         onChange={(event) => setSearch(event.currentTarget.value)}

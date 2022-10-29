@@ -1,9 +1,11 @@
 export interface ILinkGroup {
+  props?: any;
   icon: any;
   label: string;
   link?: string;
   initiallyOpened?: boolean;
   sub?: ILink[];
+  showMenu?: any;
 }
 
 export interface ILink {
@@ -15,6 +17,8 @@ export interface ILink {
 
 export interface ILinkProps extends ILink {
   active: boolean;
+  onClicked?: () => void;
+  props?: any;
 }
 
 export interface ISidebar {

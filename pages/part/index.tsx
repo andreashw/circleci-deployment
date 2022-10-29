@@ -109,7 +109,7 @@ function PartsPage() {
         <Text align="left" weight="bold" mb="xs" size="xl">
           Parts
         </Text>
-        <div className="flex justify-between">
+        <div className="flex flex-col sm:flex-row pb-4 sm:pb-0">
           <SearchForm />
           <Button className="bg-black hover:bg-black px-6" onClick={() => Router.push('/part/add')}>
             Add New Parts
@@ -118,7 +118,7 @@ function PartsPage() {
       </div>
       {dataParts.length > 0 ? (
         <ScrollArea>
-          <Table striped highlightOnHover>
+          <Table draggable="false" striped highlightOnHover>
             <thead>
               <tr>
                 <th>Name</th>

@@ -7,6 +7,7 @@
 }
 
 .mantine-AppShell-main {
+  /* width: auto; */
   padding-top: 70px;
   padding-left: 0;
   @media screen(lg) {
@@ -37,5 +38,5 @@
 
 .mantine-Select-input {
   display: flex;
-  padding-right: 20px;;
+  padding-right: 20px;
 }

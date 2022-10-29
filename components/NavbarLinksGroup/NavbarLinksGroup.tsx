@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Group, Collapse, Text, UnstyledButton, createStyles, Anchor } from '@mantine/core';
 import { IconChevronLeft, IconChevronRight } from '@tabler/icons';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
+import Router, { useRouter } from 'next/router';
 import { ILinkProps, ILinkGroup } from '@contracts/navigation';
 
 const useStyles = createStyles((theme) => ({
@@ -25,7 +24,7 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-function NavLink({ icon, label, link, active, isSubMenu }: ILinkProps) {
+function NavLink({ icon, label, link, active, isSubMenu, onClicked }: ILinkProps) {
   const [color, setColor] = useState('#828282');
   const [style, setStyle] = useState({});
   const [isLink, setIslink] = useState(false);
@@ -43,10 +42,17 @@ function NavLink({ icon, label, link, active, isSubMenu }: ILinkProps) {
     setIslink(Boolean(link));
   }, [active]);
 
+  const openLink = (_link: string) => {
+    if (onClicked) {
+      onClicked();
+    }
+    Router.push(_link);
+  };
+
   return (
     <>
       {isLink ? (
-        <Anchor href={link as string} component={Link}>
+        <Anchor onClick={() => openLink(link || '')} component="button" className="w-full">
           <div style={style}>
             {icon && icon('black')}
             <Text className="cursor-pointer" style={{ marginLeft: isSubMenu ? 40 : 20, color }}>
@@ -68,7 +74,7 @@ function NavLink({ icon, label, link, active, isSubMenu }: ILinkProps) {
   );
 }
 
-export default function LinksGroup({ icon, label, sub, link }: ILinkGroup) {
+export default function LinksGroup({ icon, label, sub, link, showMenu }: ILinkGroup) {
   const router = useRouter();
   const { classes, theme } = useStyles();
   const hasLinks = Array.isArray(sub);
@@ -77,9 +83,15 @@ export default function LinksGroup({ icon, label, sub, link }: ILinkGroup) {
 
   return (
     <>
-      <UnstyledButton onClick={() => setOpened((o) => !o)} className={classes.control}>
+      <UnstyledButton onClick={() => setOpened((o) => !o)} className={classes.control} component="div">
         <Group position="apart" spacing={0}>
-          <NavLink label={label} icon={icon} link={link} active={link ? router.asPath.includes(link || '') : false} />
+          <NavLink
+            label={label}
+            icon={icon}
+            link={link}
+            active={link ? router.asPath.includes(link || '') : false}
+            onClicked={() => showMenu(false)}
+          />
           {hasLinks && (
             <ChevronIcon
               className={classes.chevron}
@@ -95,7 +107,12 @@ export default function LinksGroup({ icon, label, sub, link }: ILinkGroup) {
       {hasLinks ? (
         <Collapse in={opened}>
           {sub.map((menu) => (
-            <NavLink key={menu.label} active={menu.link ? router.asPath.includes(menu.link) : false} {...menu} />
+            <NavLink
+              key={menu.label}
+              active={menu.link ? router.asPath.includes(menu.link) : false}
+              onClicked={() => showMenu(false)}
+              {...menu}
+            />
           ))}
         </Collapse>
       ) : null}

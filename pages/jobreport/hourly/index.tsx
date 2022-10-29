@@ -171,7 +171,7 @@ export default function ReportHourly(/*props*/) {
         <Text align="left" weight="bold" mb="xs" size="xl">
           Job Report Hourly
         </Text>
-        <div className="flex justify-between">
+        <div className="flex flex-col sm:flex-row pb-4 sm:pb-0">
           <SearchForm searchName="Job Report Hourly " />
           <Button className="bg-black hover:bg-black px-6" onClick={() => goToAddReport()}>
             Add New Job Report

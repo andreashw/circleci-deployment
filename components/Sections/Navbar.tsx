@@ -93,7 +93,7 @@ export default function NavbarComponent(props: any) {
             </Text>
             <div>
               {menus.map((item) => (
-                <LinksGroup key={item.label} {...item} />
+                <LinksGroup key={item.label} {...item} showMenu={props.showMenu} />
               ))}
             </div>
           </Navbar.Section>

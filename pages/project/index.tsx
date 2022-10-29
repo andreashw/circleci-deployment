@@ -119,7 +119,7 @@ function ProjectPage() {
         <Text align="left" weight="bold" mb="xs" size="xl">
           Project
         </Text>
-        <div className="flex justify-between">
+        <div className="flex flex-col sm:flex-row pb-4 sm:pb-0">
           <SearchForm />
           <Button className="bg-black hover:bg-black px-6" onClick={() => Router.push('/project/add')}>
             Add New Project

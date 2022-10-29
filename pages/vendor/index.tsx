@@ -114,7 +114,7 @@ function VendorPage() {
         <Text align="left" weight="bold" mb="xs" size="xl">
           Vendor
         </Text>
-        <div className="flex justify-between">
+        <div className="flex flex-col sm:flex-row pb-4 sm:pb-0">
           <SearchForm />
           <Button className="bg-black hover:bg-black px-6" onClick={() => Router.push('/vendor/add')}>
             Add New Vendor

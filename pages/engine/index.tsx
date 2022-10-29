@@ -79,7 +79,7 @@ export default function Engine(/*props*/) {
         <Text align="left" weight="bold" mb="xs" size="xl">
           Engine
         </Text>
-        <div className="flex justify-between">
+        <div className="flex flex-col sm:flex-row pb-4 sm:pb-0">
           <SearchForm searchName="Engine" />
           <Button className="bg-black hover:bg-black px-6" onClick={() => Router.push('/engine/add')}>
             Add New Engine

@@ -40,7 +40,7 @@ export default function ReportDaily(/*props*/) {
         <Text align="left" weight="bold" mb="xs" size="xl">
           Job Report Daily
         </Text>
-        <div className="flex justify-between">
+        <div className="flex flex-col sm:flex-row pb-4 sm:pb-0">
           <SearchForm searchName="Job Report Daily " />
           <Button className="bg-black hover:bg-black px-6" onClick={() => goToAddReport()}>
             Add New Job Report
