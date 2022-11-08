@@ -20,7 +20,8 @@ export async function fetcher<T>(url: string, payload?: IPayload): Promise<T> {
         Authorization: `Bearer ${token}`,
       },
     });
-    return fetchData.data.data;
+
+    return fetchData.data?.data || fetchData.data;
   } catch (error) {
     throw new Error('Something Wrong');
   }

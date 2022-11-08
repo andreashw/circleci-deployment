@@ -4,3 +4,7 @@ export interface IResponse<T> {
   title?: string;
   data: T;
 }
+
+export interface IResToken {
+  token: string;
+}

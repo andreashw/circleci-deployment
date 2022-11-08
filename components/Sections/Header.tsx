@@ -1,7 +1,16 @@
-import { Burger, Header, MediaQuery, Text, ActionIcon } from '@mantine/core';
+import { Burger, Header, MediaQuery, Text, ActionIcon, Popover } from '@mantine/core';
 import { Sun } from 'react-feather';
+import React, { useGlobal } from 'reactn';
+import { IconChevronDown } from '@tabler/icons';
+import Cookies from 'js-cookie';
+import Router from 'next/router';
 
 export default function HeaderComponent(props: any) {
+  const [email] = useGlobal('email');
+  function logout() {
+    Cookies.remove('token');
+    Router.reload();
+  }
   return (
     <Header height={70} p="md">
       <div
@@ -25,6 +34,19 @@ export default function HeaderComponent(props: any) {
             justifyContent: 'flex-end',
           }}
         >
+          <Popover width={200} position="bottom" withArrow shadow="md">
+            <Popover.Target>
+              <div className="px-4 min-w-[200px] items-center justify-end flex">
+                <p className="cursor-pointer px-2">{email}</p>
+                <IconChevronDown size={14} />
+              </div>
+            </Popover.Target>
+            <Popover.Dropdown>
+              <Text size="sm" onClick={() => logout()} className="cursor-pointer">
+                Log Out
+              </Text>
+            </Popover.Dropdown>
+          </Popover>
           <ActionIcon title="Szín beállítás" onClick={props.toggleColorScheme} size="lg" radius="md" variant="outline">
             <Sun />
           </ActionIcon>

@@ -3,18 +3,24 @@ import { useEffect, useState } from 'react';
 import { MantineProvider, AppShell } from '@mantine/core';
 import { NotificationsProvider } from '@mantine/notifications';
 import { ModalsProvider } from '@mantine/modals';
-
+import React, { setGlobal } from 'reactn';
 import Header from '@components/Sections/Header';
 import Navbar from '@components/Sections/Navbar';
 import '../styles/globals.css';
 import { SWRConfig } from 'swr';
 import { fetcher } from '@api/fetcher';
 import ErrorBoundary from '@components/ErrorBoundary';
+// eslint-disable-next-line import/order
+import { useRouter } from 'next/router';
+import Cookies from 'js-cookie';
+import LoginPage from './login';
 
 function Application({ Component, pageProps }: { Component: any; pageProps: any }) {
+  const router = useRouter();
   const [opened, showMenu] = useState(false);
   const [colorScheme, setColorScheme] = useState('dark');
   const [isLoading, setLoading] = useState(true);
+  const [isLogin, setLogin] = useState(true);
 
   const toggleColorScheme = () => {
     setColorScheme(colorScheme === 'light' ? 'dark' : 'light');
@@ -23,11 +29,27 @@ function Application({ Component, pageProps }: { Component: any; pageProps: any 
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
+      setGlobal({
+        // email: '',
+      });
     }, 1000);
   }, []);
+  const ad = router.pathname;
+  useEffect(() => {
+    const token = Cookies.get('token');
+    if (ad === '/login' || token === undefined) {
+      setLogin(true);
+      router.push('/login');
+    } else {
+      setLogin(false);
+    }
+  }, [router.pathname]);
 
   if (isLoading) {
     return <div>Loading ...</div>;
+  }
+  if (isLogin) {
+    return <LoginPage />;
   }
 
   return (
