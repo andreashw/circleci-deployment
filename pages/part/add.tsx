@@ -40,7 +40,6 @@ function AddPartPage() {
         vendor_id: '',
       },
     ],
-    vendor_id: '',
   });
 
   const { data: dataVendor } = useSWR<IVendor[]>('/api/v1/vendors/');
@@ -218,7 +217,7 @@ function AddPartPage() {
                           <div className="flex h-max items-end pb-[3px]">
                             <Trash color="red" width="16" height="16" />
                           </div>
-                          <Text className="pl-2">Delete transmission</Text>
+                          <Text className="pl-2">Delete Vendor</Text>
                         </Anchor>
                       )}
                     </div>

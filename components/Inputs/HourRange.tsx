@@ -1,4 +1,5 @@
 import { Select } from '@mantine/core';
+import { TimeInput } from '@mantine/dates';
 import { IconChevronDown } from '@tabler/icons';
 
 const hours: string[] = [];
@@ -12,6 +13,14 @@ interface YearRangProps {
   valEnd?: string;
   onStartChange?: (val: any) => void;
   onEndChange?: (val: any) => void;
+}
+interface hourRangProps {
+  label: string;
+  valueStart?: any;
+  valueEnd?: any;
+  onStartChange?: (val: any) => void;
+  onEndChange?: (val: any) => void;
+  error?: boolean;
 }
 
 const RightSection = () => (
@@ -45,6 +54,24 @@ export function HourRange({ label = 'label', onStartChange, onEndChange, valStar
         value={valEnd}
         onChange={onEndChange}
       />
+    </>
+  );
+}
+
+export function V2HourRange({
+  label = 'label',
+  onStartChange,
+  onEndChange,
+  valueStart,
+  valueEnd,
+  error,
+}: hourRangProps) {
+  return (
+    <>
+      <div className="w-28 max-width-[45%] text-[14px]">{label}</div>
+      <TimeInput value={valueStart} onChange={onStartChange} />
+      <span className="px-4">-</span>
+      <TimeInput style={{ border: `${error ? '1px solid red' : ''}` }} value={valueEnd} onChange={onEndChange} />
     </>
   );
 }
