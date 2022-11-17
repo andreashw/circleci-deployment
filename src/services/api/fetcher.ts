@@ -7,7 +7,7 @@ export interface IPayload {
   params?: object;
 }
 
-export async function fetcher<T>(url: string, payload?: IPayload): Promise<T> {
+export async function fetcher<T>(url: string, payload?: IPayload, blob = false): Promise<T> {
   const token = Cookies.get('token');
   try {
     const fetchData = await axios({
@@ -19,6 +19,7 @@ export async function fetcher<T>(url: string, payload?: IPayload): Promise<T> {
       headers: {
         Authorization: `Bearer ${token}`,
       },
+      responseType: blob ? 'blob' : 'json',
     });
 
     return fetchData.data?.data || fetchData.data;

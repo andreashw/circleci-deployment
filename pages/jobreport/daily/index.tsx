@@ -1,10 +1,11 @@
-import { Table, ScrollArea, Text, Button } from '@mantine/core';
+import { Table, ScrollArea, Text, Button, Popover } from '@mantine/core';
 
 import dayjs from 'dayjs';
 import useSWR from 'swr';
 import SearchForm from '@components/Forms/Search';
 import { useRouter } from 'next/router';
 import { IReportDaily } from '@contracts/report-daily-interface';
+import { fetcher } from '@api/fetcher';
 
 export default function ReportDaily(/*props*/) {
   const router = useRouter();
@@ -25,12 +26,36 @@ export default function ReportDaily(/*props*/) {
     });
   };
 
+  const exportXls = async () => {
+    const response: any = await fetcher(
+      '/api/v1/jobs/export',
+      {
+        method: 'GET',
+      },
+      true
+    );
+    // console.log('Response from API ', response);
+    const blob = new Blob([response], {
+      type: 'text/plain',
+    });
+
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.style.display = 'none';
+    a.href = url;
+    // the filename you want
+    a.download = 'report-daily.xlsx';
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
+
   const body = () =>
     dataReportDailies.map((item: IReportDaily, index: any) => (
       <tr key={index}>
         <td onClick={() => goToDetailPage(item)}>{dayjs(item.date).format('ddd, DD MMM YYYY')}</td>
         <td onClick={() => goToDetailPage(item)}>{item.worker}</td>
-        <td onClick={() => goToDetailPage(item)}>{item.department}</td>
+        <td onClick={() => goToDetailPage(item)}>{item.department.name}</td>
       </tr>
     ));
 
@@ -42,6 +67,26 @@ export default function ReportDaily(/*props*/) {
         </Text>
         <div className="flex flex-col sm:flex-row pb-4 sm:pb-0">
           <SearchForm searchName="Job Report Daily " />
+          <div
+            className="cursor-pointer bg-black flex items-center h-[36px] px-6 mr-4 rounded"
+            style={{
+              display: 'flex',
+              flex: 1,
+            }}
+          >
+            <Popover withArrow>
+              <Popover.Target>
+                <Text className="text-white" weight={600} size={14}>
+                  Export
+                </Text>
+              </Popover.Target>
+              <Popover.Dropdown>
+                <Text onClick={() => exportXls()} size="sm" className="cursor-pointer min-w-[54px] py-1">
+                  Xls
+                </Text>
+              </Popover.Dropdown>
+            </Popover>
+          </div>
           <Button className="bg-black hover:bg-black px-6" onClick={() => goToAddReport()}>
             Add New Job Report
           </Button>

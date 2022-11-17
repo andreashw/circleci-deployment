@@ -1,4 +1,4 @@
-import { Table, ScrollArea, Menu, Text, Button, Divider } from '@mantine/core';
+import { Table, ScrollArea, Menu, Text, Button, Divider, Popover } from '@mantine/core';
 
 import { Edit2, Trash2 } from 'react-feather';
 import { IconDotsVertical } from '@tabler/icons';
@@ -98,6 +98,31 @@ export default function ReportHourly(/*props*/) {
     });
   };
 
+  const exportXls = async () => {
+    const response: any = await fetcher(
+      '/api/v1/jobs/export',
+      {
+        method: 'GET',
+      },
+      true
+    );
+    // console.log('Response from API ', response);
+
+    const blob = new Blob([response], {
+      type: 'text/plain',
+    });
+
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.style.display = 'none';
+    a.href = url;
+    // the filename you want
+    a.download = 'report-hourly.xlsx';
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
+
   const body = () =>
     dataReportHourly.map((item: IReportHourly, index: any) => (
       <tr key={index}>
@@ -123,7 +148,7 @@ export default function ReportHourly(/*props*/) {
           onClick={() => router.push(`/jobreport/hourly/${item.ID}`)}
           style={{ color: item.paid === true ? '#828282' : 'black' }}
         >
-          {item.department_id}
+          {item.Department.name}
         </td>
         <td
           onClick={() => router.push(`/jobreport/hourly/${item.ID}`)}
@@ -173,6 +198,26 @@ export default function ReportHourly(/*props*/) {
         </Text>
         <div className="flex flex-col sm:flex-row pb-4 sm:pb-0">
           <SearchForm searchName="Job Report Hourly " />
+          <div
+            className="cursor-pointer bg-black flex items-center h-[36px] px-6 mr-4 rounded"
+            style={{
+              display: 'flex',
+              flex: 1,
+            }}
+          >
+            <Popover withArrow>
+              <Popover.Target>
+                <Text className="text-white" weight={600} size={14}>
+                  Export
+                </Text>
+              </Popover.Target>
+              <Popover.Dropdown>
+                <Text onClick={() => exportXls()} size="sm" className="cursor-pointer min-w-[54px] py-1">
+                  Xls
+                </Text>
+              </Popover.Dropdown>
+            </Popover>
+          </div>
           <Button className="bg-black hover:bg-black px-6" onClick={() => goToAddReport()}>
             Add New Job Report
           </Button>

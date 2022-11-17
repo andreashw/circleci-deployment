@@ -71,7 +71,16 @@ export function V2HourRange({
       <div className="w-28 max-width-[45%] text-[14px]">{label}</div>
       <TimeInput value={valueStart} onChange={onStartChange} />
       <span className="px-4">-</span>
-      <TimeInput style={{ border: `${error ? '1px solid red' : ''}` }} value={valueEnd} onChange={onEndChange} />
+      <TimeInput
+        error={error}
+        style={{
+          border: `${error ? '1px solid red' : ''}`,
+          borderRadius: `${error ? '8px' : ''}`,
+          padding: `${error ? '0px' : ''}`,
+        }}
+        value={valueEnd}
+        onChange={onEndChange}
+      />
     </>
   );
 }

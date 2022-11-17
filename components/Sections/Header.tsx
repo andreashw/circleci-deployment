@@ -9,7 +9,7 @@ export default function HeaderComponent(props: any) {
   const [email] = useGlobal('email');
   function logout() {
     Cookies.remove('token');
-    Router.reload();
+    Router.replace('/login');
   }
   return (
     <Header height={70} p="md">

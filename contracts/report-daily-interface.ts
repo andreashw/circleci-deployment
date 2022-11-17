@@ -1,6 +1,9 @@
+import { IDepartment } from './department-interface';
+
 export interface IReportDaily {
   date: number;
   worker_id: number;
   worker: string;
-  department: string;
+  department_id: number;
+  department: IDepartment;
 }

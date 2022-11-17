@@ -14,6 +14,7 @@ import { IconChevronDown } from '@tabler/icons';
 import dayjs from 'dayjs';
 import Plus from 'icons/Plus';
 import Trash from 'icons/Trash';
+import { IDepartment } from '@contracts/department-interface';
 
 function AddJobReportPage() {
   const router = useRouter();
@@ -21,6 +22,7 @@ function AddJobReportPage() {
 
   const { data: dataEngineers } = useSWR<IEngineer[]>('/api/v1/workers/');
   const { data: dataProjects } = useSWR<IProject[]>('/api/v1/projects/');
+  const { data: dataDepartments } = useSWR<IDepartment[]>('/api/v1/department/');
   const [input, handleInput] = useInput({
     report_date: null,
     engineer: '',
@@ -42,23 +44,11 @@ function AddJobReportPage() {
     ],
   });
 
-  const doSubmit = (e: any) => {
+  const doSubmit = async (e: any) => {
     e.preventDefault();
-    // console.log('value', value);
-    // const conv = Math.floor(value.getTime() / 1000);
-    // const endConv = Math.floor(Endvalue.getTime() / 1000);
-    // const total = endConv - conv;
-    // console.log(total);
 
-    // Date di format sesuai requirement Database
-    // const date = new Date('2022-04-26T09:35:24');
-
-    // const seconds = date.getTime();
-    // console.log(seconds);
-
-    //^batas sini
     const formatedDate = dayjs(input.report_date).format('YYYY-MM-DD');
-    const group_comments = input?.jobs?.reduce((prev: any, curr: any) => {
+    const group_jobs = input?.jobs?.reduce((prev: any, curr: any) => {
       // eslint-disable-next-line no-param-reassign
       prev = [
         ...prev,
@@ -77,23 +67,35 @@ function AddJobReportPage() {
       ];
       return prev;
     }, []);
-    console.log('cektest', group_comments);
+    // console.log('cektest', group_jobs);
 
-    fetcher('/api/v1/jobs/bulk', {
-      method: 'POST',
-      body: group_comments,
-    }).then(() => {
+    console.log(input);
+    if (input.jobs.findIndex((jobs: any) => jobs.total_hour === '') > -1) {
       showNotification({
-        title: 'Success',
-        message: 'Job Report berhasil ditambahkan',
-        color: 'teal',
+        title: 'Alert',
+        message: 'End Hour not valid',
+        color: 'red',
       });
-      if (report === 'hourly') {
-        router.replace('/jobreport/hourly');
-      } else {
-        router.replace('/jobreport/daily');
+    } else {
+      const response = await fetcher('/api/v1/jobs/bulk', {
+        method: 'POST',
+        body: group_jobs,
+      });
+      console.log('Response from API', response);
+
+      if (response) {
+        showNotification({
+          title: 'Success',
+          message: 'Job Report berhasil ditambahkan',
+          color: 'teal',
+        });
+        if (report === 'hourly') {
+          router.replace('/jobreport/hourly');
+        } else {
+          router.replace('/jobreport/daily');
+        }
       }
-    });
+    }
   };
 
   const addJobs = () => {
@@ -261,6 +263,22 @@ function AddJobReportPage() {
           return x;
         })
       );
+    } else {
+      handleInput(
+        'jobs',
+        true
+      )(
+        input.jobs.map((x: any, i: number) => {
+          if (i === index) {
+            return {
+              ...x,
+              end_hour: val1.getTime() / 1000,
+              total_hour: '',
+            };
+          }
+          return x;
+        })
+      );
     }
   };
 
@@ -372,23 +390,10 @@ function AddJobReportPage() {
                   />
                 </Grid.Col>
                 <Grid.Col md={6}>
-                  <Select
+                  <Dropdown
                     label="Department"
-                    placeholder="Department"
-                    rightSection={<IconChevronDown size={14} />}
-                    value={input.jobs[ti].department.toString()}
+                    data={dataDepartments?.map(({ ID, name }) => ({ value: ID.toString(), label: name })) || []}
                     onChange={handleInputJobs_department(ti)}
-                    data={[
-                      { value: '1', label: 'Metalwork' },
-                      { value: '2', label: 'Body' },
-                      { value: '3', label: 'Mechanical' },
-                      { value: '4', label: 'Electrical' },
-                      { value: '5', label: 'Upholstery' },
-                      { value: '6', label: 'General' },
-                      { value: '7', label: 'Blasting' },
-                      { value: '8', label: 'Powder Coating' },
-                      { value: '9', label: 'Electroplating' },
-                    ]}
                   />
                 </Grid.Col>
                 <Grid.Col md={6}>

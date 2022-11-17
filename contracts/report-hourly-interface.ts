@@ -1,3 +1,4 @@
+import { IDepartment } from './department-interface';
 import { IEngineer } from './enginers-interface';
 import { IProject } from './project-interface';
 
@@ -11,6 +12,7 @@ export interface IReportHourly {
   project_id: number;
   Project: IProject;
   department_id: number;
+  Department: IDepartment;
   status: string;
   job_id: number;
   job_description: string;
