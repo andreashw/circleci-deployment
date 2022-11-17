@@ -14,12 +14,14 @@ import { HourRange } from '@components/Inputs/HourRange';
 import { IconChevronDown } from '@tabler/icons';
 import { useEffect } from 'react';
 import dayjs from 'dayjs';
+import { IDepartment } from '@contracts/department-interface';
 
 function EditHourly() {
   const router = useRouter();
   const { id } = router.query;
   const { data: dataEngineers } = useSWR<IEngineer[]>('/api/v1/workers/');
   const { data: dataProjects } = useSWR<IProject[]>('/api/v1/projects/');
+  const { data: dataDepartments } = useSWR<IDepartment[]>('/api/v1/department/');
   const { data: hourly, mutate } = useSWR<IReportHourly>(`/api/v1/jobs/${id}`);
   const [input, handleInput] = useInput({
     report_date: dayjs(hourly?.date).toDate(),
@@ -146,16 +148,11 @@ function EditHourly() {
               />
             </Grid.Col>
             <Grid.Col md={6}>
-              <Select
+              <Dropdown
                 label="Department"
-                placeholder="Department"
-                rightSection={<IconChevronDown size={14} />}
-                value={input.department?.toString()}
+                value={input.department.toString()}
+                data={dataDepartments?.map(({ ID, name }) => ({ value: ID.toString(), label: name })) || []}
                 onChange={handleInput('department', true)}
-                data={[
-                  { value: '1', label: 'Metalwork' },
-                  { value: '2', label: 'Body' },
-                ]}
               />
             </Grid.Col>
             <Grid.Col md={6}>
