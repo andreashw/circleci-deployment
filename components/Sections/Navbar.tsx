@@ -81,6 +81,26 @@ export default function NavbarComponent(props: any) {
         },
       ],
     },
+    {
+      group: 'User & Access',
+      menus: [
+        {
+          label: 'User',
+          link: '/payroll',
+          icon: (color: string) => <Payroll color={color} width="20" height="20" />,
+        },
+        {
+          label: 'Role',
+          link: '/role',
+          icon: (color: string) => <Payroll color={color} width="20" height="20" />,
+        },
+        {
+          label: 'Permission',
+          link: '/permission',
+          icon: (color: string) => <Payroll color={color} width="20" height="20" />,
+        },
+      ],
+    },
   ];
 
   return (
