@@ -86,7 +86,7 @@ export default function NavbarComponent(props: any) {
       menus: [
         {
           label: 'User',
-          link: '/payroll',
+          link: '/user',
           icon: (color: string) => <Payroll color={color} width="20" height="20" />,
         },
         {
