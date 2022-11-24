@@ -7,6 +7,7 @@ import { useRouter } from 'next/router';
 import useSWR from 'swr';
 import dayjs from 'dayjs';
 import { rp } from '@support/formatter';
+import { fetcher } from '@api/fetcher';
 
 function DetilPatrollPage() {
   const router = useRouter();
@@ -33,15 +34,43 @@ function DetilPatrollPage() {
       </tr>
     ));
 
+  const exportXls = async () => {
+    const response: any = await fetcher(
+      `/api/v1/payrolls/${id}/export`,
+      {
+        method: 'GET',
+      },
+      true
+    );
+    // console.log('Response from API ', response);
+
+    const blob = new Blob([response], {
+      type: 'text/plain',
+    });
+
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.style.display = 'none';
+    a.href = url;
+    // the filename you want
+    a.download = 'report-payroll.xlsx';
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
+
   return (
     <>
       <HeadingTop
+        exportPayroll={() => exportXls()}
+        listPayroll
         text="Payroll"
         items={[
           { title: 'Payroll', href: '/payroll' },
           { title: 'Details Payroll', href: '' },
         ]}
       />
+
       <div className="w-full p-6">
         <Grid gutter="xl" className="mt-10">
           <ListDetail

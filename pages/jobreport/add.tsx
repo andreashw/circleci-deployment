@@ -393,6 +393,7 @@ function AddJobReportPage() {
                   <Dropdown
                     label="Department"
                     data={dataDepartments?.map(({ ID, name }) => ({ value: ID.toString(), label: name })) || []}
+                    value={input.jobs[ti].department.toString()}
                     onChange={handleInputJobs_department(ti)}
                   />
                 </Grid.Col>
