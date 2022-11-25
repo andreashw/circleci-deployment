@@ -30,9 +30,9 @@ function LoginPage() {
     console.log('Response from API ', response);
     if (response) {
       Cookies.set('token', response.token);
-
+      Cookies.set('email', input.email);
       setGlobal({
-        email: input.email,
+        email: Cookies.get('email'),
       });
       showNotification({
         title: 'Success',

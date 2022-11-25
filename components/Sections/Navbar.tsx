@@ -87,17 +87,17 @@ export default function NavbarComponent(props: any) {
         {
           label: 'User',
           link: '/user',
-          icon: (color: string) => <Payroll color={color} width="20" height="20" />,
+          icon: (color: string) => <Client color={color} width="20" height="20" />,
         },
         {
           label: 'Role',
           link: '/role',
-          icon: (color: string) => <Payroll color={color} width="20" height="20" />,
+          icon: (color: string) => <Client color={color} width="20" height="20" />,
         },
         {
           label: 'Permission',
           link: '/permission',
-          icon: (color: string) => <Payroll color={color} width="20" height="20" />,
+          icon: (color: string) => <Client color={color} width="20" height="20" />,
         },
       ],
     },

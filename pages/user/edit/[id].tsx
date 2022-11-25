@@ -1,12 +1,13 @@
 import HeadingTop from '@components/TopComponents/Heading';
 import { Button, Checkbox, createStyles, Grid, PasswordInput, Text, TextInput } from '@mantine/core';
 import useInput from '@hooks/useInput';
-import Router from 'next/router';
+import Router, { useRouter } from 'next/router';
 import useSWR from 'swr';
 import { IRole } from '@contracts/role-interface';
 import { Dropdown } from '@components/Inputs/Dropdown';
-import { IUser } from '@contracts/user-interface';
+import { IGetUser, IUser } from '@contracts/user-interface';
 import { fetcher } from '@api/fetcher';
+import { showNotification } from '@mantine/notifications';
 
 const useStyles = createStyles(() => ({
   label: {
@@ -29,21 +30,26 @@ const useStyles = createStyles(() => ({
   },
 }));
 
-function AddUserPage() {
+function EditUserPage() {
+  const router = useRouter();
   const { classes } = useStyles();
+  const id = router.query.id as unknown as number;
+  const { data: user, mutate } = useSWR<IGetUser>(`/api/v1/users/${id}`);
   const { data: role } = useSWR<IRole[]>('/api/v1/role/');
   const [input, handleInput] = useInput({
-    name: '',
-    email: '',
+    name: user ? user?.Name : '',
+    email: user ? user?.Email : '',
     password: '',
-    is_active: true,
-    role: '',
+    is_active: user ? user?.IsActive : true,
+    role: user ? user?.Roles[0].ID : '',
   });
+  console.log('User', user);
+
   const doSubmit = async (e: any) => {
     e.preventDefault();
     console.log('Input', input);
-    const response: IUser | undefined = await fetcher('/api/v1/users/', {
-      method: 'POST',
+    const response: IUser | undefined = await fetcher(`/api/v1/users/${id}`, {
+      method: 'PATCH',
       body: {
         name: input.name,
         email: input.email,
@@ -52,8 +58,14 @@ function AddUserPage() {
         role_id: Number(input.role),
       },
     });
-    console.log('Response from API ', response);
+    console.log('Response Edit from API ', response);
+    mutate();
     if (response) {
+      showNotification({
+        title: 'Success',
+        message: 'User berhasil diubah',
+        color: 'teal',
+      });
       Router.replace('/user');
     }
   };
@@ -79,6 +91,7 @@ function AddUserPage() {
             <Grid.Col md={6}>
               <Dropdown
                 label="Role"
+                value={input.role.toString()}
                 data={role?.map(({ ID, name }) => ({ value: ID.toString(), label: name })) || []}
                 onChange={handleInput('role', true)}
               />
@@ -121,4 +134,4 @@ function AddUserPage() {
   );
 }
 
-export default AddUserPage;
+export default EditUserPage;

@@ -2,97 +2,71 @@ import { ScrollArea, Drawer, Text, Table, Menu, Button } from '@mantine/core';
 import { useState } from 'react';
 import { IconDotsVertical } from '@tabler/icons';
 import { fetcher } from '@api/fetcher';
-import { IClient } from '@contracts/client-interface';
 import SearchForm from '@components/Forms/Search';
 import { Edit2, Trash2 } from 'react-feather';
 import Router from 'next/router';
 import { useModals } from '@mantine/modals';
 import True from 'icons/True';
 import False from 'icons/False';
+import useSWR from 'swr';
+import { IUser } from '@contracts/user-interface';
 
 function ListUserPage() {
   const modals = useModals();
   const [drawerOpened, toggleDrawer] = useState(false);
 
-  const dataUsers = [
-    {
-      ID: 1,
-      email: 'hilmi@gmail.com',
-      is_active: true,
-      role: 'superadmin',
-    },
-    {
-      ID: 2,
-      email: 'dev@gmail.com',
-      is_active: false,
-      role: 'admin',
-    },
-    {
-      ID: 3,
-      email: 'devs@gmail.com',
-      is_active: true,
-      role: 'superadmin',
-    },
-    {
-      ID: 4,
-      email: 'root@gmail.com',
-      is_active: true,
-      role: 'admin',
-    },
-  ];
+  const { data: dataUsers, mutate } = useSWR('/api/v1/users/');
 
-  const onDeleteData = async (client: IClient) => {
-    console.log(client.ID);
-
-    const response: IClient | undefined = await fetcher(`/api/v1/clients/${client.ID}`, {
+  const onDeleteData = async (user: IUser) => {
+    const response: IUser | undefined = await fetcher(`/api/v1/users/${user.ID}`, {
       method: 'DELETE',
     });
     console.log('Response Delete from API ', response);
     if (response) {
-      // Router.reload();
-      //   mutate();
+      mutate();
     }
   };
-  function deleteProfile(client: IClient) {
-    console.log('====================================');
+  function deleteProfile(user: IUser) {
     modals.openConfirmModal({
       title: 'Delete',
       children: (
         <Text size="sm" lineClamp={2}>
-          Delete <b>{client.name}</b> Client Data ?
+          Delete <b>{user.name}</b> User Data ?
         </Text>
       ),
       centered: true,
       labels: { confirm: 'Yes', cancel: 'No' },
       confirmProps: { className: 'bg-danger', color: 'red' },
-      onConfirm: () => onDeleteData(client),
+      onConfirm: () => onDeleteData(user),
     });
-    console.log('====================================');
-    // const response: IClient | undefined = await fetcher('/api/v1/clients/' + id, {
-    //   method: 'DELETE',
-    // });
   }
 
   const body = () =>
-    dataUsers.map((item: any, index: any) => (
+    dataUsers.map((item: IUser, index: any) => (
       <tr key={index}>
-        <td className="cursor-pointer w-2/12" onClick={() => Router.push(`/role/${item.ID}`)}>
+        <td className="cursor-pointer" onClick={() => Router.push(`/user/${item.ID}`)}>
           {item.email}
         </td>
         {item.is_active === true ? (
-          <td className="flex cursor-pointer w-full content-center items-center h-24 pl-9">
+          <td
+            className="flex cursor-pointer w-full content-center items-center h-24 pl-9"
+            onClick={() => Router.push(`/user/${item.ID}`)}
+          >
             <True color="#00D13B" width="20" height="20" />
           </td>
         ) : (
-          <td className="flex cursor-pointer w-full content-center items-center h-24 pl-9">
+          <td
+            className="flex cursor-pointer w-full content-center items-center h-24 pl-9"
+            onClick={() => Router.push(`/user/${item.ID}`)}
+          >
             <False color="#ff0000" width="20" height="20" />
           </td>
         )}
-        <td className="cursor-pointer" onClick={() => Router.push(`/role/${item.ID}`)}>
-          {item.role}
+        <td className="cursor-pointer" onClick={() => Router.push(`/user/${item.ID}`)}>
+          {item.name}
         </td>
 
-        <td className="cursor-pointer w-2/12">
+        <td className="cursor-pointer">
           <Menu>
             <Menu.Target>
               {/* <Button variant="white" color={'red'}>Action</Button> */}
@@ -110,8 +84,8 @@ function ListUserPage() {
             </Menu.Target>
             <Menu.Dropdown>
               <Menu.Label>{item.name}</Menu.Label>
-              <Menu.Item icon={<Edit2 />} onClick={() => Router.push(`/role/edit/${item.ID}`)}>
-                Edit Role
+              <Menu.Item icon={<Edit2 />} onClick={() => Router.push(`/user/edit/${item.ID}`)}>
+                Edit User
               </Menu.Item>
               {/* <Menu.Item icon={<Send />} onClick={() => sendMessage(automobile)}>
               Send Message
@@ -121,7 +95,7 @@ function ListUserPage() {
               Copy
             </Menu.Item> */}
               <Menu.Item icon={<Trash2 />} onClick={() => deleteProfile(item)} color="red">
-                Delete Role
+                Delete User
               </Menu.Item>
             </Menu.Dropdown>
           </Menu>

@@ -20,7 +20,7 @@ function Application({ Component, pageProps }: { Component: any; pageProps: any 
   const [opened, showMenu] = useState(false);
   const [colorScheme, setColorScheme] = useState('dark');
   const [isLoading, setLoading] = useState(true);
-  const [isLogin, setLogin] = useState(true);
+  const [openLoginPage, setOpenLogin] = useState(true);
 
   const toggleColorScheme = () => {
     setColorScheme(colorScheme === 'light' ? 'dark' : 'light');
@@ -29,26 +29,28 @@ function Application({ Component, pageProps }: { Component: any; pageProps: any 
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
-      setGlobal({
-        // email: '',
-      });
+      if (Cookies.get('token') !== undefined) {
+        setGlobal({
+          email: Cookies.get('email'),
+        });
+      }
     }, 1000);
   }, []);
   const ad = router.pathname;
   useEffect(() => {
     const token = Cookies.get('token');
     if (ad === '/login' || token === undefined) {
-      setLogin(true);
+      setOpenLogin(true);
       router.push('/login');
     } else {
-      setLogin(false);
+      setOpenLogin(false);
     }
   }, [router.pathname]);
 
   if (isLoading) {
     return <div>Loading ...</div>;
   }
-  if (isLogin) {
+  if (openLoginPage) {
     return <LoginPage />;
   }
 

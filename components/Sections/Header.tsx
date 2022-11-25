@@ -9,6 +9,7 @@ export default function HeaderComponent(props: any) {
   const [email] = useGlobal('email');
   function logout() {
     Cookies.remove('token');
+    Cookies.remove('email');
     Router.replace('/login');
   }
   return (
