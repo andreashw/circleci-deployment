@@ -8,17 +8,16 @@ import SearchForm from '@components/Forms/Search';
 import { Edit2, Trash2 } from 'react-feather';
 import Router from 'next/router';
 import { useModals } from '@mantine/modals';
+import { IRole } from '@contracts/role-interface';
 
 function ListRolePage() {
   const modals = useModals();
   const [drawerOpened, toggleDrawer] = useState(false);
 
-  const { data: dataClients, mutate } = useSWR('/api/v1/clients/');
+  const { data: dataRole, mutate } = useSWR('/api/v1/role/');
 
-  const onDeleteData = async (client: IClient) => {
-    console.log(client.ID);
-
-    const response: IClient | undefined = await fetcher(`/api/v1/clients/${client.ID}`, {
+  const onDeleteData = async (role: IRole) => {
+    const response: IClient | undefined = await fetcher(`/api/v1/role/${role.ID}`, {
       method: 'DELETE',
     });
     console.log('Response Delete from API ', response);
@@ -27,19 +26,19 @@ function ListRolePage() {
       mutate();
     }
   };
-  function deleteProfile(client: IClient) {
+  function deleteProfile(role: IRole) {
     console.log('====================================');
     modals.openConfirmModal({
       title: 'Delete',
       children: (
         <Text size="sm" lineClamp={2}>
-          Delete <b>{client.name}</b> Client Data ?
+          Delete <b>{role.name}</b> Client Data ?
         </Text>
       ),
       centered: true,
       labels: { confirm: 'Yes', cancel: 'No' },
       confirmProps: { className: 'bg-danger', color: 'red' },
-      onConfirm: () => onDeleteData(client),
+      onConfirm: () => onDeleteData(role),
     });
     console.log('====================================');
     // const response: IClient | undefined = await fetcher('/api/v1/clients/' + id, {
@@ -48,16 +47,12 @@ function ListRolePage() {
   }
 
   const body = () =>
-    dataClients.map((item: any, index: any) => (
+    dataRole.map((item: IRole, index: any) => (
       <tr key={index}>
-        <td className="cursor-pointer w-2/12" onClick={() => Router.push(`/role/${item.ID}`)}>
-          {item.name}
-        </td>
-        <td className="cursor-pointer" onClick={() => Router.push(`/role/${item.ID}`)}>
-          {item.email}
-        </td>
+        <td className="cursor-pointer">{item.name}</td>
+        <td className="cursor-pointer">{item.description}</td>
 
-        <td className="cursor-pointer w-2/12">
+        <td className="cursor-pointer">
           <Menu>
             <Menu.Target>
               {/* <Button variant="white" color={'red'}>Action</Button> */}
@@ -78,13 +73,6 @@ function ListRolePage() {
               <Menu.Item icon={<Edit2 />} onClick={() => Router.push(`/role/edit/${item.ID}`)}>
                 Edit Role
               </Menu.Item>
-              {/* <Menu.Item icon={<Send />} onClick={() => sendMessage(automobile)}>
-              Send Message
-            </Menu.Item>
-            <Divider />
-            <Menu.Item icon={<Save />} onClick={() => copyProfile(automobile)}>
-              Copy
-            </Menu.Item> */}
               <Menu.Item icon={<Trash2 />} onClick={() => deleteProfile(item)} color="red">
                 Delete Role
               </Menu.Item>
@@ -104,13 +92,13 @@ function ListRolePage() {
           Roles
         </Text>
         <div className="flex flex-col sm:flex-row pb-4 sm:pb-0">
-          <SearchForm searchName="Automobile" />
+          <SearchForm searchName="Role" />
           <Button className="bg-black hover:bg-black px-6" onClick={() => Router.push('/role/add')}>
             Add New Role
           </Button>
         </div>
       </div>
-      {dataClients.length > 0 ? (
+      {dataRole.length > 0 ? (
         <ScrollArea>
           <Table striped highlightOnHover>
             <thead>

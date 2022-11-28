@@ -1,5 +1,4 @@
-import { Burger, Header, MediaQuery, Text, ActionIcon, Popover } from '@mantine/core';
-import { Sun } from 'react-feather';
+import { Burger, Header, MediaQuery, Text, Popover } from '@mantine/core';
 import React, { useGlobal } from 'reactn';
 import { IconChevronDown } from '@tabler/icons';
 import Cookies from 'js-cookie';
@@ -48,9 +47,6 @@ export default function HeaderComponent(props: any) {
               </Text>
             </Popover.Dropdown>
           </Popover>
-          <ActionIcon title="Szín beállítás" onClick={props.toggleColorScheme} size="lg" radius="md" variant="outline">
-            <Sun />
-          </ActionIcon>
         </div>
       </div>
     </Header>

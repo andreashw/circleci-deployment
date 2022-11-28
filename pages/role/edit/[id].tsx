@@ -1,8 +1,14 @@
 import HeadingTop from '@components/TopComponents/Heading';
-import { Button, createStyles, Grid, Text, Select, Textarea } from '@mantine/core';
-import { IconChevronDown } from '@tabler/icons';
+import { Button, createStyles, Grid, Text, Textarea, TextInput } from '@mantine/core';
 import useInput from '@hooks/useInput';
 import CheckboxList from '@components/Inputs/CheckBox';
+import { IListPermission, IPermission } from '@contracts/permission-interface';
+import useSWR from 'swr';
+import { useEffect, useState } from 'react';
+import { fetcher } from '@api/fetcher';
+import { showNotification } from '@mantine/notifications';
+import { useRouter } from 'next/router';
+import { IGetOneRole } from '@contracts/role-interface';
 
 const useStyles = createStyles(() => ({
   label: {
@@ -25,20 +31,80 @@ const useStyles = createStyles(() => ({
   },
 }));
 
-function EditRolepage() {
+function EditRolePage() {
   const { classes } = useStyles();
+  const router = useRouter();
+  const id = router.query.id as unknown as number;
+  const { data: permissions } = useSWR<IPermission[]>('/api/v1/permission/');
+  const { data: roleDetail, mutate } = useSWR<IGetOneRole>(`/api/v1/role/${id}`);
   const [input, handleInput] = useInput({
-    name: '',
-    email: '',
+    name: roleDetail ? roleDetail?.Name : '',
+    desc: roleDetail ? roleDetail?.Description : '',
   });
-  const doSubmit = async () => {};
+  const [permissionIDs, setPermissionIDs] = useState<number[]>(roleDetail?.Permissions || []);
+  const [allPermission, setAllPermission] = useState<IListPermission[]>([]);
+
+  useEffect(() => {
+    setAllPermission(permissions?.flatMap((item) => item.Permission) || []);
+  }, [permissions]);
+
+  const handleCheckBox = (permission: IListPermission, checked: boolean) => {
+    setPermissionIDs((prev) => {
+      if (permission.name.includes('*')) {
+        const checkedPermission = allPermission
+          ?.filter((item) => item.name.includes(permission?.name?.replace('*', '')))
+          ?.map((item) => item.ID);
+        if (checked) {
+          return [
+            ...prev,
+            // eslint-disable-next-line no-unsafe-optional-chaining
+            ...checkedPermission,
+          ];
+        }
+        return prev.filter(
+          (idPermission) => idPermission !== permission.ID && !checkedPermission.includes(idPermission)
+        );
+      }
+      if (checked) {
+        return [...prev, permission.ID];
+      }
+
+      // Mendapatkan nama permission yang ada .* sesuai permission yang di uncheck
+      const uncheckAllName = permission.name.replace(permission.name.split('.').pop() || '', '*');
+      // Cek All Permission yang list permissionnya sesuai ID yang di uncheck
+      const uncheckAllID = allPermission.find((item) => item.name === uncheckAllName)?.ID;
+      return prev.filter((idPermission) => ![permission.ID, uncheckAllID].includes(idPermission));
+    });
+  };
+
+  const doSubmit = async (e: any) => {
+    e.preventDefault();
+    const response = await fetcher(`/api/v1/role/${id}`, {
+      method: 'PATCH',
+      body: {
+        name: input.name,
+        description: input.desc,
+        permissions: permissionIDs,
+      },
+    });
+    console.log('Response from API ', response);
+    mutate();
+    if (response) {
+      showNotification({
+        title: 'Success',
+        message: 'Role berhasil diubah',
+        color: 'teal',
+      });
+      router.replace('/role');
+    }
+  };
   return (
     <>
       <HeadingTop
-        text="Edit Roles"
+        text="Add New Roles"
         items={[
-          { title: 'Permission', href: '/client' },
-          { title: 'Edit Roles', href: '' },
+          { title: 'Role', href: '/role' },
+          { title: 'Add New Roles', href: '' },
         ]}
       />
       <form onSubmit={doSubmit}>
@@ -47,18 +113,9 @@ function EditRolepage() {
             Details
           </Text>
 
-          <Grid gutter="xl" className="mb-[48px]">
+          <Grid gutter="xl">
             <Grid.Col md={6}>
-              <Select
-                label="Province"
-                placeholder="Select Province"
-                rightSection={<IconChevronDown size={14} />}
-                onChange={() => {
-                  handleInput('name', true);
-                }}
-                value={input.name}
-                data={[]}
-              />
+              <TextInput label="Name" placeholder="e.g Superadmin" value={input.name} onChange={handleInput('name')} />
             </Grid.Col>
             <Grid.Col md={6} />
             <Grid.Col md={6}>
@@ -66,9 +123,9 @@ function EditRolepage() {
                 styles={{ input: { height: 'unset !important' } }}
                 className={classes.label}
                 label="Notes"
-                // value={input.notes}
-                // // onChange={handleInput('notes')}
-                placeholder="Notes"
+                value={input.desc}
+                onChange={handleInput('desc')}
+                placeholder="Description"
                 minRows={4}
               />
             </Grid.Col>
@@ -78,9 +135,11 @@ function EditRolepage() {
                 Permission
               </Text>
 
-              <CheckboxList />
-              <CheckboxList />
-              <CheckboxList />
+              <CheckboxList
+                permissions={permissions || []}
+                onPermissionChange={handleCheckBox}
+                permissionIDs={permissionIDs}
+              />
             </Grid.Col>
             <Grid.Col md={6} />
 
@@ -97,4 +156,4 @@ function EditRolepage() {
   );
 }
 
-export default EditRolepage;
+export default EditRolePage;
