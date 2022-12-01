@@ -44,3 +44,7 @@
 .PasswordInput .mantine-PasswordInput-innerInput {
   height: 48px;
 }
+
+.whiteColor {
+  color: #fff;
+}

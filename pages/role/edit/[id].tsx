@@ -35,7 +35,7 @@ function EditRolePage() {
   const { classes } = useStyles();
   const router = useRouter();
   const id = router.query.id as unknown as number;
-  const { data: permissions } = useSWR<IPermission[]>('/api/v1/permission/');
+  const { data: permissions } = useSWR<IPermission[]>('/api/v1/permission/grouped');
   const { data: roleDetail, mutate } = useSWR<IGetOneRole>(`/api/v1/role/${id}`);
   const [input, handleInput] = useInput({
     name: roleDetail ? roleDetail?.Name : '',

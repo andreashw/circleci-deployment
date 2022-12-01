@@ -33,7 +33,7 @@ const useStyles = createStyles(() => ({
 function AddRolePage() {
   const { classes } = useStyles();
   const router = useRouter();
-  const { data: permissions } = useSWR<IPermission[]>('/api/v1/permission/');
+  const { data: permissions } = useSWR<IPermission[]>('/api/v1/permission/grouped');
   const [input, handleInput] = useInput({
     name: '',
     desc: '',

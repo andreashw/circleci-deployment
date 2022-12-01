@@ -2,10 +2,9 @@ import { IRole } from './role-interface';
 
 export interface IUser {
   ID: number;
-  name: string;
-  email: string;
-  is_active: boolean;
-  Roles: IRole[];
+  Email: string;
+  IsActive: boolean;
+  Roles: string;
 }
 
 export interface IGetUser {

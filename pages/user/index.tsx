@@ -31,7 +31,7 @@ function ListUserPage() {
       title: 'Delete',
       children: (
         <Text size="sm" lineClamp={2}>
-          Delete <b>{user.name}</b> User Data ?
+          Delete <b>{user.Email}</b> User Data ?
         </Text>
       ),
       centered: true,
@@ -45,9 +45,9 @@ function ListUserPage() {
     dataUsers.map((item: IUser, index: any) => (
       <tr key={index}>
         <td className="cursor-pointer" onClick={() => Router.push(`/user/${item.ID}`)}>
-          {item.email}
+          {item.Email}
         </td>
-        {item.is_active === true ? (
+        {item.IsActive === true ? (
           <td
             className="flex cursor-pointer w-full content-center items-center h-24 pl-9"
             onClick={() => Router.push(`/user/${item.ID}`)}
@@ -63,7 +63,7 @@ function ListUserPage() {
           </td>
         )}
         <td className="cursor-pointer" onClick={() => Router.push(`/user/${item.ID}`)}>
-          {item.name}
+          {item.Email}
         </td>
 
         <td className="cursor-pointer">
@@ -83,7 +83,7 @@ function ListUserPage() {
               </div>
             </Menu.Target>
             <Menu.Dropdown>
-              <Menu.Label>{item.name}</Menu.Label>
+              <Menu.Label>{item.Email}</Menu.Label>
               <Menu.Item icon={<Edit2 />} onClick={() => Router.push(`/user/edit/${item.ID}`)}>
                 Edit User
               </Menu.Item>
