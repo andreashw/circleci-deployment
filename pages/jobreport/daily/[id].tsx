@@ -43,7 +43,7 @@ function Detail() {
                 </Text>
                 <Grid gutter="xl">
                   <ListDetail List="Hour" IsiList={`${task.Hours}`} />
-                  <ListDetail List="Total Hour" IsiList={`${task.TotalHours}`} />
+                  <ListDetail List="Department" IsiList={`${task.Department}`} />
                   <ListDetail List="Project" IsiList={`${task.Project}`} />
                   <ListDetail List="Job" IsiList={`${task.Job}`} />
                   <ListDetail List="Status Kerja" IsiList={`${task.Status}`} />

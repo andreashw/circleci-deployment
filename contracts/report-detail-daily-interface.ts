@@ -11,4 +11,5 @@ export interface ITask {
   Job: string;
   Status: string;
   Task: string;
+  Department: string;
 }

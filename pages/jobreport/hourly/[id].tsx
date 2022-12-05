@@ -33,7 +33,7 @@ function Detail() {
           <ListDetail List="Worker" IsiList={data?.Worker.name} />
           <ListDetail List="Status Kerja" IsiList={data?.status} />
           <ListDetail List="Project" IsiList={data?.Project.name} />
-          <ListDetail List="Department" IsiList={data?.department_id as unknown as string} />
+          <ListDetail List="Department" IsiList={data?.Department.name} />
           <ListDetail List="Hour" IsiList={data?.start_hour} />
           <ListDetail List="Job" IsiList={data?.job_description} />
           <ListDetail List="Task" IsiList={data?.task} />
