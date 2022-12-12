@@ -45,6 +45,10 @@
   height: 48px;
 }
 
+.mantine-DateRangePicker-wrapper {
+  flex: 1;
+}
+
 .whiteColor {
   color: #fff;
 }

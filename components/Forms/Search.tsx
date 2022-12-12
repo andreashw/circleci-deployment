@@ -29,7 +29,7 @@ export default function SearchForm(props: any) {
         className="flex text-sm text-black items-end justify-center flex-row"
         onClick={submitForm}
       >
-        <div className="flex bg-red mx-5">
+        <div className="flex bg-red mx-5" hidden={!!props.hidden}>
           <IconFilter />
           Filter
         </div>

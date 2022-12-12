@@ -11,9 +11,10 @@ import dayjs from 'dayjs';
 import { fetcher } from '@api/fetcher';
 import { useModals } from '@mantine/modals';
 import useInput from '@hooks/useInput';
-import { useEffect, useTransition } from 'react';
+import { useEffect, useTransition, useState } from 'react';
 import { showNotification } from '@mantine/notifications';
 import Lock from 'icons/Lock';
+import { DateRangePicker, DateRangePickerValue } from '@mantine/dates';
 
 export default function ReportHourly(/*props*/) {
   const router = useRouter();
@@ -28,6 +29,9 @@ export default function ReportHourly(/*props*/) {
   const { data: dataSelected } = useSWR<IReportHourly>(
     input.selectedId !== '' ? `/api/v1/jobs/${input.selectedId}` : null
   );
+
+  const now = dayjs();
+  const [value, setValue] = useState<DateRangePickerValue>([now.toDate(), now.toDate()]);
 
   useEffect(() => {
     if (dataSelected) {
@@ -99,14 +103,18 @@ export default function ReportHourly(/*props*/) {
   };
 
   const exportXls = async () => {
+    // Contoh konversi data tanggal untuk call API database
+    // console.log(dayjs(value[0]).format('YYYY-MM-DD'));
+
     const response: any = await fetcher(
-      '/api/v1/jobs/export',
+      `/api/v1/jobs/export?start_date=${dayjs(value[0]).format('YYYY-MM-DD')}&end_date=${dayjs(value[1]).format(
+        'YYYY-MM-DD'
+      )}`,
       {
         method: 'GET',
       },
       true
     );
-    // console.log('Response from API ', response);
 
     const blob = new Blob([response], {
       type: 'text/plain',
@@ -192,35 +200,54 @@ export default function ReportHourly(/*props*/) {
 
   return (
     <>
-      <div className="px-6 pt-6">
-        <Text align="left" weight="bold" mb="xs" size="xl">
-          Job Report Hourly
-        </Text>
-        <div className="flex flex-col sm:flex-row pb-4 sm:pb-0">
-          <SearchForm searchName="Job Report Hourly " />
-          <div
-            className="cursor-pointer bg-black flex items-center h-[36px] px-6 mr-4 rounded"
-            style={{
-              display: 'flex',
-              flex: 1,
-            }}
-          >
-            <Popover withArrow>
-              <Popover.Target>
-                <Text className="text-white" weight={600} size={14}>
-                  Export
-                </Text>
-              </Popover.Target>
-              <Popover.Dropdown>
-                <Text onClick={() => exportXls()} size="sm" className="cursor-pointer min-w-[54px] py-1">
-                  Xls
-                </Text>
-              </Popover.Dropdown>
-            </Popover>
+      <div className="px-6 pt-6 mb-6">
+        <div>
+          <div>
+            <Text align="left" weight="bold" mb="xs" size="xl">
+              Job Report Hourly
+            </Text>
+            <div className="flex flex-col sm:flex-row pb-4 sm:pb-0">
+              <SearchForm searchName="Job Report Hourly" hidden />
+              <Button className="bg-black hover:bg-black px-6" onClick={() => goToAddReport()}>
+                Add New Job Report
+              </Button>
+            </div>
           </div>
-          <Button className="bg-black hover:bg-black px-6" onClick={() => goToAddReport()}>
-            Add New Job Report
-          </Button>
+
+          <div>
+            <div className="flex items-center flex-col sm:flex-row pb-4 sm:pb-0">
+              <div className="min-w-[384px]">
+                <div className="flex w-full">
+                  <DateRangePicker
+                    placeholder="Pick dates range"
+                    inputFormat="DD MMMM YYYY"
+                    labelFormat="DD MMMM YYYY"
+                    value={value}
+                    onChange={setValue}
+                  />
+                </div>
+              </div>
+              <div
+                className="cursor-pointer bg-black items-center h-[36px] px-6 mr-4 rounded ml-3"
+                style={{
+                  display: 'flex',
+                }}
+              >
+                <Popover withArrow>
+                  <Popover.Target>
+                    <Text className="text-white" weight={600} size={14}>
+                      Export
+                    </Text>
+                  </Popover.Target>
+                  <Popover.Dropdown>
+                    <Text onClick={() => exportXls()} size="sm" className="cursor-pointer min-w-[54px] py-1">
+                      Xls
+                    </Text>
+                  </Popover.Dropdown>
+                </Popover>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
