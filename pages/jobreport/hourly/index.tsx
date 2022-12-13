@@ -11,10 +11,10 @@ import dayjs from 'dayjs';
 import { fetcher } from '@api/fetcher';
 import { useModals } from '@mantine/modals';
 import useInput from '@hooks/useInput';
-import { useEffect, useTransition, useState } from 'react';
+import { useEffect, useTransition } from 'react';
 import { showNotification } from '@mantine/notifications';
 import Lock from 'icons/Lock';
-import { DateRangePicker, DateRangePickerValue } from '@mantine/dates';
+import { DatePicker } from '@mantine/dates';
 
 export default function ReportHourly(/*props*/) {
   const router = useRouter();
@@ -23,15 +23,14 @@ export default function ReportHourly(/*props*/) {
   const [, startTransition] = useTransition();
   const [input, handleInput] = useInput({
     selectedId: '',
+    start_date: '',
+    end_date: '',
   });
 
   const { data: dataReportHourly, mutate } = useSWR('/api/v1/jobs/');
   const { data: dataSelected } = useSWR<IReportHourly>(
     input.selectedId !== '' ? `/api/v1/jobs/${input.selectedId}` : null
   );
-
-  const now = dayjs();
-  const [value, setValue] = useState<DateRangePickerValue>([now.toDate(), now.toDate()]);
 
   useEffect(() => {
     if (dataSelected) {
@@ -103,32 +102,47 @@ export default function ReportHourly(/*props*/) {
   };
 
   const exportXls = async () => {
-    // Contoh konversi data tanggal untuk call API database
-    // console.log(dayjs(value[0]).format('YYYY-MM-DD'));
+    let callApi = '';
 
-    const response: any = await fetcher(
-      `/api/v1/jobs/export?start_date=${dayjs(value[0]).format('YYYY-MM-DD')}&end_date=${dayjs(value[1]).format(
-        'YYYY-MM-DD'
-      )}`,
-      {
-        method: 'GET',
-      },
-      true
-    );
+    if (input.start_date === '') {
+      showNotification({
+        title: 'Alert',
+        message: 'Please fill start date',
+        color: 'red',
+      });
+    } else {
+      if (input.end_date === '') {
+        callApi = `/api/v1/jobs/export?start_date=${dayjs(input.start_date).format('YYYY-MM-DD')}&end_date=${dayjs(
+          input.start_date
+        ).format('YYYY-MM-DD')}`;
+      } else {
+        callApi = `/api/v1/jobs/export?start_date=${dayjs(input.start_date).format('YYYY-MM-DD')}&end_date=${dayjs(
+          input.end_date
+        ).format('YYYY-MM-DD')}`;
+      }
 
-    const blob = new Blob([response], {
-      type: 'text/plain',
-    });
+      const response: any = await fetcher(
+        callApi,
+        {
+          method: 'GET',
+        },
+        true
+      );
 
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.style.display = 'none';
-    a.href = url;
-    // the filename you want
-    a.download = 'report-hourly.xlsx';
-    document.body.appendChild(a);
-    a.click();
-    window.URL.revokeObjectURL(url);
+      const blob = new Blob([response], {
+        type: 'text/plain',
+      });
+
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.style.display = 'none';
+      a.href = url;
+      // the filename you want
+      a.download = 'report-daily.xlsx';
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+    }
   };
 
   const body = () =>
@@ -216,15 +230,31 @@ export default function ReportHourly(/*props*/) {
 
           <div>
             <div className="flex items-center flex-col sm:flex-row pb-4 sm:pb-0">
-              <div className="min-w-[384px]">
+              <div>
                 <div className="flex w-full">
-                  <DateRangePicker
-                    placeholder="Pick dates range"
-                    inputFormat="DD MMMM YYYY"
-                    labelFormat="DD MMMM YYYY"
-                    value={value}
-                    onChange={setValue}
-                  />
+                  <div className="w-[178px]">
+                    <DatePicker
+                      placeholder="Start Date"
+                      value={input.start_date}
+                      onChange={(v) => {
+                        startTransition(() => {
+                          handleInput('start_date', true)(v);
+                        });
+                      }}
+                    />
+                  </div>
+                  <p className="p-3">-</p>
+                  <div className="w-[178px]">
+                    <DatePicker
+                      value={input.end_date}
+                      onChange={(v) => {
+                        startTransition(() => {
+                          handleInput('end_date', true)(v);
+                        });
+                      }}
+                      placeholder="End Date"
+                    />
+                  </div>
                 </div>
               </div>
               <div

@@ -2,7 +2,6 @@ import HeadingTop from '@components/TopComponents/Heading';
 import { createStyles, Grid, Text, Select, Textarea } from '@mantine/core';
 import { IconChevronDown } from '@tabler/icons';
 import useInput from '@hooks/useInput';
-import CheckboxList from '@components/Inputs/CheckBox';
 
 const useStyles = createStyles(() => ({
   label: {

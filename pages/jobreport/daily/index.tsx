@@ -6,18 +6,19 @@ import SearchForm from '@components/Forms/Search';
 import { useRouter } from 'next/router';
 import { IReportDaily } from '@contracts/report-daily-interface';
 import { fetcher } from '@api/fetcher';
-import { DateRangePicker, DateRangePickerValue } from '@mantine/dates';
-import { useState } from 'react';
+import { DatePicker } from '@mantine/dates';
+import useInput from '@hooks/useInput';
+import { useTransition } from 'react';
+import { showNotification } from '@mantine/notifications';
 
 export default function ReportDaily(/*props*/) {
   const router = useRouter();
   const { data: dataReportDailies } = useSWR('/api/v1/jobs/group');
-
-  const now = dayjs();
-  const [value, setValue] = useState<DateRangePickerValue>([
-    new Date(now.format('DD MMM YYYY')),
-    new Date(now.format('DD MMM YYYY')),
-  ]);
+  const [, startTransition] = useTransition();
+  const [input, handleInput] = useInput({
+    start_date: '',
+    end_date: '',
+  });
 
   const goToDetailPage = (item: any) => {
     router.push({
@@ -35,29 +36,47 @@ export default function ReportDaily(/*props*/) {
   };
 
   const exportXls = async () => {
-    const response: any = await fetcher(
-      `/api/v1/jobs/export?start_date=${dayjs(value[0]).format('YYYY-MM-DD')}&end_date=${dayjs(value[1]).format(
-        'YYYY-MM-DD'
-      )}`,
-      {
-        method: 'GET',
-      },
-      true
-    );
+    let callApi = '';
 
-    const blob = new Blob([response], {
-      type: 'text/plain',
-    });
+    if (input.start_date === '') {
+      showNotification({
+        title: 'Alert',
+        message: 'Please fill start date',
+        color: 'red',
+      });
+    } else {
+      if (input.end_date === '') {
+        callApi = `/api/v1/jobs/export?start_date=${dayjs(input.start_date).format('YYYY-MM-DD')}&end_date=${dayjs(
+          input.start_date
+        ).format('YYYY-MM-DD')}`;
+      } else {
+        callApi = `/api/v1/jobs/export?start_date=${dayjs(input.start_date).format('YYYY-MM-DD')}&end_date=${dayjs(
+          input.input.end_date
+        ).format('YYYY-MM-DD')}`;
+      }
 
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.style.display = 'none';
-    a.href = url;
-    // the filename you want
-    a.download = 'report-daily.xlsx';
-    document.body.appendChild(a);
-    a.click();
-    window.URL.revokeObjectURL(url);
+      const response: any = await fetcher(
+        callApi,
+        {
+          method: 'GET',
+        },
+        true
+      );
+
+      const blob = new Blob([response], {
+        type: 'text/plain',
+      });
+
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.style.display = 'none';
+      a.href = url;
+      // the filename you want
+      a.download = 'report-daily.xlsx';
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+    }
   };
 
   const body = () =>
@@ -87,15 +106,31 @@ export default function ReportDaily(/*props*/) {
 
           <div>
             <div className="flex items-center flex-col sm:flex-row pb-4 sm:pb-0">
-              <div className="min-w-[384px]">
+              <div>
                 <div className="flex w-full">
-                  <DateRangePicker
-                    placeholder="Pick dates range"
-                    inputFormat="DD MMMM YYYY"
-                    labelFormat="DD MMMM YYYY"
-                    value={value}
-                    onChange={setValue}
-                  />
+                  <div className="w-[178px]">
+                    <DatePicker
+                      placeholder="Start Date"
+                      value={input.start_date}
+                      onChange={(v) => {
+                        startTransition(() => {
+                          handleInput('start_date', true)(v);
+                        });
+                      }}
+                    />
+                  </div>
+                  <p className="p-3">-</p>
+                  <div className="w-[178px]">
+                    <DatePicker
+                      value={input.end_date}
+                      onChange={(v) => {
+                        startTransition(() => {
+                          handleInput('end_date', true)(v);
+                        });
+                      }}
+                      placeholder="End Date"
+                    />
+                  </div>
                 </div>
               </div>
               <div
