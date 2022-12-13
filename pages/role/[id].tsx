@@ -79,10 +79,6 @@ function ShowRolePage() {
               <Text className="mt-[1rem] mb-[1rem] text-[20px]" weight={700}>
                 Permission
               </Text>
-
-              <CheckboxList disabled />
-              <CheckboxList disabled />
-              <CheckboxList disabled />
             </Grid.Col>
             <Grid.Col md={6} />
           </Grid>
