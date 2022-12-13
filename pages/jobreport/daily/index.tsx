@@ -51,7 +51,7 @@ export default function ReportDaily(/*props*/) {
         ).format('YYYY-MM-DD')}`;
       } else {
         callApi = `/api/v1/jobs/export?start_date=${dayjs(input.start_date).format('YYYY-MM-DD')}&end_date=${dayjs(
-          input.input.end_date
+          input.end_date
         ).format('YYYY-MM-DD')}`;
       }
 
