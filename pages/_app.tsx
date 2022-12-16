@@ -95,6 +95,11 @@ function Application({ Component, pageProps }: { Component: any; pageProps: any 
                 input: 'bg-red',
               },
             },
+            MultiSelect: {
+              classNames: {
+                root: 'combobox-full',
+              },
+            },
             DatePicker: {
               classNames: {
                 wrapper: 'flex-grow',

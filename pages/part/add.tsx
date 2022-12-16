@@ -9,6 +9,8 @@ import Plus from 'icons/Plus';
 import Trash from 'icons/Trash';
 import useSWR from 'swr';
 import { IVendor } from '@contracts/vendor-interface';
+import { MultiDropdown } from '@components/Inputs/MultiDropdown';
+import { IAutomobile } from '@contracts/automobile-interface';
 
 const useStyles = createStyles(() => ({
   label: {
@@ -40,11 +42,18 @@ function AddPartPage() {
         vendor_id: '',
       },
     ],
+    automobile: [
+      {
+        automobile_id: '',
+      },
+    ],
   });
 
   const { data: dataVendor } = useSWR<IVendor[]>('/api/v1/vendors/');
+  const { data: dataAutomobiles } = useSWR<IAutomobile[]>('/api/v1/automobiles/');
   const doSubmit = async (e: any) => {
     e.preventDefault();
+
     const response = await fetcher('/api/v1/parts/', {
       method: 'POST',
       body: {
@@ -55,6 +64,7 @@ function AddPartPage() {
         req_pcs_input: Number(input.req_pcs_input),
         req_unit: input.req_unit,
         vendor_id: input.vendor,
+        automobile_id: input.automobile,
       },
     });
     console.log('Response from API ', response);
@@ -108,9 +118,6 @@ function AddPartPage() {
   const removeVendor = (index: number) => {
     handleInput('vendor', true)(input.vendor.filter((_: any, i: number) => i !== index));
   };
-  console.log('====================================');
-  console.log(input, input.vendor[0].vendor_id);
-  console.log('====================================');
   return (
     <>
       <HeadingTop
@@ -185,7 +192,13 @@ function AddPartPage() {
                 }}
               />
             </Grid.Col>
-            <Grid.Col md={6} />
+            <Grid.Col md={6}>
+              <MultiDropdown
+                label="Automobile"
+                data={dataAutomobiles?.map(({ ID, model }) => ({ value: ID.toString(), label: model })) || []}
+                onChange={handleInput('automobile', true)}
+              />
+            </Grid.Col>
 
             <Grid.Col md={6}>
               {input.vendor.map((vendor: any, ti: number) => (
