@@ -80,7 +80,7 @@ function PartsPage() {
               </div>
             </Menu.Target>
             <Menu.Dropdown>
-              <Menu.Label>{item.name}</Menu.Label>
+              <Menu.Label>{item.name_input}</Menu.Label>
               <Menu.Item icon={<Edit2 />} onClick={() => Router.push(`/part/edit/${item.ID}`)}>
                 Edit Part
               </Menu.Item>

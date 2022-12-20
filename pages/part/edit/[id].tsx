@@ -10,6 +10,8 @@ import Trash from 'icons/Trash';
 import useSWR from 'swr';
 import { IParts } from '@contracts/parts-interface';
 import { IVendor } from '@contracts/vendor-interface';
+import { MultiDropdown } from '@components/Inputs/MultiDropdown';
+import { IAutomobile } from '@contracts/automobile-interface';
 
 const useStyles = createStyles(() => ({
   label: {
@@ -28,22 +30,24 @@ const useStyles = createStyles(() => ({
 function EditPartPage() {
   const { classes } = useStyles();
   const router = useRouter();
-  const id = router.query.id as unknown as number;
-  const { data: Part } = useSWR<IParts[]>(`/api/v1/parts/${id}`);
+  const id_part = router.query.id as unknown as number;
+  const { data: Part, mutate } = useSWR<IParts>(`/api/v1/parts/${id_part}`);
+  const { data: dataAutomobiles } = useSWR<IAutomobile[]>('/api/v1/automobiles/');
   const { data: dataVendor } = useSWR<IVendor[]>('/api/v1/vendors/');
 
   const [input, handleInput] = useInput({
-    name_input: Part ? Part[0]?.name_input : '',
-    brand_input: Part ? Part[0]?.brand_input : '',
-    category: Part ? Part[0]?.category : '',
-    material_input: Part ? Part[0]?.material_input : '',
-    req_pcs_input: Part ? Part[0]?.req_pcs_input : '',
-    req_unit: Part ? Part[0]?.req_unit : '',
-    vendor: Part ? Part[0]?.vendor_id : [],
+    name_input: Part ? Part?.name_input : '',
+    brand_input: Part ? Part?.brand_input : '',
+    category: Part ? Part?.category : '',
+    material_input: Part ? Part?.material_input : '',
+    req_pcs_input: Part ? Part?.req_pcs_input : '',
+    req_unit: Part ? Part?.req_unit : '',
+    vendor: Part ? Part?.vendors : [],
+    automobile: Part ? Part?.automobiles.map(({ id }) => id.toString()) : [],
   });
   const doSubmit = async (e: any) => {
     e.preventDefault();
-    const response = await fetcher(`/api/v1/parts/${id}`, {
+    const response = await fetcher(`/api/v1/parts/${id_part}`, {
       method: 'PATCH',
       body: {
         name_input: input.name_input,
@@ -52,10 +56,12 @@ function EditPartPage() {
         material_input: input.material_input,
         req_pcs_input: Number(input.req_pcs_input),
         req_unit: input.req_unit,
-        vendor_id: input.vendor,
+        vendors: input.vendor,
+        automobile: input.automobile,
       },
     });
-    console.log('Response from API ', response);
+    // console.log('Response from API ', response);
+    mutate();
     if (response) {
       showNotification({
         title: 'Success',
@@ -83,7 +89,7 @@ function EditPartPage() {
     )([
       ...input.vendor,
       {
-        vendor_id: '',
+        name: '',
       },
     ]);
   };
@@ -99,7 +105,7 @@ function EditPartPage() {
         if (i === index) {
           return {
             ...x,
-            vendor_id: Number(val),
+            name: val,
           };
         }
         return x;
@@ -110,10 +116,10 @@ function EditPartPage() {
   return (
     <>
       <HeadingTop
-        text="Add New Part"
+        text="Edit Part"
         items={[
           { title: 'Parts', href: '/part' },
-          { title: 'Add New Part', href: '' },
+          { title: 'Edit Part', href: '' },
         ]}
       />
 
@@ -181,7 +187,14 @@ function EditPartPage() {
                 }}
               />
             </Grid.Col>
-            <Grid.Col md={6} />
+            <Grid.Col md={6}>
+              <MultiDropdown
+                label="Automobile"
+                data={dataAutomobiles?.map(({ ID, model }) => ({ value: ID.toString(), label: model })) || []}
+                onChange={handleInput('automobile', true)}
+                value={input.automobile}
+              />
+            </Grid.Col>
 
             <Grid.Col md={6}>
               {input.vendor.map((vendor: any, ti: number) => (
@@ -219,11 +232,12 @@ function EditPartPage() {
                     </div>
                   </div>
                   <Select
+                    key={input.vendor?.[ti].name}
                     label="Vendor"
                     placeholder="Select Vendor"
                     rightSection={<IconChevronDown size={14} />}
-                    data={dataVendor ? dataVendor.map((y) => ({ value: y.ID.toString(), label: y.name })) : []}
-                    value={input.vendor?.[ti].vendor_id.toString()}
+                    data={dataVendor ? dataVendor.map((y) => ({ value: y.name, label: y.name })) : []}
+                    value={input.vendor?.[ti].name}
                     onChange={handleInputVendor(ti)}
                   />
                 </>

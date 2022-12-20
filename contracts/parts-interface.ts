@@ -8,6 +8,11 @@ export interface IParts {
   material_input: string;
   req_pcs_input: string;
   req_unit: number;
-  vendor_id: [];
-  Vendor?: IVendor;
+  vendors?: IVendor[];
+  automobiles: IAutomobile[];
+}
+
+export interface IAutomobile {
+  id: number;
+  name: string;
 }

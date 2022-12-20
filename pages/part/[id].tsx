@@ -1,16 +1,16 @@
 import ListDetail from '@components/ListDetail';
 import HeadingTop from '@components/TopComponents/Heading';
-import { IParts } from '@contracts/parts-interface';
+import { IAutomobile, IParts } from '@contracts/parts-interface';
 import { IVendor } from '@contracts/vendor-interface';
 import { Grid, Text } from '@mantine/core';
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
+import { Fragment } from 'react';
 
 function PartDetailPages() {
   const router = useRouter();
   const id = router.query.id as unknown as number;
-  const { data: Part } = useSWR<IParts[]>(`/api/v1/parts/${id}`);
-  const { data: Vendor } = useSWR<IVendor[]>('/api/v1/vendors/');
+  const { data: Part } = useSWR<IParts>(`/api/v1/parts/${id}`);
 
   return (
     <>
@@ -25,29 +25,37 @@ function PartDetailPages() {
         <Text className="mt-[1rem] mb-[1rem] text-[20px]" weight={700}>
           Details
         </Text>
-        <Grid gutter="xl" className="mb-10">
-          <ListDetail List="Name" IsiList={Part ? Part[0]?.name_input : ''} />
-          <ListDetail List="Category" IsiList={Part ? Part[0]?.category : ''} />
-          <ListDetail List="Part Brand" IsiList={Part ? Part[0]?.brand_input : ''} />
-          <ListDetail
-            List="Req. Pcs"
-            IsiList={Part ? `${Part[0]?.req_pcs_input.toString()} ${Part[0]?.req_unit}` : ''}
-          />
-          <ListDetail List="Part Material" IsiList={Part ? Part[0]?.material_input : ''} />
+        <Grid gutter="xl">
+          <ListDetail List="Name" IsiList={Part ? Part?.name_input : ''} />
+          <ListDetail List="Category" IsiList={Part ? Part?.category : ''} />
+          <ListDetail List="Part Brand" IsiList={Part ? Part?.brand_input : ''} />
+          <ListDetail List="Req. Pcs" IsiList={Part ? `${Part?.req_pcs_input.toString()} ${Part?.req_unit}` : ''} />
+          <ListDetail List="Part Material" IsiList={Part ? Part?.material_input : ''} />
         </Grid>
-        <Text className="mt-[1rem] mb-[1rem] text-[20px]" weight={700}>
+        <Text className="mt-4 mb-[1rem] text-[20px]" weight={700}>
           Vendor
         </Text>
-        {Part &&
-          // eslint-disable-next-line @typescript-eslint/no-shadow
-          Part[0].vendor_id?.map((data: any, id: number) => (
-            <Grid key={id} gutter="xl" className="mb-10">
-              <ListDetail
-                List="Vendor"
-                IsiList={Vendor?.filter((vendor: any) => vendor.ID === data.vendor_id)[0].name}
-              />
-            </Grid>
-          ))}
+        <Grid gutter="xl">
+          {Part &&
+            // eslint-disable-next-line @typescript-eslint/no-shadow
+            Part.vendors?.map((data: IVendor) => (
+              <Fragment key={data.name}>
+                <ListDetail List="Vendor" IsiList={data.name} />
+              </Fragment>
+            ))}
+        </Grid>
+        <Text className="mt-4 mb-[1rem] text-[20px]" weight={700}>
+          Automobile
+        </Text>
+        <Grid key={id} gutter="xl">
+          {Part &&
+            // eslint-disable-next-line @typescript-eslint/no-shadow
+            Part.automobiles?.map((data: IAutomobile, id: number) => (
+              <Fragment key={id}>
+                <ListDetail List="Automobile" IsiList={data.name} />
+              </Fragment>
+            ))}
+        </Grid>
       </div>
     </>
   );

@@ -39,20 +39,17 @@ function AddPartPage() {
     req_unit: 'Pcs',
     vendor: [
       {
-        vendor_id: '',
+        name: '',
       },
     ],
-    automobile: [
-      {
-        automobile_id: '',
-      },
-    ],
+    automobile: [],
   });
 
   const { data: dataVendor } = useSWR<IVendor[]>('/api/v1/vendors/');
   const { data: dataAutomobiles } = useSWR<IAutomobile[]>('/api/v1/automobiles/');
   const doSubmit = async (e: any) => {
     e.preventDefault();
+    // console.log('input ', input);
 
     const response = await fetcher('/api/v1/parts/', {
       method: 'POST',
@@ -63,8 +60,8 @@ function AddPartPage() {
         material_input: input.material_input,
         req_pcs_input: Number(input.req_pcs_input),
         req_unit: input.req_unit,
-        vendor_id: input.vendor,
-        automobile_id: input.automobile,
+        vendors: input.vendor,
+        automobile: input.automobile,
       },
     });
     console.log('Response from API ', response);
@@ -95,7 +92,7 @@ function AddPartPage() {
     )([
       ...input.vendor,
       {
-        vendor_id: '',
+        name: '',
       },
     ]);
   };
@@ -108,7 +105,7 @@ function AddPartPage() {
         if (i === index) {
           return {
             ...x,
-            vendor_id: Number(val),
+            name: val,
           };
         }
         return x;
@@ -239,8 +236,8 @@ function AddPartPage() {
                     label="Vendor"
                     placeholder="Select Vendor"
                     rightSection={<IconChevronDown size={14} />}
-                    data={dataVendor ? dataVendor.map((y) => ({ value: y.ID.toString(), label: y.name })) : []}
-                    value={input.vendor[ti].vendor_id.toString()}
+                    data={dataVendor ? dataVendor.map((y) => ({ value: y.name, label: y.name })) : []}
+                    value={input.vendor[ti].name}
                     onChange={handleInputVendor(ti)}
                   />
                 </>
