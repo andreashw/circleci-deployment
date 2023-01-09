@@ -51,7 +51,7 @@ function ProjectPage() {
     // });
   }
   console.log('====================================');
-  console.log(dataPic?.filter((a) => a.ID === 2)[0].Name);
+//   console.log(dataPic?.filter((a) => a.ID === 2)[0].Name);
   console.log('====================================');
 
   const body = () =>
@@ -61,13 +61,13 @@ function ProjectPage() {
           {item.name}
         </td>
         <td className="cursor-pointer " onClick={() => Router.push(`/project/${item.ID}`)}>
-          {dataClient?.filter((a) => a.ID === item.client_id)[0].Name}
+          {item.Client.name}
         </td>
         <td className="cursor-pointer w-2/12 " onClick={() => Router.push(`/project/${item.ID}`)}>
-          {dataPic?.filter((a) => a.ID === item.pic_id)[0].Name}
+          {item.Pic.name}
         </td>
         <td className="cursor-pointer " onClick={() => Router.push(`/project/${item.ID}`)}>
-          {dataAutomobile?.filter((a) => a.ID === item.automobile_id)[0].Name}
+          {item.Automobile.model} - {item.Automobile.year_start}
         </td>
 
         <td className="cursor-pointer w-2/12" onClick={() => Router.push(`/project/${item.ID}`)}>
