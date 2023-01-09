@@ -36,7 +36,7 @@ function DetailProjectPage() {
             List="Engine"
             IsiList={
               Project
-                ? `${Project[0].Engine?.name} ( ${Project[0].Engine?.year_start}-${Project[0].Engine?.year_end})`
+                ? `${Project[0].Automobile?.AutomobileManufactures?.name}${Project[0].Engine?.name} ( ${Project[0].Engine?.year_start}-${Project[0].Engine?.year_end})`
                 : ''
             }
           />
