@@ -22,7 +22,7 @@ export async function fetcher<T>(url: string, payload?: IPayload, blob = false):
       responseType: blob ? 'blob' : 'json',
     });
 
-    return fetchData.data?.data || fetchData.data;
+    return fetchData.data?.data || fetchData.data?.response || fetchData.data;
   } catch (error) {
     throw new Error('Something Wrong');
   }

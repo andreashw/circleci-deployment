@@ -1,4 +1,4 @@
-import { Table, ScrollArea, Text, Button, Popover } from '@mantine/core';
+import { Table, ScrollArea, Text, Button, Popover, Pagination, Select } from '@mantine/core';
 
 import dayjs from 'dayjs';
 import useSWR from 'swr';
@@ -13,12 +13,25 @@ import { showNotification } from '@mantine/notifications';
 
 export default function ReportDaily(/*props*/) {
   const router = useRouter();
-  const { data: dataReportDailies } = useSWR('/api/v1/jobs/group');
   const [, startTransition] = useTransition();
   const [input, handleInput] = useInput({
+    page: 1,
+    search: '',
     start_date: '',
     end_date: '',
+    limit: '100',
   });
+  const { data: dataReportDailies } = useSWR(
+    `/api/v1/jobs/group?page=${input.page}&search=${input.search}&start_date=${
+      input.start_date ? dayjs(input.start_date).format('YYYY-MM-DD') : ''
+    }&end_date=${input.end_date ? dayjs(input.end_date).format('YYYY-MM-DD') : ''}&limit=${input?.limit}`
+  );
+
+  function btnSearch(search: any) {
+    startTransition(() => {
+      handleInput('search', true)(search);
+    });
+  }
 
   const goToDetailPage = (item: any) => {
     router.push({
@@ -80,13 +93,24 @@ export default function ReportDaily(/*props*/) {
   };
 
   const body = () =>
-    dataReportDailies.map((item: IReportDaily, index: any) => (
+    dataReportDailies?.data?.map((item: IReportDaily, index: any) => (
       <tr key={index}>
         <td onClick={() => goToDetailPage(item)}>{dayjs(item.date).format('ddd, DD MMM YYYY')}</td>
         <td onClick={() => goToDetailPage(item)}>{item.worker}</td>
-        <td onClick={() => goToDetailPage(item)}>{item.department.name}</td>
+        <td onClick={() => goToDetailPage(item)}>{item.department}</td>
       </tr>
     ));
+
+  function setPage(page: any) {
+    startTransition(() => {
+      handleInput('page', true)(page);
+    });
+  }
+  function onChangeSelectLimit(limit: any) {
+    startTransition(() => {
+      handleInput('limit', true)(limit);
+    });
+  }
 
   return (
     <>
@@ -94,10 +118,10 @@ export default function ReportDaily(/*props*/) {
         <div>
           <div>
             <Text align="left" weight="bold" mb="xs" size="xl">
-              Job Report Hourly
+              Job Report Daily
             </Text>
             <div className="flex flex-col sm:flex-row pb-4 sm:pb-0">
-              <SearchForm searchName="Job Report Hourly" hidden />
+              <SearchForm searchName="Job Report Hourly" onSubmit={btnSearch} />
               <Button className="bg-black hover:bg-black px-6" onClick={() => goToAddReport()}>
                 Add New Job Report
               </Button>
@@ -157,7 +181,7 @@ export default function ReportDaily(/*props*/) {
         </div>
       </div>
 
-      {dataReportDailies.length > 0 ? (
+      {dataReportDailies?.data?.length > 0 ? (
         <ScrollArea>
           <Table highlightOnHover>
             <thead>
@@ -176,12 +200,26 @@ export default function ReportDaily(/*props*/) {
         </Text>
       )}
 
-      {/* <div className="flex justify-between my-5 p-6">
-        <Text color="#828282" size={14}>
-          Show 10 from 1020 automobiles
-        </Text>
-        <Pagination page={activePage} onChange={setPage} total={10} />
-      </div> */}
+      <div className="flex justify-between my-5 p-6">
+        <div className="flex-row flex items-center">
+          <div className="w-28 mr-8">
+            <Select
+              // rightSection={<RightSection />}
+              value={input?.limit}
+              data={[
+                { value: '100', label: '100' },
+                { value: '500', label: '500' },
+                { value: '1000', label: '1000' },
+              ]}
+              onChange={onChangeSelectLimit}
+            />
+          </div>
+          <Text color="#828282" size={14}>
+            Show {dataReportDailies?.data_per_page} from {dataReportDailies?.total_data} jobreport Daily
+          </Text>
+        </div>
+        <Pagination page={dataReportDailies?.current_page} onChange={setPage} total={dataReportDailies?.total_page} />
+      </div>
     </>
   );
 }

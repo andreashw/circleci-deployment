@@ -1,4 +1,4 @@
-import { Table, ScrollArea, Menu, Text, Button, Divider, Popover } from '@mantine/core';
+import { Table, ScrollArea, Menu, Text, Button, Divider, Popover, Pagination, Select } from '@mantine/core';
 
 import { Edit2, Trash2 } from 'react-feather';
 import { IconDotsVertical } from '@tabler/icons';
@@ -22,12 +22,19 @@ export default function ReportHourly(/*props*/) {
 
   const [, startTransition] = useTransition();
   const [input, handleInput] = useInput({
+    page: 1,
+    search: '',
     selectedId: '',
     start_date: '',
     end_date: '',
+    limit: '100',
   });
 
-  const { data: dataReportHourly, mutate } = useSWR('/api/v1/jobs/');
+  const { data: dataReportHourly, mutate } = useSWR(
+    `/api/v1/jobs/?page=${input.page}&search=${input.search}&start_date=${
+      input.start_date ? dayjs(input.start_date).format('YYYY-MM-DD') : ''
+    }&end_date=${input.end_date ? dayjs(input.end_date).format('YYYY-MM-DD') : ''}&limit=${input.limit}`
+  );
   const { data: dataSelected } = useSWR<IReportHourly>(
     input.selectedId !== '' ? `/api/v1/jobs/${input.selectedId}` : null
   );
@@ -145,8 +152,13 @@ export default function ReportHourly(/*props*/) {
     }
   };
 
+  function setPage(page: any) {
+    startTransition(() => {
+      handleInput('page', true)(page);
+    });
+  }
   const body = () =>
-    dataReportHourly.map((item: IReportHourly, index: any) => (
+    dataReportHourly.data.map((item: IReportHourly, index: any) => (
       <tr key={index}>
         <td
           onClick={() => router.push(`/jobreport/hourly/${item.ID}`)}
@@ -212,6 +224,17 @@ export default function ReportHourly(/*props*/) {
       </tr>
     ));
 
+  function btnSearch(search: any) {
+    startTransition(() => {
+      handleInput('search', true)(search);
+    });
+  }
+  function onChangeSelectLimit(limit: any) {
+    startTransition(() => {
+      handleInput('limit', true)(limit);
+    });
+  }
+
   return (
     <>
       <div className="px-6 pt-6 mb-6">
@@ -221,7 +244,7 @@ export default function ReportHourly(/*props*/) {
               Job Report Hourly
             </Text>
             <div className="flex flex-col sm:flex-row pb-4 sm:pb-0">
-              <SearchForm searchName="Job Report Hourly" hidden />
+              <SearchForm searchName="Job Report Hourly" onSubmit={btnSearch} />
               <Button className="bg-black hover:bg-black px-6" onClick={() => goToAddReport()}>
                 Add New Job Report
               </Button>
@@ -281,7 +304,7 @@ export default function ReportHourly(/*props*/) {
         </div>
       </div>
 
-      {dataReportHourly.length > 0 ? (
+      {dataReportHourly.data?.length > 0 ? (
         <ScrollArea>
           <Table highlightOnHover>
             <thead>
@@ -304,12 +327,26 @@ export default function ReportHourly(/*props*/) {
         </Text>
       )}
 
-      {/* <div className="flex justify-between my-5 p-6">
-        <Text color="#828282" size={14}>
-          Show 10 from 1020 automobiles
-        </Text>
-        <Pagination page={activePage} onChange={setPage} total={10} />
-      </div> */}
+      <div className="flex justify-between my-5 p-6">
+        <div className="flex-row flex items-center">
+          <div className="w-28 mr-8">
+            <Select
+              // rightSection={<RightSection />}
+              value={input?.limit}
+              data={[
+                { value: '100', label: '100' },
+                { value: '500', label: '500' },
+                { value: '1000', label: '1000' },
+              ]}
+              onChange={onChangeSelectLimit}
+            />
+          </div>
+          <Text color="#828282" size={14}>
+            Show {dataReportHourly?.data_per_page} from {dataReportHourly?.total_data} jobreport hourly
+          </Text>
+        </div>
+        <Pagination page={dataReportHourly?.current_page} onChange={setPage} total={dataReportHourly?.total_page} />
+      </div>
     </>
   );
 }
