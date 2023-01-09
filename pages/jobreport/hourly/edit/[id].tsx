@@ -10,7 +10,7 @@ import { Dropdown } from '@components/Inputs/Dropdown';
 import { IReportHourly } from '@contracts/report-hourly-interface';
 import { IEngineer } from '@contracts/enginers-interface';
 import { IProject } from '@contracts/project-interface';
-import { HourRange } from '@components/Inputs/HourRange';
+import { V2HourRange } from '@components/Inputs/HourRange';
 import { IconChevronDown } from '@tabler/icons';
 import { useEffect } from 'react';
 import dayjs from 'dayjs';
@@ -26,8 +26,8 @@ function EditHourly() {
   const [input, handleInput] = useInput({
     report_date: dayjs(hourly?.date).toDate(),
     engineer: hourly?.worker_id,
-    start_hour: hourly?.start_hour,
-    end_hour: hourly?.end_hour,
+    start_hour: Date.parse(`${dayjs(Date.now()).format('MM-DD-YYYY')} ${hourly?.start_hour}`) / 1000,
+    end_hour: Date.parse(`${dayjs(Date.now()).format('MM-DD-YYYY')} ${hourly?.end_hour}`) / 1000,
     project: hourly?.project_id,
     department: hourly?.department_id,
     job: hourly?.job_description,
@@ -44,8 +44,8 @@ function EditHourly() {
       method: 'PATCH',
       body: {
         date: formatedDate,
-        start_hour: input.start_hour,
-        end_hour: input.end_hour,
+        start_hour: dayjs(new Date(input.start_hour * 1000)).format('HH:mm'),
+        end_hour: dayjs(new Date(input.end_hour * 1000)).format('HH:mm'),
         worker_id: Number(input.engineer),
         project_id: Number(input.project),
         department_id: Number(input.department),
@@ -66,23 +66,32 @@ function EditHourly() {
 
   useEffect(() => {
     if (input.start_hour !== '' && input.end_hour !== '') {
-      const start_hour = parseInt(input.start_hour?.split(':')[0], 10);
-      const end_hour = parseInt(input.end_hour?.split(':')[0], 10);
+      const start_hour = Math.floor(input.start_hour);
+      const end_hour = Math.floor(input.end_hour);
+      const total_hour = end_hour - start_hour;
+      const hour = total_hour / 3600;
+      const menit = (total_hour % 3600) / 60;
 
-      if (end_hour < start_hour) {
-        handleInput('end_hour', true)('');
+      console.log('====================================');
+      console.log(start_hour, end_hour);
+      console.log('====================================');
+
+      if (total_hour < 0) {
         handleInput('total_hour', true)('');
-        showNotification({
-          title: 'Alert',
-          message: 'End Hour not valid',
-          color: 'red',
-        });
       } else {
-        handleInput('total_hour', true)(end_hour - start_hour);
+        handleInput('total_hour', true)(`${Math.floor(hour)}.${Math.floor(menit)}`);
       }
     }
   }, [input.start_hour, input.end_hour]);
-
+  console.log('====================================');
+  console.log(input.start_hour);
+  console.log(dayjs(hourly?.start_hour).toDate());
+  console.log(new Date().getTime() / 1000, dayjs(hourly?.date).format('DD-MM-YYYY'), hourly?.start_hour);
+  console.log('====================================');
+  console.log(Date.parse(`${dayjs(Date.now()).format('DD-MM-YYYY')} ${hourly?.start_hour}`) / 1000, 'ini ya');
+  console.log('====================================');
+  console.log(new Date(`${hourly?.date} ${hourly?.start_hour}`), dayjs(Date.now()).format('DD-MM-YYYY'));
+  console.log('====================================');
   return (
     <>
       <HeadingTop
@@ -118,16 +127,17 @@ function EditHourly() {
           </Grid>
 
           <Text className="mt-[1rem] mb-[1rem] text-[20px] font-bold" size="lg">
-            Task
+            Job
           </Text>
           <Grid gutter="xl">
             <Grid.Col md={6} className="flex flex-row items-center">
-              <HourRange
+              <V2HourRange
                 label="Hour"
-                valStart={input.start_hour}
-                valEnd={input.end_hour}
-                onStartChange={handleInput('start_hour', true)}
-                onEndChange={handleInput('end_hour', true)}
+                valueStart={input.start_hour !== '' ? new Date(input.start_hour * 1000) : null}
+                valueEnd={input.end_hour !== '' ? new Date(input.end_hour * 1000) : null}
+                onStartChange={(val) => handleInput('start_hour', true)(val / 1000)}
+                onEndChange={(val) => handleInput('end_hour', true)(val / 1000)}
+                error={input.end_hour < input.start_hour}
               />
             </Grid.Col>
             <Grid.Col md={6}>
@@ -174,7 +184,7 @@ function EditHourly() {
             <Grid.Col md={12}>
               <Textarea
                 styles={{ input: { height: 'unset !important' } }}
-                label="Task"
+                label="Description"
                 placeholder="e.g do some work"
                 minRows={4}
                 value={input.task}
