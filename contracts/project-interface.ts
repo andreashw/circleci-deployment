@@ -1,5 +1,6 @@
 import { IAutomobile } from './automobile-interface';
 import { IClient, IProvince } from './client-interface';
+import { IEngine } from './engine-interface';
 
 export interface IProject {
   ID: number;
@@ -12,6 +13,6 @@ export interface IProject {
   Pic?: IProvince;
   Automobile?: IAutomobile;
   power_type: string;
-  Engine?: IProvince;
+  Engine?: IEngine;
   notes: string;
 }
