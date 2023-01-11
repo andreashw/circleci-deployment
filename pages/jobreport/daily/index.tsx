@@ -31,6 +31,7 @@ export default function ReportDaily(/*props*/) {
   const router = useRouter();
 
   const [idSpec, setIdspec] = useState<any>([]);
+  const [idSpecPage, setIdspecPage] = useState<any>([]);
   const [SelectBTNBool, setSelectBTNBool] = useState(true);
   const [checkedBTNBool, setCheckedBTNBool] = useState(false);
 
@@ -166,6 +167,8 @@ export default function ReportDaily(/*props*/) {
     });
   }
   function onChangeSelectLimit(limit: any) {
+    handleInput('page', true)('1');
+    setIdspecPage([]);
     startTransition(() => {
       handleInput('limit', true)(limit);
     });
@@ -307,24 +310,22 @@ export default function ReportDaily(/*props*/) {
                       <Checkbox
                         // eslint-disable-next-line @typescript-eslint/no-unused-vars
                         onChange={(e) => {
-                          if (checkedBTNBool) {
-                            setIdspec([]);
+                          const currentPageIds = dataReportDailies.data
+                            .filter((x: any) => x.Deletable)
+                            .map((x: any) => x.Id);
+                          if (idSpecPage.includes(input.page)) {
+                            setIdspec((prev: any) => prev.filter((id: any) => !currentPageIds.includes(id)));
+                            setIdspecPage(idSpecPage.filter((x: any) => x !== input.page));
+
                             setCheckedBTNBool(!checkedBTNBool);
                           } else {
-                            setIdspec(
-                              dataReportDailies.data
-                                ?.filter((x: any) => x.Deletable === true)
-                                ?.reduce((prev: any[], curr: { Id: any }) => {
-                                  // eslint-disable-next-line no-param-reassign
-                                  prev = [...prev, curr.Id];
-                                  return prev;
-                                }, [])
-                            );
+                            setIdspec((prev: any) => [...prev, ...currentPageIds]);
+                            setIdspecPage([...idSpecPage, input.page]);
 
                             setCheckedBTNBool(!checkedBTNBool);
                           }
                         }}
-                        checked={checkedBTNBool}
+                        checked={idSpecPage.includes(input.page)}
                       />
                     </Tooltip>
                   </th>
