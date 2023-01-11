@@ -155,17 +155,12 @@ function PayrollPage() {
                       <Checkbox
                         // eslint-disable-next-line @typescript-eslint/no-unused-vars
                         onChange={(e) => {
+                          const currentPageIds = dataPayroll.map((x: any) => x.ID);
                           if (checkedBTNBool) {
-                            setIdspec([]);
+                            setIdspec((prev: any) => prev.filter((id: any) => !currentPageIds.includes(id)));
                             setCheckedBTNBool(!checkedBTNBool);
                           } else {
-                            setIdspec(
-                              dataPayroll?.reduce((prev: any[], curr: { ID: any }) => {
-                                // eslint-disable-next-line no-param-reassign
-                                prev = [...prev, curr.ID];
-                                return prev;
-                              }, [])
-                            );
+                            setIdspec((prev: any) => [...prev, ...currentPageIds]);
 
                             setCheckedBTNBool(!checkedBTNBool);
                           }
