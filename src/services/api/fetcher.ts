@@ -27,8 +27,8 @@ export async function fetcher<T>(url: string, payload?: IPayload, blob = false):
   } catch (error: any) {
     console.log(error.response.status, 'tes');
     if (error.response.status === 401) {
-      Router.push('/login');
       Cookies.remove('token');
+      Router.replace('/login');
     } else if (error.response.status === 400) {
       // throw new Error('Something Wrong');
       throw error.response;
