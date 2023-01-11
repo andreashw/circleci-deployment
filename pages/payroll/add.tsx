@@ -106,6 +106,7 @@ function AddPayrollPage() {
                       });
                     }}
                     label="Periode"
+                    required
                   />
                   <p className="p-3">-</p>
                   <DatePicker
@@ -129,6 +130,7 @@ function AddPayrollPage() {
                   }}
                   placeholder="Select Date"
                   label="Payroll Date"
+                  required
                 />
               </Grid.Col>
             </Grid>
