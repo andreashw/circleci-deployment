@@ -33,6 +33,7 @@ export default function ReportHourly(/*props*/) {
   const modals = useModals();
 
   const [idSpec, setIdspec] = useState<any>([]);
+  const [idSpecPage, setIdspecPage] = useState<any>([]);
   const [SelectBTNBool, setSelectBTNBool] = useState(true);
   const [checkedBTNBool, setCheckedBTNBool] = useState(false);
 
@@ -202,6 +203,7 @@ export default function ReportHourly(/*props*/) {
 
   console.log('====================================');
   console.log(idSpec);
+  console.log(idSpecPage);
   console.log('====================================');
   // function cektesdata() {
   //   const dataA = dataReportHourly.data
@@ -229,7 +231,6 @@ export default function ReportHourly(/*props*/) {
                 }
               }}
               checked={idSpec.includes(item.ID)}
-              alt="Select All"
             />
           </td>
         )}
@@ -303,6 +304,8 @@ export default function ReportHourly(/*props*/) {
     });
   }
   function onChangeSelectLimit(limit: any) {
+    handleInput('page', true)('1');
+    setIdspecPage([]);
     startTransition(() => {
       handleInput('limit', true)(limit);
     });
@@ -407,24 +410,21 @@ export default function ReportHourly(/*props*/) {
                       <Checkbox
                         // eslint-disable-next-line @typescript-eslint/no-unused-vars
                         onChange={(e) => {
-                          if (checkedBTNBool) {
-                            setIdspec([]);
+                          const currentPageIds = dataReportHourly.data
+                            .filter((x: any) => !x.paid)
+                            .map((x: any) => x.ID);
+                          if (idSpecPage.includes(input.page)) {
+                            setIdspec((prev: any) => prev.filter((id: any) => !currentPageIds.includes(id)));
+                            setIdspecPage(idSpecPage.filter((x: any) => x !== input.page));
                             setCheckedBTNBool(!checkedBTNBool);
                           } else {
-                            setIdspec(
-                              dataReportHourly.data
-                                ?.filter((x: any) => x.paid === false)
-                                ?.reduce((prev: any[], curr: { ID: any }) => {
-                                  // eslint-disable-next-line no-param-reassign
-                                  prev = [...prev, curr.ID];
-                                  return prev;
-                                }, [])
-                            );
+                            setIdspec((prev: any) => [...prev, ...currentPageIds]);
+                            setIdspecPage([...idSpecPage, input.page]);
 
                             setCheckedBTNBool(!checkedBTNBool);
                           }
                         }}
-                        checked={checkedBTNBool}
+                        checked={idSpecPage.includes(input.page)}
                       />
                     </Tooltip>
                   </th>
@@ -454,7 +454,7 @@ export default function ReportHourly(/*props*/) {
               // rightSection={<RightSection />}
               value={input?.limit}
               data={[
-                { value: '100', label: '100' },
+                { value: '3', label: '3' },
                 { value: '500', label: '500' },
                 { value: '1000', label: '1000' },
               ]}

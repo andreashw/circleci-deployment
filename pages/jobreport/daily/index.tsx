@@ -129,7 +129,6 @@ export default function ReportDaily(/*props*/) {
                 }
               }}
               checked={idSpec.includes(item.Id)}
-              alt="Select All"
             />
           </td>
         )}
