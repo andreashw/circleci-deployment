@@ -51,23 +51,32 @@ function AddPayrollPage() {
 
   const doSubmit = async (e: any) => {
     e.preventDefault();
-    const response = await fetcher(
+    await fetcher(
       `/api/v1/payrolls/generate?start_date=${dayjs(input.start_date).format('YYYY-MM-DD')}&end_date=${dayjs(
         input.end_date
       ).format('YYYY-MM-DD')}&payroll_date=${dayjs(input.payroll_date).format('YYYY-MM-DD')}`,
       {
         method: 'POST',
       }
-    );
+    )
+      .then((res) => {
+        console.log(res);
 
-    if (response) {
-      showNotification({
-        title: 'Success',
-        message: 'Status payroll berhasil diubah',
-        color: 'teal',
+        showNotification({
+          title: 'Success',
+          message: 'Status payroll berhasil diubah',
+          color: 'teal',
+        });
+        Router.replace('/payroll');
+      })
+      .catch((err) => {
+        console.log(err, 'cek');
+        showNotification({
+          title: 'Error',
+          message: err.data.error,
+          color: 'red',
+        });
       });
-      Router.replace('/payroll');
-    }
   };
 
   return (

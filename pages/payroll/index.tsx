@@ -1,4 +1,4 @@
-import { ScrollArea, Drawer, Text, Table, Button, Menu } from '@mantine/core';
+import { ScrollArea, Drawer, Text, Table, Button, Menu, Checkbox, Tooltip } from '@mantine/core';
 import { useState } from 'react';
 import useSWR from 'swr';
 import SearchForm from '@components/Forms/Search';
@@ -7,15 +7,37 @@ import { Edit2 } from 'react-feather';
 import { IconDotsVertical } from '@tabler/icons';
 import dayjs from 'dayjs';
 import { rp } from '@support/formatter';
+import { showNotification } from '@mantine/notifications';
+import { fetcher } from '@api/fetcher';
 
 function PayrollPage() {
   const [drawerOpened, toggleDrawer] = useState(false);
 
-  const { data: dataPayroll } = useSWR('/api/v1/payrolls/');
+  const [idSpec, setIdspec] = useState<any>([]);
+  const [SelectBTNBool, setSelectBTNBool] = useState(true);
+  const [checkedBTNBool, setCheckedBTNBool] = useState(false);
+
+  const { data: dataPayroll, mutate } = useSWR('/api/v1/payrolls/');
+  console.log('tes id', idSpec);
 
   const body = () =>
     dataPayroll.map((item: any, index: any) => (
       <tr key={index}>
+        {!SelectBTNBool && (
+          <td className="w-8">
+            <Checkbox
+              // eslint-disable-next-line @typescript-eslint/no-unused-vars
+              onChange={(e) => {
+                if (idSpec.includes(item?.ID)) {
+                  setIdspec(idSpec.filter((id: number) => id !== item?.ID));
+                } else {
+                  setIdspec([...idSpec, item.ID]);
+                }
+              }}
+              checked={idSpec.includes(item.ID)}
+            />
+          </td>
+        )}
         <td className="cursor-pointer w-2/12" onClick={() => Router.push(`/payroll/${item.ID}`)}>
           {dayjs(item?.payroll_date).format('ddd, DD MMM YYYY')}
         </td>
@@ -63,6 +85,32 @@ function PayrollPage() {
         </td>
       </tr>
     ));
+  const doDeleteMultiple = async () => {
+    await fetcher('/api/v1/payrolls/', {
+      method: 'DELETE',
+      body: { ids: idSpec },
+    })
+      .then((res: any) => {
+        console.log(res, 'cek');
+
+        showNotification({
+          title: 'Success',
+          message: res.message,
+          color: 'teal',
+        });
+        setCheckedBTNBool(false);
+        setIdspec([]);
+        setSelectBTNBool(!SelectBTNBool);
+        mutate();
+      })
+      .catch((err) => {
+        showNotification({
+          title: 'Error',
+          message: err.message,
+          color: 'red',
+        });
+      });
+  };
 
   return (
     <>
@@ -75,9 +123,25 @@ function PayrollPage() {
         </Text>
         <div className="flex flex-col sm:flex-row pb-4 sm:pb-0">
           <SearchForm />
-          <Button className="bg-black hover:bg-black px-6" onClick={() => Router.push('/payroll/add')}>
-            Add New Payroll
-          </Button>
+          {SelectBTNBool ? (
+            <Button className="bg-black hover:bg-black px-6 mx-3" onClick={() => setSelectBTNBool(!SelectBTNBool)}>
+              Select
+            </Button>
+          ) : (
+            <>
+              <Button className="bg-black hover:bg-black px-6 mx-3" onClick={() => setSelectBTNBool(!SelectBTNBool)}>
+                Cencel
+              </Button>
+              <Button className="bg-black hover:bg-black px-6" onClick={() => doDeleteMultiple()}>
+                Delete
+              </Button>
+            </>
+          )}
+          {SelectBTNBool && (
+            <Button className="bg-black hover:bg-black px-6" onClick={() => Router.push('/payroll/add')}>
+              Add New Payroll
+            </Button>
+          )}
         </div>
       </div>
       {dataPayroll.length > 0 ? (
@@ -85,6 +149,32 @@ function PayrollPage() {
           <Table striped highlightOnHover>
             <thead>
               <tr>
+                {!SelectBTNBool && (
+                  <th className="w-8">
+                    <Tooltip label="Select All">
+                      <Checkbox
+                        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                        onChange={(e) => {
+                          if (checkedBTNBool) {
+                            setIdspec([]);
+                            setCheckedBTNBool(!checkedBTNBool);
+                          } else {
+                            setIdspec(
+                              dataPayroll?.reduce((prev: any[], curr: { ID: any }) => {
+                                // eslint-disable-next-line no-param-reassign
+                                prev = [...prev, curr.ID];
+                                return prev;
+                              }, [])
+                            );
+
+                            setCheckedBTNBool(!checkedBTNBool);
+                          }
+                        }}
+                        checked={checkedBTNBool}
+                      />
+                    </Tooltip>
+                  </th>
+                )}
                 <th>Payroll Date</th>
                 <th>Periode</th>
                 <th>Total</th>

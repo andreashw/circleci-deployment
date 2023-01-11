@@ -1,4 +1,16 @@
-import { Table, ScrollArea, Text, Button, Popover, Pagination, Select } from '@mantine/core';
+import {
+  Table,
+  ScrollArea,
+  Text,
+  Button,
+  Popover,
+  Pagination,
+  Select,
+  Menu,
+  Divider,
+  Checkbox,
+  Tooltip,
+} from '@mantine/core';
 
 import dayjs from 'dayjs';
 import useSWR from 'swr';
@@ -8,11 +20,20 @@ import { IReportDaily } from '@contracts/report-daily-interface';
 import { fetcher } from '@api/fetcher';
 import { DatePicker } from '@mantine/dates';
 import useInput from '@hooks/useInput';
-import { useTransition } from 'react';
+import { useState, useTransition } from 'react';
 import { showNotification } from '@mantine/notifications';
+
+import { Edit2, Trash2 } from 'react-feather';
+import { IconDotsVertical } from '@tabler/icons';
+import Lock from 'icons/Lock';
 
 export default function ReportDaily(/*props*/) {
   const router = useRouter();
+
+  const [idSpec, setIdspec] = useState<any>([]);
+  const [SelectBTNBool, setSelectBTNBool] = useState(true);
+  const [checkedBTNBool, setCheckedBTNBool] = useState(false);
+
   const [, startTransition] = useTransition();
   const [input, handleInput] = useInput({
     page: 1,
@@ -21,7 +42,7 @@ export default function ReportDaily(/*props*/) {
     end_date: '',
     limit: '100',
   });
-  const { data: dataReportDailies } = useSWR(
+  const { data: dataReportDailies, mutate } = useSWR(
     `/api/v1/jobs/group?page=${input.page}&search=${input.search}&start_date=${
       input.start_date ? dayjs(input.start_date).format('YYYY-MM-DD') : ''
     }&end_date=${input.end_date ? dayjs(input.end_date).format('YYYY-MM-DD') : ''}&limit=${input?.limit}`
@@ -95,9 +116,48 @@ export default function ReportDaily(/*props*/) {
   const body = () =>
     dataReportDailies?.data?.map((item: IReportDaily, index: any) => (
       <tr key={index}>
+        {!SelectBTNBool && (
+          <td className="w-8">
+            <Checkbox
+              disabled={!item.Deletable}
+              // eslint-disable-next-line @typescript-eslint/no-unused-vars
+              onChange={(e) => {
+                if (idSpec.includes(item?.Id)) {
+                  setIdspec(idSpec.filter((id: number) => id !== item?.Id));
+                } else {
+                  setIdspec([...idSpec, item.Id]);
+                }
+              }}
+              checked={idSpec.includes(item.Id)}
+              alt="Select All"
+            />
+          </td>
+        )}
         <td onClick={() => goToDetailPage(item)}>{dayjs(item.date).format('ddd, DD MMM YYYY')}</td>
         <td onClick={() => goToDetailPage(item)}>{item.worker}</td>
         <td onClick={() => goToDetailPage(item)}>{item.department}</td>
+        <td>
+          {item.Deletable === false ? (
+            <div className="flex content-center items-center w-6 h-9">
+              <Lock color="#828282" width="20" height="20" />
+            </div>
+          ) : (
+            <Menu>
+              <Menu.Target>
+                <div className="flex content-center items-center w-6 h-9 cursor-pointer">
+                  <IconDotsVertical size={14} />
+                </div>
+              </Menu.Target>
+              <Menu.Dropdown>
+                <Menu.Item icon={<Edit2 />}>Edit</Menu.Item>
+                <Divider />
+                <Menu.Item icon={<Trash2 />} color="red">
+                  Delete
+                </Menu.Item>
+              </Menu.Dropdown>
+            </Menu>
+          )}
+        </td>
       </tr>
     ));
 
@@ -112,6 +172,43 @@ export default function ReportDaily(/*props*/) {
     });
   }
 
+  const doDeleteMultiple = async () => {
+    const testdata = dataReportDailies?.data
+      ?.filter((x: any) => idSpec.includes(x.Id))
+      .reduce((prev: any[], curr: any) => {
+        // eslint-disable-next-line no-param-reassign
+        prev = [...prev, curr.Jobs?.map((x: { Id: any }) => x.Id)];
+        return prev;
+      }, [])
+      .flat();
+    console.log(testdata, JSON.stringify(testdata));
+
+    await fetcher('/api/v1/jobs/mass', {
+      method: 'DELETE',
+      body: { ids: testdata },
+    })
+      .then((res: IReportDaily | any) => {
+        console.log(res, 'cek');
+
+        showNotification({
+          title: 'Success',
+          message: res.message,
+          color: 'teal',
+        });
+        setCheckedBTNBool(false);
+        setIdspec([]);
+        setSelectBTNBool(!SelectBTNBool);
+        mutate();
+      })
+      .catch((err) => {
+        showNotification({
+          title: 'Error',
+          message: err.message,
+          color: 'red',
+        });
+      });
+  };
+
   return (
     <>
       <div className="px-6 pt-6 mb-6">
@@ -122,9 +219,28 @@ export default function ReportDaily(/*props*/) {
             </Text>
             <div className="flex flex-col sm:flex-row pb-4 sm:pb-0">
               <SearchForm searchName="Job Report Hourly" onSubmit={btnSearch} />
-              <Button className="bg-black hover:bg-black px-6" onClick={() => goToAddReport()}>
-                Add New Job Report
-              </Button>
+              {SelectBTNBool ? (
+                <Button className="bg-black hover:bg-black px-6 mx-3" onClick={() => setSelectBTNBool(!SelectBTNBool)}>
+                  Select
+                </Button>
+              ) : (
+                <>
+                  <Button
+                    className="bg-black hover:bg-black px-6 mx-3"
+                    onClick={() => setSelectBTNBool(!SelectBTNBool)}
+                  >
+                    Cencel
+                  </Button>
+                  <Button className="bg-black hover:bg-black px-6" onClick={() => doDeleteMultiple()}>
+                    Delete
+                  </Button>
+                </>
+              )}
+              {SelectBTNBool && (
+                <Button className="bg-black hover:bg-black px-6" onClick={() => goToAddReport()}>
+                  Add New Job Report
+                </Button>
+              )}
             </div>
           </div>
 
@@ -186,9 +302,38 @@ export default function ReportDaily(/*props*/) {
           <Table highlightOnHover>
             <thead>
               <tr>
+                {!SelectBTNBool && (
+                  <th className="w-8">
+                    <Tooltip label="Select All">
+                      <Checkbox
+                        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                        onChange={(e) => {
+                          if (checkedBTNBool) {
+                            setIdspec([]);
+                            setCheckedBTNBool(!checkedBTNBool);
+                          } else {
+                            setIdspec(
+                              dataReportDailies.data
+                                ?.filter((x: any) => x.Deletable === true)
+                                ?.reduce((prev: any[], curr: { Id: any }) => {
+                                  // eslint-disable-next-line no-param-reassign
+                                  prev = [...prev, curr.Id];
+                                  return prev;
+                                }, [])
+                            );
+
+                            setCheckedBTNBool(!checkedBTNBool);
+                          }
+                        }}
+                        checked={checkedBTNBool}
+                      />
+                    </Tooltip>
+                  </th>
+                )}
                 <th className="w-80">Date</th>
                 <th className="w-[400px]">Worker</th>
                 <th className="w-[400px]">Department</th>
+                <th />
               </tr>
             </thead>
             <tbody>{body()}</tbody>

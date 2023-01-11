@@ -1,4 +1,16 @@
-import { Table, ScrollArea, Menu, Text, Button, Divider, Popover, Pagination, Select } from '@mantine/core';
+import {
+  Table,
+  ScrollArea,
+  Menu,
+  Text,
+  Button,
+  Divider,
+  Popover,
+  Pagination,
+  Select,
+  Checkbox,
+  Tooltip,
+} from '@mantine/core';
 
 import { Edit2, Trash2 } from 'react-feather';
 import { IconDotsVertical } from '@tabler/icons';
@@ -11,7 +23,7 @@ import dayjs from 'dayjs';
 import { fetcher } from '@api/fetcher';
 import { useModals } from '@mantine/modals';
 import useInput from '@hooks/useInput';
-import { useEffect, useTransition } from 'react';
+import { useEffect, useState, useTransition } from 'react';
 import { showNotification } from '@mantine/notifications';
 import Lock from 'icons/Lock';
 import { DatePicker } from '@mantine/dates';
@@ -19,6 +31,10 @@ import { DatePicker } from '@mantine/dates';
 export default function ReportHourly(/*props*/) {
   const router = useRouter();
   const modals = useModals();
+
+  const [idSpec, setIdspec] = useState<any>([]);
+  const [SelectBTNBool, setSelectBTNBool] = useState(true);
+  const [checkedBTNBool, setCheckedBTNBool] = useState(false);
 
   const [, startTransition] = useTransition();
   const [input, handleInput] = useInput({
@@ -85,6 +101,32 @@ export default function ReportHourly(/*props*/) {
         color: 'red',
       });
     }
+  };
+
+  const doDeleteMultiple = async () => {
+    await fetcher('/api/v1/jobs/mass', {
+      method: 'DELETE',
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
+      body: { ids: idSpec },
+    })
+      .then((res: IReportHourly | any) => {
+        showNotification({
+          title: 'Success',
+          message: res?.message,
+          color: 'teal',
+        });
+        setCheckedBTNBool(false);
+        setIdspec([]);
+        setSelectBTNBool(!SelectBTNBool);
+        mutate();
+      })
+      .catch((err) => {
+        showNotification({
+          title: 'Error',
+          message: err?.message,
+          color: 'red',
+        });
+      });
   };
 
   const deleteData = (item: IReportHourly) => {
@@ -157,9 +199,40 @@ export default function ReportHourly(/*props*/) {
       handleInput('page', true)(page);
     });
   }
+
+  console.log('====================================');
+  console.log(idSpec);
+  console.log('====================================');
+  // function cektesdata() {
+  //   const dataA = dataReportHourly.data
+  //     ?.filter((x: any) => x.paid === false)
+  //     ?.reduce((prev: any[], curr: { ID: any }) => {
+  //       // eslint-disable-next-line no-param-reassign
+  //       prev = [...prev, curr.ID];
+  //       return prev;
+  //     }, []);
+  //   console.log(dataA, 'cek tes');
+  // }
   const body = () =>
     dataReportHourly.data.map((item: IReportHourly, index: any) => (
       <tr key={index}>
+        {!SelectBTNBool && (
+          <td className="w-8">
+            <Checkbox
+              disabled={item.paid}
+              // eslint-disable-next-line @typescript-eslint/no-unused-vars
+              onChange={(e) => {
+                if (idSpec.includes(item?.ID)) {
+                  setIdspec(idSpec.filter((id: number) => id !== item?.ID));
+                } else {
+                  setIdspec([...idSpec, item.ID]);
+                }
+              }}
+              checked={idSpec.includes(item.ID)}
+              alt="Select All"
+            />
+          </td>
+        )}
         <td
           onClick={() => router.push(`/jobreport/hourly/${item.ID}`)}
           style={{ color: item.paid === true ? '#828282' : 'black' }}
@@ -245,9 +318,28 @@ export default function ReportHourly(/*props*/) {
             </Text>
             <div className="flex flex-col sm:flex-row pb-4 sm:pb-0">
               <SearchForm searchName="Job Report Hourly" onSubmit={btnSearch} />
-              <Button className="bg-black hover:bg-black px-6" onClick={() => goToAddReport()}>
-                Add New Job Report
-              </Button>
+              {SelectBTNBool ? (
+                <Button className="bg-black hover:bg-black px-6 mx-3" onClick={() => setSelectBTNBool(!SelectBTNBool)}>
+                  Select
+                </Button>
+              ) : (
+                <>
+                  <Button
+                    className="bg-black hover:bg-black px-6 mx-3"
+                    onClick={() => setSelectBTNBool(!SelectBTNBool)}
+                  >
+                    Cencel
+                  </Button>
+                  <Button className="bg-black hover:bg-black px-6" onClick={() => doDeleteMultiple()}>
+                    Delete
+                  </Button>
+                </>
+              )}
+              {SelectBTNBool && (
+                <Button className="bg-black hover:bg-black px-6" onClick={() => goToAddReport()}>
+                  Add New Job Report
+                </Button>
+              )}
             </div>
           </div>
 
@@ -309,6 +401,34 @@ export default function ReportHourly(/*props*/) {
           <Table highlightOnHover>
             <thead>
               <tr>
+                {!SelectBTNBool && (
+                  <th className="w-8">
+                    <Tooltip label="Select All">
+                      <Checkbox
+                        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                        onChange={(e) => {
+                          if (checkedBTNBool) {
+                            setIdspec([]);
+                            setCheckedBTNBool(!checkedBTNBool);
+                          } else {
+                            setIdspec(
+                              dataReportHourly.data
+                                ?.filter((x: any) => x.paid === false)
+                                ?.reduce((prev: any[], curr: { ID: any }) => {
+                                  // eslint-disable-next-line no-param-reassign
+                                  prev = [...prev, curr.ID];
+                                  return prev;
+                                }, [])
+                            );
+
+                            setCheckedBTNBool(!checkedBTNBool);
+                          }
+                        }}
+                        checked={checkedBTNBool}
+                      />
+                    </Tooltip>
+                  </th>
+                )}
                 <th className="w-44">Date</th>
                 <th className="w-[120px]">Worker</th>
                 <th className="w-[120px]">Project</th>
