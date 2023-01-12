@@ -85,7 +85,6 @@ export default function ReportHourly(/*props*/) {
     const response: IReportHourly | undefined = await fetcher(`/api/v1/jobs/${item.ID}`, {
       method: 'DELETE',
     });
-    console.log(response);
     if (response?.title === 'Not Deletable') {
       showNotification({
         title: 'Delete Failed',
@@ -205,10 +204,6 @@ export default function ReportHourly(/*props*/) {
     });
   }
 
-  console.log('====================================');
-  console.log(idSpec);
-  console.log(idSpecPage);
-  console.log('====================================');
   // function cektesdata() {
   //   const dataA = dataReportHourly.data
   //     ?.filter((x: any) => x.paid === false)
