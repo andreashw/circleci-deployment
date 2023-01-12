@@ -37,6 +37,10 @@ export default function ReportHourly(/*props*/) {
   const [SelectBTNBool, setSelectBTNBool] = useState(true);
   const [checkedBTNBool, setCheckedBTNBool] = useState(false);
 
+  const setStart_Date = `${parseInt(dayjs(Date.now()).format('YYYY'), 10) - 5}-${dayjs(Date.now()).format('MM-DD')}`;
+
+  const setEnd_Date = `${parseInt(dayjs(Date.now()).format('YYYY'), 10) + 5}-${dayjs(Date.now()).format('MM-DD')}`;
+
   const [, startTransition] = useTransition();
   const [input, handleInput] = useInput({
     page: 1,
@@ -49,8 +53,8 @@ export default function ReportHourly(/*props*/) {
 
   const { data: dataReportHourly, mutate } = useSWR(
     `/api/v1/jobs/?page=${input.page}&search=${input.search}&start_date=${
-      input.start_date ? dayjs(input.start_date).format('YYYY-MM-DD') : ''
-    }&end_date=${input.end_date ? dayjs(input.end_date).format('YYYY-MM-DD') : ''}&limit=${input.limit}`
+      input.start_date ? dayjs(input.start_date).format('YYYY-MM-DD') : setStart_Date
+    }&end_date=${input.end_date ? dayjs(input.end_date).format('YYYY-MM-DD') : setEnd_Date}&limit=${input.limit}`
   );
   const { data: dataSelected } = useSWR<IReportHourly>(
     input.selectedId !== '' ? `/api/v1/jobs/${input.selectedId}` : null
@@ -415,16 +419,16 @@ export default function ReportHourly(/*props*/) {
                             .map((x: any) => x.ID);
                           if (idSpecPage.includes(input.page)) {
                             setIdspec((prev: any) => prev.filter((id: any) => !currentPageIds.includes(id)));
-                            setIdspecPage(idSpecPage.filter((x: any) => x !== input.page));
+                            setIdspecPage(idSpecPage.filter((x: number) => x !== parseInt(input.page, 10)));
                             setCheckedBTNBool(!checkedBTNBool);
                           } else {
                             setIdspec((prev: any) => [...prev, ...currentPageIds]);
-                            setIdspecPage([...idSpecPage, input.page]);
+                            setIdspecPage([...idSpecPage, parseInt(input.page, 10)]);
 
                             setCheckedBTNBool(!checkedBTNBool);
                           }
                         }}
-                        checked={idSpecPage.includes(input.page)}
+                        checked={idSpecPage.includes(parseInt(input.page, 10))}
                       />
                     </Tooltip>
                   </th>
