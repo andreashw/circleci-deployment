@@ -1,5 +1,6 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import Router from 'next/router';
 
 export interface IPayload {
   method?: 'POST' | 'GET' | 'DELETE' | 'PUT' | 'PATCH';
@@ -23,7 +24,15 @@ export async function fetcher<T>(url: string, payload?: IPayload, blob = false):
     });
 
     return fetchData.data?.data || fetchData.data?.response || fetchData.data;
-  } catch (error) {
-    throw new Error('Something Wrong');
+  } catch (error: any) {
+    console.log(error.response.status, 'tes');
+    if (error.response.status === 401) {
+      Cookies.remove('token');
+      Router.replace('/login');
+    } else if (error.response.status === 400) {
+      // throw new Error('Something Wrong');
+      throw error.response;
+    }
+    throw error;
   }
 }

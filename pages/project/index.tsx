@@ -8,16 +8,12 @@ import { Edit2, Trash2 } from 'react-feather';
 import Router from 'next/router';
 import { useModals } from '@mantine/modals';
 import { IProject } from '@contracts/project-interface';
-import { IProvince } from '@contracts/client-interface';
 
 function ProjectPage() {
   const modals = useModals();
   const [drawerOpened, toggleDrawer] = useState(false);
 
   const { data: dataVendor, mutate } = useSWR('/api/v1/projects/');
-  const { data: dataPic } = useSWR<IProvince[]>('/api/v1/projects/pic/');
-  const { data: dataAutomobile } = useSWR<IProvince[]>('/api/v1/projects/automobiles/');
-  const { data: dataClient } = useSWR<IProvince[]>('/api/v1/projects/clients/');
 
   const onDeleteData = async (project: IProject) => {
     console.log(project.ID);
@@ -51,7 +47,7 @@ function ProjectPage() {
     // });
   }
   console.log('====================================');
-//   console.log(dataPic?.filter((a) => a.ID === 2)[0].Name);
+  //   console.log(dataPic?.filter((a) => a.ID === 2)[0].Name);
   console.log('====================================');
 
   const body = () =>

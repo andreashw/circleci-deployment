@@ -1,4 +1,16 @@
-import { Table, ScrollArea, Menu, Text, Button, Divider, Popover, Pagination, Select } from '@mantine/core';
+import {
+  Table,
+  ScrollArea,
+  Menu,
+  Text,
+  Button,
+  Divider,
+  Popover,
+  Pagination,
+  Select,
+  Checkbox,
+  Tooltip,
+} from '@mantine/core';
 
 import { Edit2, Trash2 } from 'react-feather';
 import { IconDotsVertical } from '@tabler/icons';
@@ -11,7 +23,7 @@ import dayjs from 'dayjs';
 import { fetcher } from '@api/fetcher';
 import { useModals } from '@mantine/modals';
 import useInput from '@hooks/useInput';
-import { useEffect, useTransition } from 'react';
+import { useEffect, useState, useTransition } from 'react';
 import { showNotification } from '@mantine/notifications';
 import Lock from 'icons/Lock';
 import { DatePicker } from '@mantine/dates';
@@ -19,6 +31,15 @@ import { DatePicker } from '@mantine/dates';
 export default function ReportHourly(/*props*/) {
   const router = useRouter();
   const modals = useModals();
+
+  const [idSpec, setIdspec] = useState<any>([]);
+  const [idSpecPage, setIdspecPage] = useState<any>([]);
+  const [SelectBTNBool, setSelectBTNBool] = useState(true);
+  const [checkedBTNBool, setCheckedBTNBool] = useState(false);
+
+  const setStart_Date = `${parseInt(dayjs(Date.now()).format('YYYY'), 10) - 5}-${dayjs(Date.now()).format('MM-DD')}`;
+
+  const setEnd_Date = `${parseInt(dayjs(Date.now()).format('YYYY'), 10) + 5}-${dayjs(Date.now()).format('MM-DD')}`;
 
   const [, startTransition] = useTransition();
   const [input, handleInput] = useInput({
@@ -32,8 +53,8 @@ export default function ReportHourly(/*props*/) {
 
   const { data: dataReportHourly, mutate } = useSWR(
     `/api/v1/jobs/?page=${input.page}&search=${input.search}&start_date=${
-      input.start_date ? dayjs(input.start_date).format('YYYY-MM-DD') : ''
-    }&end_date=${input.end_date ? dayjs(input.end_date).format('YYYY-MM-DD') : ''}&limit=${input.limit}`
+      input.start_date ? dayjs(input.start_date).format('YYYY-MM-DD') : setStart_Date
+    }&end_date=${input.end_date ? dayjs(input.end_date).format('YYYY-MM-DD') : setEnd_Date}&limit=${input.limit}`
   );
   const { data: dataSelected } = useSWR<IReportHourly>(
     input.selectedId !== '' ? `/api/v1/jobs/${input.selectedId}` : null
@@ -64,7 +85,6 @@ export default function ReportHourly(/*props*/) {
     const response: IReportHourly | undefined = await fetcher(`/api/v1/jobs/${item.ID}`, {
       method: 'DELETE',
     });
-    console.log(response);
     if (response?.title === 'Not Deletable') {
       showNotification({
         title: 'Delete Failed',
@@ -85,6 +105,32 @@ export default function ReportHourly(/*props*/) {
         color: 'red',
       });
     }
+  };
+
+  const doDeleteMultiple = async () => {
+    await fetcher('/api/v1/jobs/mass', {
+      method: 'DELETE',
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
+      body: { ids: idSpec },
+    })
+      .then((res: IReportHourly | any) => {
+        showNotification({
+          title: 'Success',
+          message: res?.message,
+          color: 'teal',
+        });
+        setCheckedBTNBool(false);
+        setIdspec([]);
+        setSelectBTNBool(!SelectBTNBool);
+        mutate();
+      })
+      .catch((err) => {
+        showNotification({
+          title: 'Error',
+          message: err?.message,
+          color: 'red',
+        });
+      });
   };
 
   const deleteData = (item: IReportHourly) => {
@@ -157,9 +203,36 @@ export default function ReportHourly(/*props*/) {
       handleInput('page', true)(page);
     });
   }
+
+  // function cektesdata() {
+  //   const dataA = dataReportHourly.data
+  //     ?.filter((x: any) => x.paid === false)
+  //     ?.reduce((prev: any[], curr: { ID: any }) => {
+  //       // eslint-disable-next-line no-param-reassign
+  //       prev = [...prev, curr.ID];
+  //       return prev;
+  //     }, []);
+  //   console.log(dataA, 'cek tes');
+  // }
   const body = () =>
     dataReportHourly.data.map((item: IReportHourly, index: any) => (
       <tr key={index}>
+        {!SelectBTNBool && (
+          <td className="w-8">
+            <Checkbox
+              disabled={item.paid}
+              // eslint-disable-next-line @typescript-eslint/no-unused-vars
+              onChange={(e) => {
+                if (idSpec.includes(item?.ID)) {
+                  setIdspec(idSpec.filter((id: number) => id !== item?.ID));
+                } else {
+                  setIdspec([...idSpec, item.ID]);
+                }
+              }}
+              checked={idSpec.includes(item.ID)}
+            />
+          </td>
+        )}
         <td
           onClick={() => router.push(`/jobreport/hourly/${item.ID}`)}
           style={{ color: item.paid === true ? '#828282' : 'black' }}
@@ -230,6 +303,8 @@ export default function ReportHourly(/*props*/) {
     });
   }
   function onChangeSelectLimit(limit: any) {
+    handleInput('page', true)('1');
+    setIdspecPage([]);
     startTransition(() => {
       handleInput('limit', true)(limit);
     });
@@ -245,9 +320,28 @@ export default function ReportHourly(/*props*/) {
             </Text>
             <div className="flex flex-col sm:flex-row pb-4 sm:pb-0">
               <SearchForm searchName="Job Report Hourly" onSubmit={btnSearch} />
-              <Button className="bg-black hover:bg-black px-6" onClick={() => goToAddReport()}>
-                Add New Job Report
-              </Button>
+              {SelectBTNBool ? (
+                <Button className="bg-black hover:bg-black px-6 mx-3" onClick={() => setSelectBTNBool(!SelectBTNBool)}>
+                  Select
+                </Button>
+              ) : (
+                <>
+                  <Button
+                    className="bg-black hover:bg-black px-6 mx-3"
+                    onClick={() => setSelectBTNBool(!SelectBTNBool)}
+                  >
+                    Cencel
+                  </Button>
+                  <Button className="bg-black hover:bg-black px-6" onClick={() => doDeleteMultiple()}>
+                    Delete
+                  </Button>
+                </>
+              )}
+              {SelectBTNBool && (
+                <Button className="bg-black hover:bg-black px-6" onClick={() => goToAddReport()}>
+                  Add New Job Report
+                </Button>
+              )}
             </div>
           </div>
 
@@ -309,6 +403,31 @@ export default function ReportHourly(/*props*/) {
           <Table highlightOnHover>
             <thead>
               <tr>
+                {!SelectBTNBool && (
+                  <th className="w-8">
+                    <Tooltip label="Select All">
+                      <Checkbox
+                        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                        onChange={(e) => {
+                          const currentPageIds = dataReportHourly.data
+                            .filter((x: any) => !x.paid)
+                            .map((x: any) => x.ID);
+                          if (idSpecPage.includes(input.page)) {
+                            setIdspec((prev: any) => prev.filter((id: any) => !currentPageIds.includes(id)));
+                            setIdspecPage(idSpecPage.filter((x: number) => x !== parseInt(input.page, 10)));
+                            setCheckedBTNBool(!checkedBTNBool);
+                          } else {
+                            setIdspec((prev: any) => [...prev, ...currentPageIds]);
+                            setIdspecPage([...idSpecPage, parseInt(input.page, 10)]);
+
+                            setCheckedBTNBool(!checkedBTNBool);
+                          }
+                        }}
+                        checked={idSpecPage.includes(parseInt(input.page, 10))}
+                      />
+                    </Tooltip>
+                  </th>
+                )}
                 <th className="w-44">Date</th>
                 <th className="w-[120px]">Worker</th>
                 <th className="w-[120px]">Project</th>
@@ -334,7 +453,7 @@ export default function ReportHourly(/*props*/) {
               // rightSection={<RightSection />}
               value={input?.limit}
               data={[
-                { value: '100', label: '100' },
+                { value: '3', label: '3' },
                 { value: '500', label: '500' },
                 { value: '1000', label: '1000' },
               ]}

@@ -13,6 +13,11 @@ import { showNotification } from '@mantine/notifications';
 
 export default function ReportDaily(/*props*/) {
   const router = useRouter();
+
+  const setStart_Date = `${parseInt(dayjs(Date.now()).format('YYYY'), 10) - 5}-${dayjs(Date.now()).format('MM-DD')}`;
+
+  const setEnd_Date = `${parseInt(dayjs(Date.now()).format('YYYY'), 10) + 5}-${dayjs(Date.now()).format('MM-DD')}`;
+
   const [, startTransition] = useTransition();
   const [input, handleInput] = useInput({
     page: 1,
@@ -23,8 +28,8 @@ export default function ReportDaily(/*props*/) {
   });
   const { data: dataReportDailies } = useSWR(
     `/api/v1/jobs/group?page=${input.page}&search=${input.search}&start_date=${
-      input.start_date ? dayjs(input.start_date).format('YYYY-MM-DD') : ''
-    }&end_date=${input.end_date ? dayjs(input.end_date).format('YYYY-MM-DD') : ''}&limit=${input?.limit}`
+      input.start_date ? dayjs(input.start_date).format('YYYY-MM-DD') : setStart_Date
+    }&end_date=${input.end_date ? dayjs(input.end_date).format('YYYY-MM-DD') : setEnd_Date}&limit=${input?.limit}`
   );
 
   function btnSearch(search: any) {
@@ -107,6 +112,7 @@ export default function ReportDaily(/*props*/) {
     });
   }
   function onChangeSelectLimit(limit: any) {
+    handleInput('page', true)('1');
     startTransition(() => {
       handleInput('limit', true)(limit);
     });
@@ -122,6 +128,7 @@ export default function ReportDaily(/*props*/) {
             </Text>
             <div className="flex flex-col sm:flex-row pb-4 sm:pb-0">
               <SearchForm searchName="Job Report Hourly" onSubmit={btnSearch} />
+
               <Button className="bg-black hover:bg-black px-6" onClick={() => goToAddReport()}>
                 Add New Job Report
               </Button>
