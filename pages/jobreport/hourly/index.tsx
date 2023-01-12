@@ -330,7 +330,7 @@ export default function ReportHourly(/*props*/) {
                     className="bg-black hover:bg-black px-6 mx-3"
                     onClick={() => setSelectBTNBool(!SelectBTNBool)}
                   >
-                    Cencel
+                    Cancel
                   </Button>
                   <Button className="bg-black hover:bg-black px-6" onClick={() => doDeleteMultiple()}>
                     Delete
