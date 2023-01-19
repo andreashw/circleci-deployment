@@ -4,20 +4,20 @@ import { IProject } from './project-interface';
 
 export interface IReportHourly {
   ID: number;
-  date: number;
-  worker_id: number;
+  Date: number;
+  WorkerId: number;
   Worker: IEngineer;
-  start_hour: string;
-  end_hour: string;
-  project_id: number;
+  StartHour: string;
+  EndHour: string;
+  ProjectId: number;
   Project: IProject;
-  department_id: number;
+  DepartmentId: number;
   Department: IDepartment;
-  status: string;
-  job_id: number;
-  job_description: string;
-  task: string;
-  paid: boolean;
-  title: string;
-  message: string;
+  Status: string;
+  JobId: number;
+  JobDescription: string;
+  Task: string;
+  Paid: boolean;
+  Title: string;
+  Message: string;
 }

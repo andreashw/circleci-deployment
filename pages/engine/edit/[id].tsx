@@ -23,20 +23,20 @@ function EditEngine(/*props*/) {
   const { data: EngineLayout } = useSWR<IAutomobileLayouts[]>('/api/v1/engine-layouts/');
 
   const [input, handleInput] = useInput({
-    engine_name: data?.[0].name,
+    engine_name: data?.[0].Name,
     manufacture: data?.[0]?.engine_manufacture_id,
     layout: data?.[0]?.engine_layout_id,
-    year_start: data?.[0]?.year_start,
-    year_end: data?.[0]?.year_end,
-    engine_type: data?.[0]?.engine_type,
-    fuel_type: data?.[0]?.fuel_type,
-    cylinder_bores: data?.[0]?.cylinder_bores || [
+    year_start: data?.[0]?.YearStart,
+    year_end: data?.[0]?.YearEnd,
+    engine_type: data?.[0]?.EngineType,
+    fuel_type: data?.[0]?.FuelType,
+    cylinder_bores: data?.[0]?.CylinderBores || [
       {
         cylinder_bore: 0,
       },
     ],
     displacements: data
-      ? data[0]?.displacements
+      ? data[0]?.Displacements
       : [
           {
             displacement: 0,
@@ -45,7 +45,7 @@ function EditEngine(/*props*/) {
           },
         ],
     transmissions: data
-      ? data[0]?.transmissions
+      ? data[0]?.Transmissions
       : [
           {
             transmission: '',
@@ -277,7 +277,7 @@ function EditEngine(/*props*/) {
               <Dropdown
                 label="Manufacture"
                 value={input.manufacture.toString()}
-                data={EngineManufacture?.map(({ ID, name }) => ({ value: ID.toString(), label: name })) || []}
+                data={EngineManufacture?.map(({ ID, Name }) => ({ value: ID.toString(), label: Name })) || []}
                 onChange={handleInput('manufacture', true)}
               />
             </Grid.Col>
@@ -368,7 +368,7 @@ function EditEngine(/*props*/) {
               <Dropdown
                 label="Layout"
                 value={input.layout.toString()}
-                data={EngineLayout?.map(({ ID, name }) => ({ value: ID.toString(), label: name })) || []}
+                data={EngineLayout?.map(({ ID, Name }) => ({ value: ID.toString(), label: Name })) || []}
                 onChange={handleInput('layout', true)}
               />
             </Grid.Col>

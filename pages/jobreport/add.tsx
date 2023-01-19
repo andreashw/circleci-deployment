@@ -55,8 +55,8 @@ function AddJobReportPage() {
         {
           date: formatedDate,
           worker_id: Number(input.engineer),
-          start_hour: dayjs(new Date(curr.start_hour * 1000)).format('HH:mm'),
-          end_hour: dayjs(new Date(curr.end_hour * 1000)).format('HH:mm'),
+          start_hour: dayjs(curr.start_hour).format('HH:mm'),
+          end_hour: dayjs(curr.end_hour).format('HH:mm'),
           project_id: Number(curr.project),
           department_id: Number(curr.department),
           status: curr.status_pekerja,
@@ -165,7 +165,7 @@ function AddJobReportPage() {
         if (i === index) {
           return {
             ...x,
-            start_hour: val.getTime() / 1000,
+            start_hour: val,
           };
         }
         return x;
@@ -242,9 +242,9 @@ function AddJobReportPage() {
   };
 
   const handleInputJobs_end_hour = (index: number) => (val1?: any) => {
-    const test1 = Math.floor(val1.getTime() / 1000);
-    const test2 = Math.floor(input.jobs[index].start_hour);
-    const total_hour = test1 - test2;
+    // const test1 = Math.floor(val1.getTime() / 1000);
+    // const test2 = Math.floor(input.jobs[index].start_hour);
+    const total_hour = dayjs(val1).diff(input.jobs[index]?.start_hour) / 1000;
     const hour = total_hour / 3600;
     const menit = (total_hour % 3600) / 60;
     if (total_hour > 0) {
@@ -256,7 +256,7 @@ function AddJobReportPage() {
           if (i === index) {
             return {
               ...x,
-              end_hour: val1.getTime() / 1000,
+              end_hour: val1,
               total_hour: `${Math.floor(hour)}.${Math.floor(menit)}`,
             };
           }
@@ -272,7 +272,7 @@ function AddJobReportPage() {
           if (i === index) {
             return {
               ...x,
-              end_hour: val1.getTime() / 1000,
+              end_hour: val1,
               total_hour: '',
             };
           }
@@ -313,7 +313,7 @@ function AddJobReportPage() {
               <Grid.Col md={6}>
                 <Dropdown
                   label="Engineer"
-                  data={dataEngineers?.map(({ ID, name }) => ({ value: ID.toString(), label: name })) || []}
+                  data={dataEngineers?.map(({ ID, Name }) => ({ value: ID.toString(), label: Name })) || []}
                   onChange={handleInput('engineer', true)}
                 />
               </Grid.Col>
@@ -363,8 +363,8 @@ function AddJobReportPage() {
                 <Grid.Col md={6} className="flex flex-row items-center">
                   <V2HourRange
                     label="Hour"
-                    valueStart={input.jobs[ti].start_hour !== '' ? new Date(input.jobs[ti].start_hour * 1000) : null}
-                    valueEnd={input.jobs[ti].end_hour !== '' ? new Date(input.jobs[ti].end_hour * 1000) : null}
+                    valueStart={input.jobs[ti].start_hour !== '' ? input.jobs[ti].start_hour : null}
+                    valueEnd={input.jobs[ti].end_hour !== '' ? input.jobs[ti].end_hour : null}
                     onStartChange={(val) => handleInputJobs_start_hour(ti)(val)}
                     onEndChange={(val) => handleInputJobs_end_hour(ti)(val)}
                     error={input.jobs[ti].end_hour < input.jobs[ti].start_hour}
@@ -384,7 +384,7 @@ function AddJobReportPage() {
                 <Grid.Col md={6}>
                   <Dropdown
                     label="Project"
-                    data={dataProjects?.map(({ ID, name }) => ({ value: ID.toString(), label: name })) || []}
+                    data={dataProjects?.map(({ ID, Name }) => ({ value: ID.toString(), label: Name })) || []}
                     value={input.jobs[ti].project}
                     onChange={handleInputJobs_project(ti)}
                   />
@@ -392,7 +392,7 @@ function AddJobReportPage() {
                 <Grid.Col md={6}>
                   <Dropdown
                     label="Department"
-                    data={dataDepartments?.map(({ ID, name }) => ({ value: ID.toString(), label: name })) || []}
+                    data={dataDepartments?.map(({ ID, Name }) => ({ value: ID.toString(), label: Name })) || []}
                     value={input.jobs[ti].department.toString()}
                     onChange={handleInputJobs_department(ti)}
                   />

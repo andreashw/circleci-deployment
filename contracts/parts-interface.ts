@@ -2,17 +2,17 @@ import { IVendor } from './vendor-interface';
 
 export interface IParts {
   ID: number;
-  name_input: string;
-  brand_input: string;
-  category: string;
-  material_input: string;
-  req_pcs_input: string;
-  req_unit: number;
-  vendors?: IVendor[];
-  automobiles: IAutomobile[];
+  NameInput: string;
+  BrandInput: string;
+  Category: string;
+  MaterialInput: string;
+  ReqPcsInput: string;
+  ReqUnit: number;
+  Vendors?: IVendor[];
+  Automobiles: IAutomobile[];
 }
 
 export interface IAutomobile {
-  id: number;
-  name: string;
+  Id: number;
+  Name: string;
 }

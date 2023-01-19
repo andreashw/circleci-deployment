@@ -36,14 +36,14 @@ function EditPartPage() {
   const { data: dataVendor } = useSWR<IVendor[]>('/api/v1/vendors/');
 
   const [input, handleInput] = useInput({
-    name_input: Part ? Part?.name_input : '',
-    brand_input: Part ? Part?.brand_input : '',
-    category: Part ? Part?.category : '',
-    material_input: Part ? Part?.material_input : '',
-    req_pcs_input: Part ? Part?.req_pcs_input : '',
-    req_unit: Part ? Part?.req_unit : '',
-    vendor: Part ? Part?.vendors : [],
-    automobile: Part ? Part?.automobiles.map(({ id }) => id.toString()) : [],
+    name_input: Part ? Part?.NameInput : '',
+    brand_input: Part ? Part?.BrandInput : '',
+    category: Part ? Part?.Category : '',
+    material_input: Part ? Part?.MaterialInput : '',
+    req_pcs_input: Part ? Part?.ReqPcsInput : '',
+    req_unit: Part ? Part?.ReqUnit : '',
+    vendor: Part ? Part?.Vendors : [],
+    automobile: Part ? Part?.Automobiles.map(({ Id }) => Id.toString()) : [],
   });
   const doSubmit = async (e: any) => {
     e.preventDefault();
@@ -190,7 +190,7 @@ function EditPartPage() {
             <Grid.Col md={6}>
               <MultiDropdown
                 label="Automobile"
-                data={dataAutomobiles?.map(({ ID, model }) => ({ value: ID.toString(), label: model })) || []}
+                data={dataAutomobiles?.map(({ ID, Model }) => ({ value: ID.toString(), label: Model })) || []}
                 onChange={handleInput('automobile', true)}
                 value={input.automobile}
               />
@@ -236,7 +236,7 @@ function EditPartPage() {
                     label="Vendor"
                     placeholder="Select Vendor"
                     rightSection={<IconChevronDown size={14} />}
-                    data={dataVendor ? dataVendor.map((y) => ({ value: y.name, label: y.name })) : []}
+                    data={dataVendor ? dataVendor.map((y) => ({ value: y.Name, label: y.Name })) : []}
                     value={input.vendor?.[ti].name}
                     onChange={handleInputVendor(ti)}
                   />

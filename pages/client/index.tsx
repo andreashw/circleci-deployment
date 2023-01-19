@@ -33,7 +33,7 @@ function Clients() {
       title: 'Delete',
       children: (
         <Text size="sm" lineClamp={2}>
-          Delete <b>{client.name}</b> Client Data ?
+          Delete <b>{client.Name}</b> Client Data ?
         </Text>
       ),
       centered: true,
@@ -51,18 +51,18 @@ function Clients() {
     dataClients.map((item: any, index: any) => (
       <tr key={index}>
         <td className="cursor-pointer w-2/12" onClick={() => Router.push(`/client/${item.ID}`)}>
-          {item.name}
+          {item.Name}
         </td>
         <td className="cursor-pointer w-2/12" onClick={() => Router.push(`/client/${item.ID}`)}>
-          {item.email}
+          {item.Email}
         </td>
         <td className="cursor-pointer  w-72  " onClick={() => Router.push(`/client/${item.ID}`)}>
           <p className="truncate w-72">
-            {item.City.name}, {item.address}
+            {item.City.Name}, {item.Address}
           </p>
         </td>
         <td className="cursor-pointer " onClick={() => Router.push(`/client/${item.ID}`)}>
-          {item.phone}
+          {item.Phone}
         </td>
         <td>
           <Menu>
@@ -81,7 +81,7 @@ function Clients() {
               </div>
             </Menu.Target>
             <Menu.Dropdown>
-              <Menu.Label>{item.name}</Menu.Label>
+              <Menu.Label>{item.Name}</Menu.Label>
               <Menu.Item icon={<Edit2 />} onClick={() => Router.push(`/client/edit/${item.ID}`)}>
                 Edit Client
               </Menu.Item>

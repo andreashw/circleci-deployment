@@ -1,7 +1,7 @@
 export interface IRole {
   ID: number;
-  name: string;
-  description: string;
+  Name: string;
+  Description: string;
 }
 
 export interface IGetOneRole {

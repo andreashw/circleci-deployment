@@ -33,7 +33,7 @@ function ProjectPage() {
       title: 'Delete',
       children: (
         <Text size="sm" lineClamp={2}>
-          Delete <b>{project.name}</b> Project Data ?
+          Delete <b>{project.Name}</b> Project Data ?
         </Text>
       ),
       centered: true,
@@ -54,20 +54,20 @@ function ProjectPage() {
     dataVendor.map((item: any, index: any) => (
       <tr key={index}>
         <td className="cursor-pointer w-2/12" onClick={() => Router.push(`/project/${item.ID}`)}>
-          {item.name}
+          {item.Name}
         </td>
         <td className="cursor-pointer " onClick={() => Router.push(`/project/${item.ID}`)}>
-          {item.Client.name}
+          {item.Client.Name}
         </td>
         <td className="cursor-pointer w-2/12 " onClick={() => Router.push(`/project/${item.ID}`)}>
-          {item.Pic.name}
+          {item.PIC.Name}
         </td>
         <td className="cursor-pointer " onClick={() => Router.push(`/project/${item.ID}`)}>
-          {item.Automobile.model} - {item.Automobile.year_start}
+          {item.Automobile.Model} - {item.Automobile.year_start}
         </td>
 
         <td className="cursor-pointer w-2/12" onClick={() => Router.push(`/project/${item.ID}`)}>
-          {item.power_type}
+          {item.PowerType}
         </td>
         <td>
           <Menu>

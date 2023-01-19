@@ -33,14 +33,14 @@ function EditAutomobile(/*props*/) {
     brand: data ? data[0]?.AutomobileBrands.ID : '',
     body_type: data ? data[0]?.AutomobileBodyTypes.ID : '',
     layout: data ? data[0]?.AutomobileLayouts.ID : '',
-    model: data ? data[0]?.model : '',
-    year_start: data ? data[0]?.year_start : '',
-    year_end: data ? data[0]?.year_end : '',
-    power_type: data ? data[0]?.power_type : '',
-    curb: data ? data[0]?.curb_wight : '',
-    wheel: data ? data[0]?.wheel_base : '',
+    model: data ? data[0]?.Model : '',
+    year_start: data ? data[0]?.YearStart : '',
+    year_end: data ? data[0]?.YearEnd : '',
+    power_type: data ? data[0]?.PowerType : '',
+    curb: data ? data[0]?.CurbWight : '',
+    wheel: data ? data[0]?.WheelBase : '',
     lengths: data
-      ? data[0]?.lengths
+      ? data[0]?.Lengths
       : [
           {
             length: 0,
@@ -49,7 +49,7 @@ function EditAutomobile(/*props*/) {
           },
         ],
     widths: data
-      ? data[0]?.widths
+      ? data[0]?.Widths
       : [
           {
             width: 0,
@@ -58,7 +58,7 @@ function EditAutomobile(/*props*/) {
           },
         ],
     heights: data
-      ? data[0]?.heights
+      ? data[0]?.Heights
       : [
           {
             height: 0,
@@ -322,7 +322,7 @@ function EditAutomobile(/*props*/) {
             <Dropdown
               label="Manufacture"
               value={input.manufacture.toString()}
-              data={AutomobileManufacture?.map(({ ID, name }) => ({ value: ID.toString(), label: name })) || []}
+              data={AutomobileManufacture?.map(({ ID, Name }) => ({ value: ID.toString(), label: Name })) || []}
               onChange={handleInput('manufacture', true)}
             />
           </Grid.Col>
@@ -330,7 +330,7 @@ function EditAutomobile(/*props*/) {
             <Dropdown
               label="Brand"
               value={input.brand.toString()}
-              data={AutomobileBrand?.map(({ ID, name }) => ({ value: ID.toString(), label: name })) || []}
+              data={AutomobileBrand?.map(({ ID, Name }) => ({ value: ID.toString(), label: Name })) || []}
               onChange={handleInput('brand', true)}
             />
           </Grid.Col>
@@ -342,7 +342,7 @@ function EditAutomobile(/*props*/) {
             <Dropdown
               label="Body Type"
               value={input.body_type.toString()}
-              data={AutomobileBodyType?.map(({ ID, name }) => ({ value: ID.toString(), label: name })) || []}
+              data={AutomobileBodyType?.map(({ ID, Name }) => ({ value: ID.toString(), label: Name })) || []}
               onChange={handleInput('body_type', true)}
             />
           </Grid.Col>
@@ -366,7 +366,7 @@ function EditAutomobile(/*props*/) {
             <Dropdown
               label="Layout"
               value={input.layout.toString()}
-              data={AutomobileLayout?.map(({ ID, name }) => ({ value: ID.toString(), label: name })) || []}
+              data={AutomobileLayout?.map(({ ID, Name }) => ({ value: ID.toString(), label: Name })) || []}
               onChange={handleInput('layout', true)}
             />
           </Grid.Col>

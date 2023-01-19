@@ -48,12 +48,12 @@ export default function Engineer(/*props*/) {
   const body = () =>
     dataEngineers.map((item: IEngineer, index: any) => (
       <tr key={index}>
-        <td onClick={openDetail(item.ID)}>{item.name}</td>
-        <td onClick={openDetail(item.ID)}>{item.phone}</td>
-        <td onClick={openDetail(item.ID)}>{item.bank_name}</td>
-        <td onClick={openDetail(item.ID)}>{rp(item.hourly_pay)}</td>
-        <td onClick={openDetail(item.ID)}>{rp(item.monthly_pay)}</td>
-        <td onClick={openDetail(item.ID)}>{dayjs(item.first_work_date).format('ddd, DD MMM YYYY')}</td>
+        <td onClick={openDetail(item.ID)}>{item.Name}</td>
+        <td onClick={openDetail(item.ID)}>{item.Phone}</td>
+        <td onClick={openDetail(item.ID)}>{item.BankName}</td>
+        <td onClick={openDetail(item.ID)}>{rp(item.HourlyPay)}</td>
+        <td onClick={openDetail(item.ID)}>{rp(item.MonthlyPay)}</td>
+        <td onClick={openDetail(item.ID)}>{dayjs(item.FirstWorkDate).format('ddd, DD MMM YYYY')}</td>
         <td>
           <Menu>
             <Menu.Target>
@@ -62,7 +62,7 @@ export default function Engineer(/*props*/) {
               </div>
             </Menu.Target>
             <Menu.Dropdown>
-              <Menu.Label>{item.name}</Menu.Label>
+              <Menu.Label>{item.Name}</Menu.Label>
               <Menu.Item icon={<Edit2 />} onClick={() => Router.push(`/engineer/edit/${item.ID}`)}>
                 Edit
               </Menu.Item>

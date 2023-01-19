@@ -24,14 +24,14 @@ function DetilClientPage() {
           Details
         </Text>
         <Grid gutter="xl" className="mb-10">
-          <ListDetail List="Name" IsiList={Vendor ? Vendor[0]?.name : ''} />
-          <ListDetail List="Type" IsiList={Vendor ? Vendor[0]?.type : ''} />
-          <ListDetail List="Website" IsiList={Vendor ? Vendor[0]?.url_website : ''} />
-          <ListDetail List="Country" IsiList={Vendor ? Vendor[0]?.Country?.name : ''} />
-          <ListDetail List="Address" IsiList={Vendor ? Vendor[0]?.phone : ''} />
-          <ListDetail List="Email" IsiList={Vendor ? Vendor[0]?.email : ''} />
-          <ListDetail List="Phone Number" IsiList={Vendor ? Vendor[0]?.address : ''} />
-          <ListDetail List="Description" IsiList={Vendor ? Vendor[0]?.description : ''} />
+          <ListDetail List="Name" IsiList={Vendor ? Vendor[0]?.Name : ''} />
+          <ListDetail List="Type" IsiList={Vendor ? Vendor[0]?.Type : ''} />
+          <ListDetail List="Website" IsiList={Vendor ? Vendor[0]?.UrlWebsite : ''} />
+          <ListDetail List="Country" IsiList={Vendor ? Vendor[0]?.Country?.Name : ''} />
+          <ListDetail List="Address" IsiList={Vendor ? Vendor[0]?.Phone : ''} />
+          <ListDetail List="Email" IsiList={Vendor ? Vendor[0]?.Email : ''} />
+          <ListDetail List="Phone Number" IsiList={Vendor ? Vendor[0]?.Address : ''} />
+          <ListDetail List="Description" IsiList={Vendor ? Vendor[0]?.Description : ''} />
         </Grid>
       </div>
     </>

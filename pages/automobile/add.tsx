@@ -312,14 +312,14 @@ function AddAutomobile(/*props*/) {
           <Grid.Col md={6}>
             <Dropdown
               label="Manufacture"
-              data={AutomobileManufacture?.map(({ ID, name }) => ({ value: ID.toString(), label: name })) || []}
+              data={AutomobileManufacture?.map(({ ID, Name }) => ({ value: ID.toString(), label: Name })) || []}
               onChange={handleInput('manufacture', true)}
             />
           </Grid.Col>
           <Grid.Col md={6}>
             <Dropdown
               label="Brand"
-              data={AutomobileBrand?.map(({ ID, name }) => ({ value: ID.toString(), label: name })) || []}
+              data={AutomobileBrand?.map(({ ID, Name }) => ({ value: ID.toString(), label: Name })) || []}
               onChange={handleInput('brand', true)}
             />
           </Grid.Col>
@@ -330,7 +330,7 @@ function AddAutomobile(/*props*/) {
           <Grid.Col md={6}>
             <Dropdown
               label="Body Type"
-              data={AutomobileBodyType?.map(({ ID, name }) => ({ value: ID.toString(), label: name })) || []}
+              data={AutomobileBodyType?.map(({ ID, Name }) => ({ value: ID.toString(), label: Name })) || []}
               onChange={handleInput('body_type', true)}
             />
           </Grid.Col>
@@ -353,7 +353,7 @@ function AddAutomobile(/*props*/) {
           <Grid.Col md={6}>
             <Dropdown
               label="Layout"
-              data={AutomobileLayout?.map(({ ID, name }) => ({ value: ID.toString(), label: name })) || []}
+              data={AutomobileLayout?.map(({ ID, Name }) => ({ value: ID.toString(), label: Name })) || []}
               onChange={handleInput('layout', true)}
             />
           </Grid.Col>

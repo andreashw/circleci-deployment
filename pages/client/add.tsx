@@ -128,8 +128,8 @@ function ClientsPage() {
               valProvince={input.province_id}
               valCities={input.city_id}
               onCitiesChange={handleInput('city_id', true)}
-              province={provinces ? provinces.map((y) => ({ value: y.ID.toString(), label: y.name })) : []}
-              cities={cities ? cities.map((y) => ({ value: y.ID.toString(), label: y.name })) : []}
+              province={provinces ? provinces.map((y) => ({ value: y.ID.toString(), label: y.Name })) : []}
+              cities={cities ? cities.map((y) => ({ value: y.ID.toString(), label: y.Name })) : []}
             />
 
             <Grid.Col md={12}>

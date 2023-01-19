@@ -28,19 +28,16 @@ function Detail() {
           Details
         </Text>
         <Grid gutter="xl">
-          <ListDetail List="Engine Name" IsiList={data ? data[0]?.name : undefined} />
-          <ListDetail List="Engine Name" IsiList={data ? data[0]?.EngineManufactures.name : undefined} />
-          <ListDetail
-            List="Production Year"
-            IsiList={data ? `${data[0].year_start} - ${data[0].year_end}` : undefined}
-          />
+          <ListDetail List="Engine Name" IsiList={data ? data[0]?.Name : undefined} />
+          <ListDetail List="Engine Name" IsiList={data ? data[0]?.EngineManufactures.Name : undefined} />
+          <ListDetail List="Production Year" IsiList={data ? `${data[0].YearStart} - ${data[0].YearEnd}` : undefined} />
         </Grid>
         <Divider my="sm" className="my-5" />
 
         {/* DISPLACEMENTS SECTION */}
         {data
-          ? data[0]?.displacements &&
-            data[0]?.displacements.map((displacement: any, di: number) => (
+          ? data[0]?.Displacements &&
+            data[0]?.Displacements.map((displacement: any, di: number) => (
               <Fragment key={di}>
                 <Text className="mt-[1rem] mb-[1rem] text-[20px]" weight={700}>
                   {`Displacement ${di + 1}`}
@@ -59,9 +56,9 @@ function Detail() {
           General
         </Text>
         <Grid gutter="xl">
-          <ListDetail List="Layout" IsiList={data ? data[0]?.EngineLayouts.name : undefined} />
-          <ListDetail List="Engine Type" IsiList={data ? data[0]?.engine_type : undefined} />
-          <ListDetail List="Fuel Type" IsiList={data ? data[0]?.fuel_type : undefined} />
+          <ListDetail List="Layout" IsiList={data ? data[0]?.EngineLayouts.Name : undefined} />
+          <ListDetail List="Engine Type" IsiList={data ? data[0]?.EngineType : undefined} />
+          <ListDetail List="Fuel Type" IsiList={data ? data[0]?.FuelType : undefined} />
         </Grid>
         <Divider my="sm" className="my-5" />
 
@@ -71,8 +68,8 @@ function Detail() {
         </Text>
         <Grid gutter="xl">
           {data
-            ? data[0]?.cylinder_bores &&
-              data[0]?.cylinder_bores.map((cylinderBore: any, ci: number) => (
+            ? data[0]?.CylinderBores &&
+              data[0]?.CylinderBores.map((cylinderBore: any, ci: number) => (
                 <ListDetail key={ci} List="Cylinder Bore" IsiList={`${cylinderBore.cylinder_bore}`} />
               ))
             : undefined}
@@ -81,8 +78,8 @@ function Detail() {
 
         {/* TRANSMISSIONS SECTION */}
         {data
-          ? data[0]?.transmissions &&
-            data[0]?.transmissions.map((transmission: any, ti: number) => (
+          ? data[0]?.Transmissions &&
+            data[0]?.Transmissions.map((transmission: any, ti: number) => (
               <Fragment key={ti}>
                 <Text className="mt-[1rem] mb-[1rem] text-[20px]" weight={700}>
                   {`Transmission ${ti + 1}`}

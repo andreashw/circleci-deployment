@@ -266,7 +266,7 @@ function AddEngine(/*props*/) {
             <Grid.Col md={6}>
               <Dropdown
                 label="Manufacture"
-                data={EngineManufacture?.map(({ ID, name }) => ({ value: ID.toString(), label: name })) || []}
+                data={EngineManufacture?.map(({ ID, Name }) => ({ value: ID.toString(), label: Name })) || []}
                 onChange={handleInput('manufacture', true)}
               />
             </Grid.Col>
@@ -356,7 +356,7 @@ function AddEngine(/*props*/) {
             <Grid.Col md={6}>
               <Dropdown
                 label="Layout"
-                data={EngineLayout?.map(({ ID, name }) => ({ value: ID.toString(), label: name })) || []}
+                data={EngineLayout?.map(({ ID, Name }) => ({ value: ID.toString(), label: Name })) || []}
                 onChange={handleInput('layout', true)}
               />
             </Grid.Col>

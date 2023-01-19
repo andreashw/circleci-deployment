@@ -33,14 +33,14 @@ function EditVendorPage() {
   const { data: Vendor } = useSWR<IVendor[]>(`/api/v1/vendors/${id}`);
 
   const [input, handleInput] = useInput({
-    name: Vendor ? Vendor[0]?.name : '',
-    email: Vendor ? Vendor[0]?.email : '',
-    phone: Vendor ? Vendor[0]?.phone : '',
-    address: Vendor ? Vendor[0]?.address : '',
-    type: Vendor ? Vendor[0]?.type?.toString() : '',
-    url_website: Vendor ? Vendor[0]?.url_website : '',
-    country_id: Vendor ? Vendor[0]?.country_id : '',
-    description: Vendor ? Vendor[0]?.description : '',
+    name: Vendor ? Vendor[0]?.Name : '',
+    email: Vendor ? Vendor[0]?.Email : '',
+    phone: Vendor ? Vendor[0]?.Phone : '',
+    address: Vendor ? Vendor[0]?.Address : '',
+    type: Vendor ? Vendor[0]?.Type?.toString() : '',
+    url_website: Vendor ? Vendor[0]?.UrlWebsite : '',
+    country_id: Vendor ? Vendor[0]?.CountryId : '',
+    description: Vendor ? Vendor[0]?.Description : '',
   });
   const doSubmit = async (e: any) => {
     e.preventDefault();
@@ -129,7 +129,7 @@ function EditVendorPage() {
                   });
                 }}
                 value={input.country_id?.toString()}
-                data={country ? country.map((y) => ({ value: y.ID.toString(), label: y.name })) : []}
+                data={country ? country.map((y) => ({ value: y.ID.toString(), label: y.Name })) : []}
               />
             </Grid.Col>
             <Grid.Col md={6}>

@@ -44,12 +44,12 @@ export default function Engine(/*props*/) {
   const body = () =>
     dataEngines.map((item: IEngine, index: any) => (
       <tr key={index}>
-        <td onClick={() => Router.push(`/engine/${item.ID}`)}>{item.name}</td>
-        <td onClick={() => Router.push(`/engine/${item.ID}`)}>{item.EngineManufactures.name}</td>
-        <td onClick={() => Router.push(`/engine/${item.ID}`)}>{`${item.year_start} - ${item.year_end}`}</td>
-        <td onClick={() => Router.push(`/engine/${item.ID}`)}>{item.EngineLayouts.name}</td>
-        <td onClick={() => Router.push(`/engine/${item.ID}`)}>{item.engine_type}</td>
-        <td onClick={() => Router.push(`/engine/${item.ID}`)}>{item.fuel_type}</td>
+        <td onClick={() => Router.push(`/engine/${item.ID}`)}>{item.Name}</td>
+        <td onClick={() => Router.push(`/engine/${item.ID}`)}>{item.EngineManufactures.Name}</td>
+        <td onClick={() => Router.push(`/engine/${item.ID}`)}>{`${item.YearStart} - ${item.YearEnd}`}</td>
+        <td onClick={() => Router.push(`/engine/${item.ID}`)}>{item.EngineLayouts.Name}</td>
+        <td onClick={() => Router.push(`/engine/${item.ID}`)}>{item.EngineType}</td>
+        <td onClick={() => Router.push(`/engine/${item.ID}`)}>{item.FuelType}</td>
         <td>
           <Menu>
             <Menu.Target>
@@ -59,7 +59,7 @@ export default function Engine(/*props*/) {
               </div>
             </Menu.Target>
             <Menu.Dropdown>
-              <Menu.Label>{item.name}</Menu.Label>
+              <Menu.Label>{item.Name}</Menu.Label>
               <Menu.Item icon={<Edit2 />} onClick={() => Router.push(`/engine/edit/${item.ID}`)}>
                 Edit
               </Menu.Item>

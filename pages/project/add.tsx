@@ -99,7 +99,7 @@ function ProjectAddPage() {
                 value={input.client_id.toString()}
                 onChange={handleInput('client_id', true)}
                 rightSection={<IconChevronDown size={14} />}
-                data={dataClient ? dataClient.map((y) => ({ value: y.ID.toString(), label: y.Name })) : []}
+                data={dataClient ? dataClient.map((y: any) => ({ value: y.Id.toString(), label: y.Name })) : []}
               />
             </Grid.Col>
 
@@ -110,7 +110,7 @@ function ProjectAddPage() {
                 value={input.pic_id.toString()}
                 onChange={handleInput('pic_id', true)}
                 rightSection={<IconChevronDown size={14} />}
-                data={dataPic ? dataPic.map((y) => ({ value: y.ID.toString(), label: y.Name })) : []}
+                data={dataPic ? dataPic.map((y: any) => ({ value: y.Id.toString(), label: y.Name })) : []}
               />
             </Grid.Col>
 
@@ -121,7 +121,7 @@ function ProjectAddPage() {
                 value={input.automobile_id.toString()}
                 onChange={handleInput('automobile_id', true)}
                 rightSection={<IconChevronDown size={14} />}
-                data={dataAutomobile ? dataAutomobile.map((y) => ({ value: y.ID.toString(), label: y.Name })) : []}
+                data={dataAutomobile ? dataAutomobile.map((y: any) => ({ value: y.Id.toString(), label: y.Name })) : []}
               />
             </Grid.Col>
 
@@ -145,7 +145,7 @@ function ProjectAddPage() {
                 value={input.engine_id.toString()}
                 onChange={handleInput('engine_id', true)}
                 rightSection={<IconChevronDown size={14} />}
-                data={dataPower ? dataPower.map((y) => ({ value: y.ID.toString(), label: y.Name })) : []}
+                data={dataPower ? dataPower.map((y: any) => ({ value: y.Id.toString(), label: y.Name })) : []}
               />
             </Grid.Col>
 

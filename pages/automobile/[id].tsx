@@ -28,40 +28,37 @@ function Detail() {
           Details
         </Text>
         <Grid gutter="xl" className="mb-10">
-          <ListDetail List="Manufacturer" IsiList={data ? data[0]?.AutomobileManufactures.name : undefined} />
-          <ListDetail List="Brand" IsiList={data ? data[0]?.AutomobileBrands.name : undefined} />
-          <ListDetail List="Model" IsiList={data ? data[0]?.model : undefined} />
-          <ListDetail List="Body Type" IsiList={data ? data[0]?.AutomobileBodyTypes.name : undefined} />
-          <ListDetail
-            List="Production Year"
-            IsiList={data ? `${data[0].year_start} - ${data[0].year_end}` : undefined}
-          />
+          <ListDetail List="Manufacturer" IsiList={data ? data[0]?.AutomobileManufactures.Name : undefined} />
+          <ListDetail List="Brand" IsiList={data ? data[0]?.AutomobileBrands.Name : undefined} />
+          <ListDetail List="Model" IsiList={data ? data[0]?.Model : undefined} />
+          <ListDetail List="Body Type" IsiList={data ? data[0]?.AutomobileBodyTypes.Name : undefined} />
+          <ListDetail List="Production Year" IsiList={data ? `${data[0].YearStart} - ${data[0].YearEnd}` : undefined} />
         </Grid>
 
         <Text className="mt-[1rem] mb-[1rem] text-[20px]" weight={700}>
           Body & Chassis
         </Text>
         <Grid gutter="xl" className="mb-10">
-          <ListDetail List="Layout" IsiList={data ? data[0]?.AutomobileBodyTypes.name : undefined} />
+          <ListDetail List="Layout" IsiList={data ? data[0]?.AutomobileBodyTypes.Name : undefined} />
         </Grid>
 
         <Text className="mt-[1rem] mb-[1rem] text-[20px]" weight={700}>
           Power
         </Text>
         <Grid gutter="xl" className="mb-10">
-          <ListDetail List="Type" IsiList={data ? data[0]?.power_type : undefined} />
+          <ListDetail List="Type" IsiList={data ? data[0]?.PowerType : undefined} />
           <ListDetail List="Engine / Motor" IsiList="V8" />
         </Grid>
         <Text className="mt-[1rem] mb-[1rem] text-[20px]" weight={700}>
           Dimension
         </Text>
         <Grid gutter="xl" className="mb-10">
-          <ListDetail List="Curb Weight" IsiList={data ? `${data[0]?.curb_wight as unknown as string}mm` : undefined} />
-          <ListDetail List="Wheel Base" IsiList={data ? `${data[0]?.wheel_base as unknown as string}mm` : undefined} />
+          <ListDetail List="Curb Weight" IsiList={data ? `${data[0]?.CurbWight as unknown as string}mm` : undefined} />
+          <ListDetail List="Wheel Base" IsiList={data ? `${data[0]?.WheelBase as unknown as string}mm` : undefined} />
           {/* LENGTH SECTION */}
           {data
-            ? data[0]?.lengths &&
-              data[0]?.lengths.map((length: any, li: number) => (
+            ? data[0]?.Lengths &&
+              data[0]?.Lengths.map((length: any, li: number) => (
                 <Fragment key={li}>
                   <ListDetail
                     List={`Length ${li + 1}`}
@@ -72,8 +69,8 @@ function Detail() {
             : undefined}
           {/* WIDTH SECTION */}
           {data
-            ? data[0]?.widths &&
-              data[0]?.widths.map((width: any, wi: number) => (
+            ? data[0]?.Widths &&
+              data[0]?.Widths.map((width: any, wi: number) => (
                 <Fragment key={wi}>
                   <ListDetail
                     List={`Width ${wi + 1}`}
@@ -84,8 +81,8 @@ function Detail() {
             : undefined}
           {/* HEIGHT SECTION */}
           {data
-            ? data[0]?.heights &&
-              data[0]?.heights.map((height: any, hi: number) => (
+            ? data[0]?.Heights &&
+              data[0]?.Heights.map((height: any, hi: number) => (
                 <Fragment key={hi}>
                   <ListDetail
                     List={`Height ${hi + 1}`}

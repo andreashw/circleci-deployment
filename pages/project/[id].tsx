@@ -24,23 +24,23 @@ function DetailProjectPage() {
           Details
         </Text>
         <Grid gutter="xl" className="mb-10">
-          <ListDetail List="Project Name" IsiList={Project ? Project[0]?.name : ''} />
-          <ListDetail List="Client" IsiList={Project ? Project[0]?.Client?.name : ''} />
-          <ListDetail List="PIC" IsiList={Project ? Project[0]?.Pic?.name : ''} />
+          <ListDetail List="Project Name" IsiList={Project ? Project[0]?.Name : ''} />
+          <ListDetail List="Client" IsiList={Project ? Project[0]?.Client?.Name : ''} />
+          <ListDetail List="PIC" IsiList={Project ? Project[0]?.PIC?.Name : ''} />
           <ListDetail
             List="Automobile"
-            IsiList={Project ? `${Project[0]?.Automobile?.model} - ${Project[0]?.Automobile?.year_start}` : ''}
+            IsiList={Project ? `${Project[0]?.Automobile?.Model} - ${Project[0]?.Automobile?.YearStart}` : ''}
           />
-          <ListDetail List="Power Type" IsiList={Project ? Project[0]?.power_type : ''} />
+          <ListDetail List="Power Type" IsiList={Project ? Project[0]?.PowerType : ''} />
           <ListDetail
             List="Engine"
             IsiList={
               Project
-                ? `${Project[0].Automobile?.AutomobileManufactures?.name}${Project[0].Engine?.name} ( ${Project[0].Engine?.year_start}-${Project[0].Engine?.year_end})`
+                ? `${Project[0].Automobile?.AutomobileManufactures?.Name}${Project[0].Engine?.Name} ( ${Project[0].Engine?.YearStart}-${Project[0].Engine?.YearEnd})`
                 : ''
             }
           />
-          <ListDetail List="Notes" IsiList={Project ? Project[0]?.notes : ''} />
+          <ListDetail List="Notes" IsiList={Project ? Project[0]?.Notes : ''} />
         </Grid>
       </div>
     </>

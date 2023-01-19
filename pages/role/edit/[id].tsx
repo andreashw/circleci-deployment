@@ -50,9 +50,9 @@ function EditRolePage() {
 
   const handleCheckBox = (permission: IListPermission, checked: boolean) => {
     setPermissionIDs((prev) => {
-      if (permission.name.includes('*')) {
+      if (permission.Name.includes('*')) {
         const checkedPermission = allPermission
-          ?.filter((item) => item.name.includes(permission?.name?.replace('*', '')))
+          ?.filter((item) => item.Name.includes(permission?.Name?.replace('*', '')))
           ?.map((item) => item.ID);
         if (checked) {
           return [
@@ -70,9 +70,9 @@ function EditRolePage() {
       }
 
       // Mendapatkan nama permission yang ada .* sesuai permission yang di uncheck
-      const uncheckAllName = permission.name.replace(permission.name.split('.').pop() || '', '*');
+      const uncheckAllName = permission.Name.replace(permission.Name.split('.').pop() || '', '*');
       // Cek All Permission yang list permissionnya sesuai ID yang di uncheck
-      const uncheckAllID = allPermission.find((item) => item.name === uncheckAllName)?.ID;
+      const uncheckAllID = allPermission.find((item) => item.Name === uncheckAllName)?.ID;
       return prev.filter((idPermission) => ![permission.ID, uncheckAllID].includes(idPermission));
     });
   };

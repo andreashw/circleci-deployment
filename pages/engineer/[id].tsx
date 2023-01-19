@@ -29,8 +29,8 @@ function Detail() {
           General
         </Text>
         <Grid gutter="xl" className="mb-10">
-          <ListDetail List="Name" IsiList={data?.[0]?.name} />
-          <ListDetail List="Phone Number" IsiList={data?.[0]?.phone} />
+          <ListDetail List="Name" IsiList={data?.[0]?.Name} />
+          <ListDetail List="Phone Number" IsiList={data?.[0]?.Phone} />
         </Grid>
         <Divider my="sm" className="my-5" />
 
@@ -38,9 +38,9 @@ function Detail() {
           Account Information
         </Text>
         <Grid gutter="xl" className="mb-10">
-          <ListDetail List="Bank" IsiList={data?.[0]?.bank_name} />
-          <ListDetail List="Rekening" IsiList={data?.[0]?.account_number} />
-          <ListDetail List="Nama Pemilik Rek." IsiList={data?.[0]?.account_name} />
+          <ListDetail List="Bank" IsiList={data?.[0]?.BankName} />
+          <ListDetail List="Rekening" IsiList={data?.[0]?.AccountNumber} />
+          <ListDetail List="Nama Pemilik Rek." IsiList={data?.[0]?.AccountName} />
         </Grid>
         <Divider my="sm" className="my-5" />
 
@@ -48,8 +48,8 @@ function Detail() {
           Salary
         </Text>
         <Grid gutter="xl" className="mb-10">
-          <ListDetail List="Hourly Pay" IsiList={rp(data?.[0]?.hourly_pay)} />
-          <ListDetail List="Bulanan Equiv." IsiList={rp(data?.[0]?.monthly_pay)} />
+          <ListDetail List="Hourly Pay" IsiList={rp(data?.[0]?.HourlyPay)} />
+          <ListDetail List="Bulanan Equiv." IsiList={rp(data?.[0]?.MonthlyPay)} />
         </Grid>
         <Divider my="sm" className="my-5" />
 
@@ -57,8 +57,8 @@ function Detail() {
           Notes
         </Text>
         <Grid gutter="xl" className="mb-10">
-          <ListDetail List="Tanggal Masuk" IsiList={dayjs(data?.[0]?.first_work_date).format('ddd, DD MMM YYYY')} />
-          <ListDetail List="Notes" IsiList={data?.[0]?.note} />
+          <ListDetail List="Tanggal Masuk" IsiList={dayjs(data?.[0]?.FirstWorkDate).format('ddd, DD MMM YYYY')} />
+          <ListDetail List="Notes" IsiList={data?.[0]?.Note} />
         </Grid>
       </div>
     </>

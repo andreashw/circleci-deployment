@@ -19,30 +19,30 @@ function EditPayrollPage() {
   const [drawerOpened, toggleDrawer] = useState(false);
   const [, startTransition] = useTransition();
   const [input, handleInput] = useInput({
-    payroll_date: Payroll ? dayjs(Payroll.payroll_date).toDate() : '',
-    start_date: Payroll ? dayjs(Payroll.start_date).toDate() : '',
-    end_date: Payroll ? dayjs(Payroll.end_date).toDate() : '',
-    status: Payroll ? Payroll.status : '',
+    payroll_date: Payroll ? dayjs(Payroll.PayrollDate).toDate() : '',
+    start_date: Payroll ? dayjs(Payroll.StartDate).toDate() : '',
+    end_date: Payroll ? dayjs(Payroll.EndDate).toDate() : '',
+    status: Payroll ? Payroll.Status : '',
   });
 
   // const { data: dataClients } = useSWR('/api/v1/clients/');
 
   const body = () =>
-    Payroll?.payrolls.map((item: any, index: any) => (
+    Payroll?.Payrolls.map((item: any, index: any) => (
       <tr key={index}>
-        <td className=" w-2/12">{item.worker}</td>
-        <td className=" w-2/12">{item.total_hm}</td>
-        <td className="   w-2/12">{rp(item.hourly_pay)}</td>
-        <td className="  w-2/12">{rp(item.total_pay)}</td>
+        <td className=" w-2/12">{item.Worker}</td>
+        <td className=" w-2/12">{item.TotalHm}</td>
+        <td className="   w-2/12">{rp(item.HourlyPay)}</td>
+        <td className="  w-2/12">{rp(item.TotalPay)}</td>
       </tr>
     ));
   const clientPay = () =>
-    Payroll?.clients.map((item: any, index: any) => (
+    Payroll?.Clients.map((item: any, index: any) => (
       <tr key={index}>
         <td />
         <td />
-        <td className="   w-2/12">{item.name}</td>
-        <td className="  w-2/12">{rp(item.total_pay)}</td>
+        <td className="   w-2/12">{item.Name}</td>
+        <td className="  w-2/12">{rp(item.TotalPay)}</td>
       </tr>
     ));
 
@@ -103,7 +103,7 @@ function EditPayrollPage() {
               <Grid.Col md={6}>
                 <DatePicker
                   placeholder="Select Date"
-                  value={input.payroll_date}
+                  value={input.Payroll_date}
                   disabled
                   onChange={handleInput('payroll_date', true)}
                   label="Periode"
@@ -131,7 +131,7 @@ function EditPayrollPage() {
               </Grid.Col>
             </Grid>
           </div>
-          {Payroll && Payroll?.payrolls.length > 0 ? (
+          {Payroll && Payroll?.Payrolls.length > 0 ? (
             <Table striped highlightOnHover>
               <thead>
                 <tr>
@@ -145,22 +145,22 @@ function EditPayrollPage() {
                 {body()}
                 <tr>
                   <td className="p-6 font-bold">Total</td>
-                  <td className="p-6">{Payroll.payrolls.reduce((prev, curr) => prev + curr.total_hm, 0)}</td>
+                  <td className="p-6">{Payroll.Payrolls.reduce((prev, curr) => prev + curr.TotalHm, 0)}</td>
                   <td />
-                  <td className="font-bold">{rp(Payroll?.total)}</td>
+                  <td className="font-bold">{rp(Payroll?.Total)}</td>
                 </tr>
                 <tr>
                   <td className="p-6"> </td>
                   <td className="p-6"> </td>
                   <td className=" font-bold">Payment By </td>
-                  <td className="font-bold">{rp(Payroll?.total)}</td>
+                  <td className="font-bold">{rp(Payroll?.Total)}</td>
                 </tr>
                 {clientPay()}
                 <tr>
                   <td className="p-6"> </td>
                   <td className="p-6"> </td>
                   <td className=" font-bold">Total </td>
-                  <td className="font-bold">{rp(Payroll?.total)}</td>
+                  <td className="font-bold">{rp(Payroll?.Total)}</td>
                 </tr>
                 <tr>
                   <td className="p-6"> </td>

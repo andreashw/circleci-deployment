@@ -62,12 +62,12 @@ export default function ReportHourly(/*props*/) {
 
   useEffect(() => {
     if (dataSelected) {
-      if (dataSelected?.title === 'Editable') {
+      if (dataSelected?.Title === 'Editable') {
         router.push(`/jobreport/hourly/edit/${Number(dataSelected.ID)}`);
       } else {
         showNotification({
           title: 'Warning',
-          message: dataSelected?.message,
+          message: dataSelected?.Message,
           color: 'teal',
         });
       }
@@ -85,16 +85,17 @@ export default function ReportHourly(/*props*/) {
     const response: IReportHourly | undefined = await fetcher(`/api/v1/jobs/${item.ID}`, {
       method: 'DELETE',
     });
-    if (response?.title === 'Not Deletable') {
+    console.log(response);
+    if (response?.Title === 'Not Deletable') {
       showNotification({
         title: 'Delete Failed',
-        message: response?.message,
+        message: response?.Message,
         color: 'red',
       });
-    } else if (response?.title === 'Deletable') {
+    } else if (response?.Title === 'Deletable') {
       showNotification({
         title: 'Delete Success',
-        message: response?.message,
+        message: response?.Message,
         color: 'teal',
       });
       mutate();
@@ -116,7 +117,7 @@ export default function ReportHourly(/*props*/) {
       .then((res: IReportHourly | any) => {
         showNotification({
           title: 'Success',
-          message: res?.message,
+          message: res?.Message,
           color: 'teal',
         });
         setCheckedBTNBool(false);
@@ -127,7 +128,7 @@ export default function ReportHourly(/*props*/) {
       .catch((err) => {
         showNotification({
           title: 'Error',
-          message: err?.message,
+          message: err?.Message,
           color: 'red',
         });
       });
@@ -206,7 +207,7 @@ export default function ReportHourly(/*props*/) {
 
   // function cektesdata() {
   //   const dataA = dataReportHourly.data
-  //     ?.filter((x: any) => x.paid === false)
+  //     ?.filter((x: any) => x.Paid === false)
   //     ?.reduce((prev: any[], curr: { ID: any }) => {
   //       // eslint-disable-next-line no-param-reassign
   //       prev = [...prev, curr.ID];
@@ -215,12 +216,12 @@ export default function ReportHourly(/*props*/) {
   //   console.log(dataA, 'cek tes');
   // }
   const body = () =>
-    dataReportHourly.data.map((item: IReportHourly, index: any) => (
+    dataReportHourly.Data.map((item: IReportHourly, index: any) => (
       <tr key={index}>
         {!SelectBTNBool && (
           <td className="w-8">
             <Checkbox
-              disabled={item.paid}
+              disabled={item.Paid}
               // eslint-disable-next-line @typescript-eslint/no-unused-vars
               onChange={(e) => {
                 if (idSpec.includes(item?.ID)) {
@@ -235,42 +236,42 @@ export default function ReportHourly(/*props*/) {
         )}
         <td
           onClick={() => router.push(`/jobreport/hourly/${item.ID}`)}
-          style={{ color: item.paid === true ? '#828282' : 'black' }}
+          style={{ color: item.Paid === true ? '#828282' : 'black' }}
         >
-          {dayjs(item.date).format('ddd, DD MMM YYYY')}
+          {dayjs(item.Date).format('ddd, DD MMM YYYY')}
         </td>
         <td
           onClick={() => router.push(`/jobreport/hourly/${item.ID}`)}
-          style={{ color: item.paid === true ? '#828282' : 'black' }}
+          style={{ color: item.Paid === true ? '#828282' : 'black' }}
         >
-          {item.Worker.name}
+          {item.Worker.Name}
         </td>
         <td
           onClick={() => router.push(`/jobreport/hourly/${item.ID}`)}
-          style={{ color: item.paid === true ? '#828282' : 'black' }}
+          style={{ color: item.Paid === true ? '#828282' : 'black' }}
         >
-          {item.Project.name}
+          {item.Project.Name}
         </td>
         <td
           onClick={() => router.push(`/jobreport/hourly/${item.ID}`)}
-          style={{ color: item.paid === true ? '#828282' : 'black' }}
+          style={{ color: item.Paid === true ? '#828282' : 'black' }}
         >
-          {item.Department.name}
+          {item.Department.Name}
         </td>
         <td
           onClick={() => router.push(`/jobreport/hourly/${item.ID}`)}
-          style={{ color: item.paid === true ? '#828282' : 'black' }}
+          style={{ color: item.Paid === true ? '#828282' : 'black' }}
         >
-          {item.start_hour}
+          {item.StartHour}
         </td>
         <td
           onClick={() => router.push(`/jobreport/hourly/${item.ID}`)}
-          style={{ color: item.paid === true ? '#828282' : 'black' }}
+          style={{ color: item.Paid === true ? '#828282' : 'black' }}
         >
-          {item.task}
+          {item.Task}
         </td>
         <td>
-          {item.paid === true ? (
+          {item.Paid === true ? (
             <div className="flex content-center items-center w-6 h-9">
               <Lock color="#828282" width="20" height="20" />
             </div>
@@ -282,7 +283,7 @@ export default function ReportHourly(/*props*/) {
                 </div>
               </Menu.Target>
               <Menu.Dropdown>
-                <Menu.Label>{item.Worker.name}</Menu.Label>
+                <Menu.Label>{item.Worker.Name}</Menu.Label>
                 <Menu.Item icon={<Edit2 />} onClick={() => checkEditable(item)}>
                   Edit
                 </Menu.Item>
@@ -398,7 +399,7 @@ export default function ReportHourly(/*props*/) {
         </div>
       </div>
 
-      {dataReportHourly.data?.length > 0 ? (
+      {dataReportHourly.Data?.length > 0 ? (
         <ScrollArea>
           <Table highlightOnHover>
             <thead>
@@ -410,7 +411,7 @@ export default function ReportHourly(/*props*/) {
                         // eslint-disable-next-line @typescript-eslint/no-unused-vars
                         onChange={(e) => {
                           const currentPageIds = dataReportHourly.data
-                            .filter((x: any) => !x.paid)
+                            .filter((x: any) => !x.Paid)
                             .map((x: any) => x.ID);
                           if (idSpecPage.includes(input.page)) {
                             setIdspec((prev: any) => prev.filter((id: any) => !currentPageIds.includes(id)));
@@ -461,10 +462,10 @@ export default function ReportHourly(/*props*/) {
             />
           </div>
           <Text color="#828282" size={14}>
-            Show {dataReportHourly?.data_per_page} from {dataReportHourly?.total_data} jobreport hourly
+            Show {dataReportHourly?.DataPerPage} from {dataReportHourly?.TotalData} jobreport hourly
           </Text>
         </div>
-        <Pagination page={dataReportHourly?.current_page} onChange={setPage} total={dataReportHourly?.total_page} />
+        <Pagination page={dataReportHourly?.CurrentPage} onChange={setPage} total={dataReportHourly?.TotalPage} />
       </div>
     </>
   );

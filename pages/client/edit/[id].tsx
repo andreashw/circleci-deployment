@@ -37,13 +37,13 @@ function EditClientPage() {
   const { data: Client } = useSWR<IClient[]>(`/api/v1/clients/${id}`);
 
   const [input, handleInput] = useInput({
-    name: Client ? Client[0]?.name : '',
-    email: Client ? Client[0]?.email : '',
-    phone: Client ? Client[0]?.phone : '',
-    address: Client ? Client[0]?.address : '',
-    notes: Client ? Client[0]?.notes : '',
-    city_id: Client ? Client[0]?.city_id : '',
-    province_id: Client ? Client[0]?.province_id : '',
+    name: Client ? Client[0]?.Name : '',
+    email: Client ? Client[0]?.Email : '',
+    phone: Client ? Client[0]?.Phone : '',
+    address: Client ? Client[0]?.Address : '',
+    notes: Client ? Client[0]?.Notes : '',
+    city_id: Client ? Client[0]?.CityId : '',
+    province_id: Client ? Client[0]?.ProvinceId : '',
   });
 
   const [, startTransition] = useTransition();
@@ -130,7 +130,7 @@ function EditClientPage() {
                   });
                 }}
                 value={input.province_id.toString()}
-                data={provinces ? provinces.map((y) => ({ value: y.ID.toString(), label: y.name })) : []}
+                data={provinces ? provinces.map((y) => ({ value: y.ID.toString(), label: y.Name })) : []}
               />
             </Grid.Col>
 
@@ -141,7 +141,7 @@ function EditClientPage() {
                 rightSection={<IconChevronDown size={14} />}
                 onChange={handleInput('city_id', true)}
                 value={input.city_id.toString()}
-                data={cities ? cities.map((y) => ({ value: y.ID.toString(), label: y.name })) : []}
+                data={cities ? cities.map((y) => ({ value: y.ID.toString(), label: y.Name })) : []}
               />
             </Grid.Col>
             <Grid.Col md={12}>

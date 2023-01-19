@@ -5,20 +5,20 @@ export interface IPermission {
 
 export interface IListPermission {
   ID: number;
-  name: string;
-  group: string;
+  Name: string;
+  Group: string;
 }
 
 export interface IResPermission {
-  permissions: IListAllPermission[];
+  Permissions: IListAllPermission[];
 }
 
 export interface IListAllPermission {
-  name: string;
-  group: string;
-  roles: IRoleDesc[];
+  Name: string;
+  Group: string;
+  Roles: IRoleDesc[];
 }
 
 export interface IRoleDesc {
-  name: string;
+  Name: string;
 }

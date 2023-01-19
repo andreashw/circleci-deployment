@@ -46,12 +46,12 @@ export default function Automobile(/*props*/) {
   const body = () =>
     dataAutomobiles.map((item: IAutomobile, index: any) => (
       <tr key={index}>
-        <td onClick={() => Router.push(`/automobile/${item.ID}`)}>{item.AutomobileManufactures.name}</td>
-        <td onClick={() => Router.push(`/automobile/${item.ID}`)}>{item.AutomobileBrands.name}</td>
-        <td onClick={() => Router.push(`/automobile/${item.ID}`)}>{item.model}</td>
-        <td onClick={() => Router.push(`/automobile/${item.ID}`)}>{item.AutomobileBodyTypes.name}</td>
-        <td onClick={() => Router.push(`/automobile/${item.ID}`)}>{item.year_start}</td>
-        <td onClick={() => Router.push(`/automobile/${item.ID}`)}>{item.power_type}</td>
+        <td onClick={() => Router.push(`/automobile/${item.ID}`)}>{item.AutomobileManufactures.Name}</td>
+        <td onClick={() => Router.push(`/automobile/${item.ID}`)}>{item.AutomobileBrands.Name}</td>
+        <td onClick={() => Router.push(`/automobile/${item.ID}`)}>{item.Model}</td>
+        <td onClick={() => Router.push(`/automobile/${item.ID}`)}>{item.AutomobileBodyTypes.Name}</td>
+        <td onClick={() => Router.push(`/automobile/${item.ID}`)}>{item.YearStart}</td>
+        <td onClick={() => Router.push(`/automobile/${item.ID}`)}>{item.PowerType}</td>
         <td>
           <Menu>
             <Menu.Target>
@@ -61,7 +61,7 @@ export default function Automobile(/*props*/) {
               </div>
             </Menu.Target>
             <Menu.Dropdown>
-              <Menu.Label>{item.AutomobileManufactures.name}</Menu.Label>
+              <Menu.Label>{item.AutomobileManufactures.Name}</Menu.Label>
               <Menu.Item icon={<Edit2 />} onClick={() => Router.push(`/automobile/edit/${item.ID}`)}>
                 Edit
               </Menu.Item>

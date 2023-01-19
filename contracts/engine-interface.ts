@@ -1,27 +1,27 @@
 export interface IEngine {
   ID: number;
-  name: string;
+  Name: string;
   engine_manufacture_id: number;
   engine_layout_id: number;
-  year_start: number;
-  year_end: number;
-  engine_type: string;
-  fuel_type: string;
+  YearStart: number;
+  YearEnd: number;
+  EngineType: string;
+  FuelType: string;
   EngineManufactures: IEngineManufacture;
   EngineLayouts: IEngineLayouts;
-  displacements: IDisplacement[];
-  cylinder_bores: ICylinderBore[];
-  transmissions: ITransmission[];
+  Displacements: IDisplacement[];
+  CylinderBores: ICylinderBore[];
+  Transmissions: ITransmission[];
 }
 
 export interface IEngineManufacture {
   ID: number;
-  name: string;
+  Name: string;
 }
 
 export interface IEngineLayouts {
   ID: number;
-  name: string;
+  Name: string;
 }
 
 export interface IDisplacement {

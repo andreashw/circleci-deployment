@@ -192,7 +192,7 @@ function AddPartPage() {
             <Grid.Col md={6}>
               <MultiDropdown
                 label="Automobile"
-                data={dataAutomobiles?.map(({ ID, model }) => ({ value: ID.toString(), label: model })) || []}
+                data={dataAutomobiles?.map(({ ID, Model }) => ({ value: ID.toString(), label: Model })) || []}
                 onChange={handleInput('automobile', true)}
               />
             </Grid.Col>
@@ -236,7 +236,7 @@ function AddPartPage() {
                     label="Vendor"
                     placeholder="Select Vendor"
                     rightSection={<IconChevronDown size={14} />}
-                    data={dataVendor ? dataVendor.map((y) => ({ value: y.name, label: y.name })) : []}
+                    data={dataVendor ? dataVendor.map((y) => ({ value: y.Name, label: y.Name })) : []}
                     value={input.vendor[ti].name}
                     onChange={handleInputVendor(ti)}
                   />

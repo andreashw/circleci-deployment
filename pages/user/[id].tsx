@@ -27,7 +27,7 @@ function DetailUserPage() {
           <ListDetail List="Name" IsiList={user ? user?.Name : ''} />
           <ListDetail List="Email" IsiList={user ? user?.Email : ''} />
           <ListDetail List="Active" IsiList={user ? user?.IsActive.toString() : ''} />
-          <ListDetail List="Role" IsiList={user ? user?.Roles[0].name : ''} />
+          <ListDetail List="Role" IsiList={user ? user?.Roles[0].Name : ''} />
         </Grid>
       </div>
     </>

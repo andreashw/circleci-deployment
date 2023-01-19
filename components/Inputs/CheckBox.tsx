@@ -30,7 +30,7 @@ export default function CheckboxList({
                 checked={permissionIDs.includes(permission.ID)}
                 className="pl-2"
                 disabled={disabled}
-                label={permission.name}
+                label={permission.Name}
                 color="gray"
               />
             ))}

@@ -13,24 +13,24 @@ function DetilPatrollPage() {
   const router = useRouter();
   const id = router.query.id as unknown as number;
   const { data: Payroll } = useSWR<IPayroll>(`/api/v1/payrolls/${id}`);
-  console.log(Payroll?.payroll_date, 'tes');
+  console.log(Payroll?.PayrollDate, 'tes');
 
   const body = () =>
-    Payroll?.payrolls.map((item: any, index: any) => (
+    Payroll?.Payrolls.map((item: any, index: any) => (
       <tr key={index}>
-        <td className=" w-2/12">{item.worker}</td>
-        <td className=" w-2/12">{item.total_hm}</td>
-        <td className="   w-2/12">{rp(item.hourly_pay)}</td>
-        <td className="  w-2/12">{rp(item.total_pay)}</td>
+        <td className=" w-2/12">{item.Worker}</td>
+        <td className=" w-2/12">{item.TotalHm}</td>
+        <td className="   w-2/12">{rp(item.HourlyPay)}</td>
+        <td className="  w-2/12">{rp(item.TotalPay)}</td>
       </tr>
     ));
   const clientPay = () =>
-    Payroll?.clients.map((item: any, index: any) => (
+    Payroll?.Clients.map((item: any, index: any) => (
       <tr key={index}>
         <td />
         <td />
-        <td className="   w-2/12">{item.name}</td>
-        <td className="  w-2/12">{rp(item.total_pay)}</td>
+        <td className="   w-2/12">{item.Name}</td>
+        <td className="  w-2/12">{rp(item.TotalPay)}</td>
       </tr>
     ));
 
@@ -76,20 +76,20 @@ function DetilPatrollPage() {
           <ListDetail
             List="Periode Payroll"
             classname=" font-bold text-black"
-            IsiList={`${dayjs(Payroll?.start_date).format('ddd, DD MMM YYYY')} - ${dayjs(Payroll?.end_date).format(
+            IsiList={`${dayjs(Payroll?.StartDate).format('ddd, DD MMM YYYY')} - ${dayjs(Payroll?.EndDate).format(
               'ddd, DD MMM YYYY'
             )}`}
           />
           <ListDetail
             List="Payroll Date"
             classname=" font-bold text-black"
-            IsiList={dayjs(Payroll?.payroll_date).format('ddd, DD MMM YYYY')}
+            IsiList={dayjs(Payroll?.PayrollDate).format('ddd, DD MMM YYYY')}
           />
-          <ListDetail List="Status" classname=" font-bold text-black" IsiList={Payroll?.status} />
+          <ListDetail List="Status" classname=" font-bold text-black" IsiList={Payroll?.Status} />
         </Grid>
       </div>
 
-      {Payroll && Payroll?.payrolls.length > 0 ? (
+      {Payroll && Payroll?.Payrolls.length > 0 ? (
         <ScrollArea>
           <Table striped highlightOnHover>
             <thead>
@@ -104,22 +104,22 @@ function DetilPatrollPage() {
               {body()}
               <tr>
                 <td className="p-6 font-bold">Total</td>
-                <td className="p-6">{Payroll.payrolls.reduce((prev, curr) => prev + curr.total_hm, 0)}</td>
+                <td className="p-6">{Payroll.Payrolls.reduce((prev, curr) => prev + curr.TotalHm, 0)}</td>
                 <td />
-                <td className="font-bold">{rp(Payroll?.total)}</td>
+                <td className="font-bold">{rp(Payroll?.Total)}</td>
               </tr>
               <tr>
                 <td className="p-6"> </td>
                 <td className="p-6"> </td>
                 <td className=" font-bold">Payment By </td>
-                <td className="font-bold">{rp(Payroll?.total)}</td>
+                <td className="font-bold">{rp(Payroll?.Total)}</td>
               </tr>
               {clientPay()}
               <tr>
                 <td className="p-6"> </td>
                 <td className="p-6"> </td>
                 <td className=" font-bold">Total </td>
-                <td className="font-bold">{rp(Payroll?.total)}</td>
+                <td className="font-bold">{rp(Payroll?.Total)}</td>
               </tr>
             </tbody>
           </Table>

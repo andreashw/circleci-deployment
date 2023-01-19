@@ -8,51 +8,51 @@ export interface IAutomobile {
   AutomobileBodyTypes: IAutomobileBodyTypes;
   automobile_layout_id: number;
   AutomobileLayouts: IAutomobileLayouts;
-  model: string;
-  year_start: number;
-  year_end: number;
-  power_type: string;
-  curb_wight: number;
-  wheel_base: number;
-  lengths: IAutomobileDimensionLength[];
-  heights: IAutomobileDimensionHeight[];
-  widths: IAutomobileDimensionWidth[];
+  Model: string;
+  YearStart: number;
+  YearEnd: number;
+  PowerType: string;
+  CurbWight: number;
+  WheelBase: number;
+  Lengths: IAutomobileDimensionLength[];
+  Heights: IAutomobileDimensionHeight[];
+  Widths: IAutomobileDimensionWidth[];
 }
 
 export interface IAutomobileManufactures {
   ID: number;
-  name: string;
+  Name: string;
 }
 
 export interface IAutomobileBrands {
   ID: number;
-  name: string;
+  Name: string;
 }
 
 export interface IAutomobileBodyTypes {
   ID: number;
-  name: string;
+  Name: string;
 }
 
 export interface IAutomobileLayouts {
   ID: number;
-  name: string;
+  Name: string;
 }
 
 export interface IAutomobileDimensionLength {
   length: number;
-  startYear: string;
-  endYear: string;
+  StartYear: string;
+  EndYear: string;
 }
 
 export interface IAutomobileDimensionWidth {
   width: number;
-  startYear: string;
-  endYear: string;
+  StartYear: string;
+  EndYear: string;
 }
 
 export interface IAutomobileDimensionHeight {
   height: number;
-  startYear: string;
-  endYear: string;
+  StartYear: string;
+  EndYear: string;
 }

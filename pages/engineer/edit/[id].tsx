@@ -21,15 +21,15 @@ function EditEngineer() {
     label: bank,
   }));
   const [input, handleInput] = useInput({
-    name: engineer?.[0]?.name,
-    phone: engineer?.[0]?.phone,
-    bank_name: engineer?.[0]?.bank_name,
-    account_name: engineer?.[0]?.account_name,
-    account_number: engineer?.[0]?.account_number,
-    hourly_pay: engineer?.[0]?.hourly_pay,
-    monthly_pay: engineer?.[0]?.monthly_pay,
-    first_work_date: dayjs(engineer?.[0]?.first_work_date).toDate(),
-    note: engineer?.[0]?.note,
+    name: engineer?.[0]?.Name,
+    phone: engineer?.[0]?.Phone,
+    bank_name: engineer?.[0]?.BankName,
+    account_name: engineer?.[0]?.AccountName,
+    account_number: engineer?.[0]?.AccountNumber,
+    hourly_pay: engineer?.[0]?.HourlyPay,
+    monthly_pay: engineer?.[0]?.MonthlyPay,
+    first_work_date: dayjs(engineer?.[0]?.FirstWorkDate).toDate(),
+    note: engineer?.[0]?.Note,
   });
 
   const doSubmit = (e: any) => {

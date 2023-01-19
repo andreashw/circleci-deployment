@@ -40,8 +40,8 @@ export default function ReportDaily(/*props*/) {
 
   const goToDetailPage = (item: any) => {
     router.push({
-      pathname: `/jobreport/daily/${item.worker_id}`,
-      query: { worker_id: item.worker_id, date: item.date },
+      pathname: `/jobreport/daily/${item.WorkerId}`,
+      query: { worker_id: item.WorkerId, date: item.Date },
     });
     // Jangan diubah ke URL custom karena jika diubah maka query di halaman selanjutnya jika di refresh akan hilang
   };
@@ -98,11 +98,11 @@ export default function ReportDaily(/*props*/) {
   };
 
   const body = () =>
-    dataReportDailies?.data?.map((item: IReportDaily, index: any) => (
+    dataReportDailies?.Data?.map((item: IReportDaily, index: any) => (
       <tr key={index}>
-        <td onClick={() => goToDetailPage(item)}>{dayjs(item.date).format('ddd, DD MMM YYYY')}</td>
-        <td onClick={() => goToDetailPage(item)}>{item.worker}</td>
-        <td onClick={() => goToDetailPage(item)}>{item.department}</td>
+        <td onClick={() => goToDetailPage(item)}>{dayjs(item.Date).format('ddd, DD MMM YYYY')}</td>
+        <td onClick={() => goToDetailPage(item)}>{item.Worker}</td>
+        <td onClick={() => goToDetailPage(item)}>{item.Department}</td>
       </tr>
     ));
 
@@ -188,7 +188,7 @@ export default function ReportDaily(/*props*/) {
         </div>
       </div>
 
-      {dataReportDailies?.data?.length > 0 ? (
+      {dataReportDailies?.Data?.length > 0 ? (
         <ScrollArea>
           <Table highlightOnHover>
             <thead>
@@ -222,10 +222,10 @@ export default function ReportDaily(/*props*/) {
             />
           </div>
           <Text color="#828282" size={14}>
-            Show {dataReportDailies?.data_per_page} from {dataReportDailies?.total_data} jobreport Daily
+            Show {dataReportDailies?.DataPerPage} from {dataReportDailies?.TotalData} jobreport Daily
           </Text>
         </div>
-        <Pagination page={dataReportDailies?.current_page} onChange={setPage} total={dataReportDailies?.total_page} />
+        <Pagination page={dataReportDailies?.CurrentPage} onChange={setPage} total={dataReportDailies?.TotalPage} />
       </div>
     </>
   );

@@ -33,7 +33,7 @@ function PartsPage() {
       title: 'Delete',
       children: (
         <Text size="sm" lineClamp={2}>
-          Delete <b>{part.name_input}</b> Part Data ?
+          Delete <b>{part.NameInput}</b> Part Data ?
         </Text>
       ),
       centered: true,
@@ -51,17 +51,17 @@ function PartsPage() {
     dataParts.map((item: any, index: any) => (
       <tr key={index}>
         <td className="cursor-pointer w-2/12" onClick={() => Router.push(`/part/${item.ID}`)}>
-          {item.name_input}
+          {item.NameInput}
         </td>
         <td className="cursor-pointer w-2/12" onClick={() => Router.push(`/part/${item.ID}`)}>
-          {item.brand_input}
+          {item.BrandInput}
         </td>
         <td className="cursor-pointer  w-72 " onClick={() => Router.push(`/part/${item.ID}`)}>
-          <p className="truncate w-72">{item.category}</p>
+          <p className="truncate w-72">{item.Category}</p>
         </td>
 
         <td className="cursor-pointer " onClick={() => Router.push(`/part/${item.ID}`)}>
-          {item.material_input}
+          {item.MaterialInput}
         </td>
         <td>
           <Menu>
@@ -80,7 +80,7 @@ function PartsPage() {
               </div>
             </Menu.Target>
             <Menu.Dropdown>
-              <Menu.Label>{item.name_input}</Menu.Label>
+              <Menu.Label>{item.NameInput}</Menu.Label>
               <Menu.Item icon={<Edit2 />} onClick={() => Router.push(`/part/edit/${item.ID}`)}>
                 Edit Part
               </Menu.Item>

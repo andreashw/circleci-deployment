@@ -4,15 +4,15 @@ import { IEngine } from './engine-interface';
 
 export interface IProject {
   ID: number;
-  name: string;
-  pic_id: number;
-  client_id: number;
-  automobile_id: number;
-  engine_id: number;
+  Name: string;
+  PicId: number;
+  ClientId: number;
+  AutomobileId: number;
+  EngineId: number;
   Client?: IClient;
-  Pic?: IProvince;
+  PIC?: IProvince;
   Automobile?: IAutomobile;
-  power_type: string;
+  PowerType: string;
   Engine?: IEngine;
-  notes: string;
+  Notes: string;
 }

@@ -37,13 +37,13 @@ function ProjectEditPage() {
   const { data: dataPower } = useSWR<IProvince[]>('/api/v1/projects/powers/');
 
   const [input, handleInput] = useInput({
-    name: Project ? Project[0].name : '',
-    pic_id: Project ? Project[0].pic_id : '',
-    client_id: Project ? Project[0].client_id : '',
-    automobile_id: Project ? Project[0].automobile_id : '',
-    notes: Project ? Project[0].notes : '',
-    engine_id: Project ? Project[0].engine_id : '',
-    power_type: Project ? Project[0].power_type : '',
+    name: Project ? Project[0].Name : '',
+    pic_id: Project ? Project[0].PicId : '',
+    client_id: Project ? Project[0].ClientId : '',
+    automobile_id: Project ? Project[0].AutomobileId : '',
+    notes: Project ? Project[0].Notes : '',
+    engine_id: Project ? Project[0].EngineId : '',
+    power_type: Project ? Project[0].PowerType : '',
   });
   const doSubmit = async (e: any) => {
     e.preventDefault();
@@ -102,7 +102,7 @@ function ProjectEditPage() {
                 value={input.client_id.toString()}
                 onChange={handleInput('client_id', true)}
                 rightSection={<IconChevronDown size={14} />}
-                data={dataClient ? dataClient.map((y) => ({ value: y.ID.toString(), label: y.Name })) : []}
+                data={dataClient ? dataClient.map((y: any) => ({ value: y.Id.toString(), label: y.Name })) : []}
               />
             </Grid.Col>
 
@@ -113,7 +113,7 @@ function ProjectEditPage() {
                 value={input.pic_id.toString()}
                 onChange={handleInput('pic_id', true)}
                 rightSection={<IconChevronDown size={14} />}
-                data={dataPic ? dataPic.map((y) => ({ value: y.ID.toString(), label: y.Name })) : []}
+                data={dataPic ? dataPic.map((y: any) => ({ value: y.Id.toString(), label: y.Name })) : []}
               />
             </Grid.Col>
 
@@ -124,7 +124,7 @@ function ProjectEditPage() {
                 value={input.automobile_id.toString()}
                 onChange={handleInput('automobile_id', true)}
                 rightSection={<IconChevronDown size={14} />}
-                data={dataAutomobile ? dataAutomobile.map((y) => ({ value: y.ID.toString(), label: y.Name })) : []}
+                data={dataAutomobile ? dataAutomobile.map((y: any) => ({ value: y.Id.toString(), label: y.Name })) : []}
               />
             </Grid.Col>
 
@@ -148,7 +148,7 @@ function ProjectEditPage() {
                 value={input.engine_id.toString()}
                 onChange={handleInput('engine_id', true)}
                 rightSection={<IconChevronDown size={14} />}
-                data={dataPower ? dataPower.map((y) => ({ value: y.ID.toString(), label: y.Name })) : []}
+                data={dataPower ? dataPower.map((y: any) => ({ value: y.Id.toString(), label: y.Name })) : []}
               />
             </Grid.Col>
 

@@ -29,14 +29,14 @@ function Detail() {
           Details
         </Text>
         <Grid gutter="xl">
-          <ListDetail List="Date" IsiList={dayjs(data?.date).format('ddd, DD MMM YYYY')} />
-          <ListDetail List="Worker" IsiList={data?.Worker.name} />
-          <ListDetail List="Status Kerja" IsiList={data?.status} />
-          <ListDetail List="Project" IsiList={data?.Project.name} />
-          <ListDetail List="Department" IsiList={data?.Department.name} />
-          <ListDetail List="Hour" IsiList={data?.start_hour} />
-          <ListDetail List="Job" IsiList={data?.job_description} />
-          <ListDetail List="Task" IsiList={data?.task} />
+          <ListDetail List="Date" IsiList={dayjs(data?.Date).format('ddd, DD MMM YYYY')} />
+          <ListDetail List="Worker" IsiList={data?.Worker.Name} />
+          <ListDetail List="Status Kerja" IsiList={data?.Status} />
+          <ListDetail List="Project" IsiList={data?.Project.Name} />
+          <ListDetail List="Department" IsiList={data?.Department.Name} />
+          <ListDetail List="Hour" IsiList={data?.StartHour} />
+          <ListDetail List="Job" IsiList={data?.JobDescription} />
+          <ListDetail List="Task" IsiList={data?.Task} />
         </Grid>
       </div>
     </>

@@ -33,7 +33,7 @@ function VendorPage() {
       title: 'Delete',
       children: (
         <Text size="sm" lineClamp={2}>
-          Delete <b>{vendor.name}</b> Client Data ?
+          Delete <b>{vendor.Name}</b> Client Data ?
         </Text>
       ),
       centered: true,
@@ -51,22 +51,22 @@ function VendorPage() {
     dataVendor.map((item: any, index: any) => (
       <tr key={index}>
         <td className="cursor-pointer w-2/12" onClick={() => Router.push(`/vendor/${item.ID}`)}>
-          {item.name}
+          {item.Name}
         </td>
         <td className="cursor-pointer w-2/12" onClick={() => Router.push(`/vendor/${item.ID}`)}>
-          {item.type}
+          {item.Type}
         </td>
         <td className="cursor-pointer  w-72 " onClick={() => Router.push(`/vendor/${item.ID}`)}>
           <p className="truncate w-72">
-            {item.Country.name}, {item.address}
+            {item.Country.Name}, {item.Address}
           </p>
         </td>
         <td className="cursor-pointer w-2/12" onClick={() => Router.push(`/vendor/${item.ID}`)}>
-          {item.email}
+          {item.Email}
         </td>
 
         <td className="cursor-pointer " onClick={() => Router.push(`/vendor/${item.ID}`)}>
-          {item.phone}
+          {item.Phone}
         </td>
         <td>
           <Menu>
@@ -85,7 +85,7 @@ function VendorPage() {
               </div>
             </Menu.Target>
             <Menu.Dropdown>
-              <Menu.Label>{item.name}</Menu.Label>
+              <Menu.Label>{item.Name}</Menu.Label>
               <Menu.Item icon={<Edit2 />} onClick={() => Router.push(`/vendor/edit/${item.ID}`)}>
                 Edit Vendor
               </Menu.Item>

@@ -39,18 +39,16 @@ function PayrollPage() {
           </td>
         )}
         <td className="cursor-pointer w-2/12" onClick={() => Router.push(`/payroll/${item.ID}`)}>
-          {dayjs(item?.payroll_date).format('ddd, DD MMM YYYY')}
+          {dayjs(item?.PayrollDate).format('ddd, DD MMM YYYY')}
         </td>
         <td className="cursor-pointer " onClick={() => Router.push(`/payroll/${item.ID}`)}>
-          {`${dayjs(item?.start_date).format('ddd, DD MMM YYYY')} - ${dayjs(item?.end_date).format(
-            'ddd, DD MMM YYYY'
-          )}`}
+          {`${dayjs(item?.StartDate).format('ddd, DD MMM YYYY')} - ${dayjs(item?.EndDate).format('ddd, DD MMM YYYY')}`}
         </td>
         <td className="cursor-pointer   w-2/12" onClick={() => Router.push(`/payroll/${item.ID}`)}>
-          {rp(item?.total)}
+          {rp(item?.Total)}
         </td>
         <td className="cursor-pointer   w-2/12" onClick={() => Router.push(`/payroll/${item.ID}`)}>
-          {item?.status}
+          {item?.Status}
         </td>
         <td className="cursor-pointer   w-2/12">
           <Menu>

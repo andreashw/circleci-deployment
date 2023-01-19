@@ -1,10 +1,10 @@
 export interface IReportDaily {
   Id: number;
-  date: number;
-  worker_id: number;
-  worker: string;
-  department_id: number;
-  department: string;
+  Date: number;
+  WorkerId: number;
+  Worker: string;
+  DepartmentId: number;
+  Department: string;
   Deletable?: boolean;
-  message?: string;
+  Message?: string;
 }

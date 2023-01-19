@@ -10,13 +10,13 @@ function ListRolePage() {
   const { data: dataPermission } = useSWR<IResPermission>('/api/v1/permission/');
 
   const body = () =>
-    dataPermission?.permissions.map((item, index: any) => (
+    dataPermission?.Permissions.map((item, index: any) => (
       <tr key={index}>
-        <td className="cursor-pointer">{item.name}</td>
+        <td className="cursor-pointer">{item.Name}</td>
         <td className="cursor-pointer">
-          {item.roles.map((role) => (
+          {item.Roles.map((role) => (
             <text className="whiteColor cursor-pointer bg-[#A18BDF] rounded-lg px-5 py-2 m-1" color="white">
-              {role.name}
+              {role.Name}
             </text>
           ))}
         </td>
@@ -36,7 +36,7 @@ function ListRolePage() {
           <SearchForm searchName="Permissions" />
         </div>
       </div>
-      {dataPermission?.permissions && dataPermission?.permissions.length > 0 ? (
+      {dataPermission?.Permissions && dataPermission?.Permissions.length > 0 ? (
         <ScrollArea>
           <Table striped highlightOnHover>
             <thead>

@@ -30,22 +30,22 @@ function AddPayrollPage() {
 
   console.log('tes', dataPayroll, input.start_date);
   const body = () =>
-    dataPayroll.payrolls.map((item: any, index: any) => (
+    dataPayroll.Payrolls.map((item: any, index: any) => (
       <tr key={index}>
-        <td className=" w-2/12">{item.worker}</td>
-        <td className=" w-2/12">{item.total_hm}</td>
-        <td className="   w-2/12">{rp(item.hourly_pay)}</td>
-        <td className="  text-right  w-2/12">{rp(item.total_pay)}</td>
+        <td className=" w-2/12">{item.Worker}</td>
+        <td className=" w-2/12">{item.TotalHm}</td>
+        <td className="   w-2/12">{rp(item.HourlyPay)}</td>
+        <td className="  text-right  w-2/12">{rp(item.TotalPay)}</td>
       </tr>
     ));
 
   const clientPay = () =>
-    dataPayroll?.clients.map((item: any, index: any) => (
+    dataPayroll?.Clients.map((item: any, index: any) => (
       <tr key={index}>
         <td />
         <td />
-        <td className="   w-2/12">{item.name}</td>
-        <td className="  text-right  w-2/12">{rp(item.total_pay)}</td>
+        <td className="   w-2/12">{item.Name}</td>
+        <td className="  text-right  w-2/12">{rp(item.TotalPay)}</td>
       </tr>
     ));
 
@@ -135,7 +135,7 @@ function AddPayrollPage() {
               </Grid.Col>
             </Grid>
           </div>
-          {dataPayroll && dataPayroll.payrolls.length > 0 ? (
+          {dataPayroll && dataPayroll.Payrolls.length > 0 ? (
             <Table striped highlightOnHover>
               <thead>
                 <tr>
@@ -150,10 +150,10 @@ function AddPayrollPage() {
                 <tr>
                   <td className="p-6 font-bold">Total</td>
                   <td className="p-6">
-                    {dataPayroll.payrolls.reduce((prev: any, curr: any) => prev + curr.total_hm, 0)}
+                    {dataPayroll.Payrolls.reduce((prev: any, curr: any) => prev + curr.TotalHm, 0)}
                   </td>
                   <td />
-                  <td className="font-bold  text-right">{rp(dataPayroll?.total)}</td>
+                  <td className="font-bold  text-right">{rp(dataPayroll?.Total)}</td>
                 </tr>
                 <tr>
                   <td className="p-6"> </td>
@@ -166,7 +166,7 @@ function AddPayrollPage() {
                   <td className="p-6"> </td>
                   <td className="p-6"> </td>
                   <td className=" font-bold">Total </td>
-                  <td className="font-bold text-right ">{rp(dataPayroll?.total)}</td>
+                  <td className="font-bold text-right ">{rp(dataPayroll?.Total)}</td>
                 </tr>
                 <tr>
                   <td className="p-6"> </td>

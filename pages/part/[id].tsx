@@ -26,11 +26,11 @@ function PartDetailPages() {
           Details
         </Text>
         <Grid gutter="xl">
-          <ListDetail List="Name" IsiList={Part ? Part?.name_input : ''} />
-          <ListDetail List="Category" IsiList={Part ? Part?.category : ''} />
-          <ListDetail List="Part Brand" IsiList={Part ? Part?.brand_input : ''} />
-          <ListDetail List="Req. Pcs" IsiList={Part ? `${Part?.req_pcs_input.toString()} ${Part?.req_unit}` : ''} />
-          <ListDetail List="Part Material" IsiList={Part ? Part?.material_input : ''} />
+          <ListDetail List="Name" IsiList={Part ? Part?.NameInput : ''} />
+          <ListDetail List="Category" IsiList={Part ? Part?.Category : ''} />
+          <ListDetail List="Part Brand" IsiList={Part ? Part?.BrandInput : ''} />
+          <ListDetail List="Req. Pcs" IsiList={Part ? `${Part?.ReqPcsInput.toString()} ${Part?.ReqUnit}` : ''} />
+          <ListDetail List="Part Material" IsiList={Part ? Part?.MaterialInput : ''} />
         </Grid>
         <Text className="mt-4 mb-[1rem] text-[20px]" weight={700}>
           Vendor
@@ -38,9 +38,9 @@ function PartDetailPages() {
         <Grid gutter="xl">
           {Part &&
             // eslint-disable-next-line @typescript-eslint/no-shadow
-            Part.vendors?.map((data: IVendor) => (
-              <Fragment key={data.name}>
-                <ListDetail List="Vendor" IsiList={data.name} />
+            Part.Vendors?.map((data: IVendor) => (
+              <Fragment key={data.Name}>
+                <ListDetail List="Vendor" IsiList={data.Name} />
               </Fragment>
             ))}
         </Grid>
@@ -50,9 +50,9 @@ function PartDetailPages() {
         <Grid key={id} gutter="xl">
           {Part &&
             // eslint-disable-next-line @typescript-eslint/no-shadow
-            Part.automobiles?.map((data: IAutomobile, id: number) => (
+            Part.Automobiles?.map((data: IAutomobile, id: number) => (
               <Fragment key={id}>
-                <ListDetail List="Automobile" IsiList={data.name} />
+                <ListDetail List="Automobile" IsiList={data.Name} />
               </Fragment>
             ))}
         </Grid>

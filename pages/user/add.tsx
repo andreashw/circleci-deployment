@@ -79,7 +79,7 @@ function AddUserPage() {
             <Grid.Col md={6}>
               <Dropdown
                 label="Role"
-                data={role?.map(({ ID, name }) => ({ value: ID.toString(), label: name })) || []}
+                data={role?.map(({ ID, Name }) => ({ value: ID.toString(), label: Name })) || []}
                 onChange={handleInput('role', true)}
               />
             </Grid.Col>

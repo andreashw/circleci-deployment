@@ -32,7 +32,7 @@ function ListRolePage() {
       title: 'Delete',
       children: (
         <Text size="sm" lineClamp={2}>
-          Delete <b>{role.name}</b> Client Data ?
+          Delete <b>{role.Name}</b> Client Data ?
         </Text>
       ),
       centered: true,
@@ -49,8 +49,8 @@ function ListRolePage() {
   const body = () =>
     dataRole.map((item: IRole, index: any) => (
       <tr key={index}>
-        <td className="cursor-pointer">{item.name}</td>
-        <td className="cursor-pointer">{item.description}</td>
+        <td className="cursor-pointer">{item.Name}</td>
+        <td className="cursor-pointer">{item.Description}</td>
 
         <td className="cursor-pointer">
           <Menu>
@@ -69,7 +69,7 @@ function ListRolePage() {
               </div>
             </Menu.Target>
             <Menu.Dropdown>
-              <Menu.Label>{item.name}</Menu.Label>
+              <Menu.Label>{item.Name}</Menu.Label>
               <Menu.Item icon={<Edit2 />} onClick={() => Router.push(`/role/edit/${item.ID}`)}>
                 Edit Role
               </Menu.Item>

@@ -24,13 +24,13 @@ function DetilClientPage() {
           Details
         </Text>
         <Grid gutter="xl" className="mb-10">
-          <ListDetail List="Name" IsiList={Client ? Client[0]?.name : ''} />
-          <ListDetail List="Email" IsiList={Client ? Client[0]?.email : ''} />
-          <ListDetail List="Address" IsiList={Client ? Client[0]?.phone : ''} />
-          <ListDetail List="Phone Number" IsiList={Client ? Client[0]?.address : ''} />
-          <ListDetail List="City" IsiList={Client ? Client[0]?.City?.name?.toString() : ''} />
-          <ListDetail List="Province" IsiList={Client ? Client[0]?.Province?.name?.toString() : ''} />
-          <ListDetail List="Notes" IsiList={Client ? Client[0]?.notes : ''} />
+          <ListDetail List="Name" IsiList={Client ? Client[0]?.Name : ''} />
+          <ListDetail List="Email" IsiList={Client ? Client[0]?.Email : ''} />
+          <ListDetail List="Address" IsiList={Client ? Client[0]?.Phone : ''} />
+          <ListDetail List="Phone Number" IsiList={Client ? Client[0]?.Address : ''} />
+          <ListDetail List="City" IsiList={Client ? Client[0]?.City?.Name?.toString() : ''} />
+          <ListDetail List="Province" IsiList={Client ? Client[0]?.Province?.Name?.toString() : ''} />
+          <ListDetail List="Notes" IsiList={Client ? Client[0]?.Notes : ''} />
         </Grid>
       </div>
     </>
