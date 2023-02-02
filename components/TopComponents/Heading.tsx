@@ -21,7 +21,12 @@ function HeadingTop({
         <Breadcrumbs separator=">">
           {items.map((item, index) => (
             <Link href={item.href ? item.href : '/'} passHref key={index}>
-              <Anchor style={{ color: index === 0 ? '#828282' : '#2C2C2C' }}>{item.title}</Anchor>
+              <Anchor
+                className="whitespace-nowrap max-w-[100px] md:max-w-60 overflow-hidden text-ellipsis"
+                style={{ color: index === 0 ? '#828282' : '#2C2C2C' }}
+              >
+                {item.title}
+              </Anchor>
             </Link>
           ))}
         </Breadcrumbs>
