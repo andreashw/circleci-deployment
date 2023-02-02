@@ -122,14 +122,18 @@ function PayrollPage() {
         <div className="flex flex-col sm:flex-row pb-4 sm:pb-0">
           <SearchForm />
           {SelectBTNBool ? (
-            <Button className="bg-black hover:bg-black px-6 mx-3" onClick={() => setSelectBTNBool(!SelectBTNBool)}>
-              Select
-            </Button>
+            <>
+              <Button className="bg-black hover:bg-black px-6 " onClick={() => setSelectBTNBool(!SelectBTNBool)}>
+                Select
+              </Button>
+              <div id="gap" className="h-6 md:w-6" />
+            </>
           ) : (
             <>
-              <Button className="bg-black hover:bg-black px-6 mx-3" onClick={() => setSelectBTNBool(!SelectBTNBool)}>
+              <Button className="bg-black hover:bg-black px-6 " onClick={() => setSelectBTNBool(!SelectBTNBool)}>
                 Cancel
               </Button>
+              <div id="gap" className="h-6 md:w-6" />
               <Button className="bg-black hover:bg-black px-6" onClick={() => doDeleteMultiple()}>
                 Delete
               </Button>

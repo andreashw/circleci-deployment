@@ -56,3 +56,9 @@
 input#IconRupiah {
   padding-left: 50px;
 }
+th {
+  white-space: nowrap;
+}
+td {
+  white-space: nowrap;
+}

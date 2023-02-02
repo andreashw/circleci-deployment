@@ -56,7 +56,7 @@ function LoginPage() {
     <MantineProvider withNormalizeCSS withGlobalStyles>
       <NotificationsProvider>
         <div className="w-full h-screen flex">
-          <div className="w-1/2 h-screen flex items-center justify-center">
+          <div className="w-full md:w-1/2 h-screen flex items-center justify-center">
             <form onSubmit={doSubmit}>
               <Grid gutter="xl" className=" flex-row p-12">
                 <div className="flex-col p-3">
@@ -89,7 +89,7 @@ function LoginPage() {
               </Grid>
             </form>
           </div>
-          <div className="h-screen w-1/2 bg-green-400">
+          <div className="hidden md:flex h-screen w-1/2 bg-green-400">
             <img src="/bg-login.jpg" className="w-full h-full" />
           </div>
         </div>
