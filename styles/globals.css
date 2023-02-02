@@ -52,3 +52,9 @@
 .whiteColor {
   color: #fff;
 }
+th {
+  white-space: nowrap;
+}
+td {
+  white-space: nowrap;
+}

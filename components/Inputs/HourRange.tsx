@@ -70,7 +70,7 @@ export function V2HourRange({
     <>
       <div className="w-28 max-width-[45%] text-[14px]">{label}</div>
       <TimeInput value={valueStart} onChange={onStartChange} />
-      <span className="px-4">-</span>
+      <span className="px-2 md:px-4">-</span>
       <TimeInput
         error={error}
         style={{
