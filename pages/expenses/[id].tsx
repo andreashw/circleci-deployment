@@ -1,6 +1,7 @@
 import ListDetail from '@components/ListDetail';
 import HeadingTop from '@components/TopComponents/Heading';
 import { Grid, Text } from '@mantine/core';
+import { rp } from '@support/formatter';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
@@ -26,9 +27,9 @@ function DetilexpensePage() {
         <Grid gutter="xl" className="mb-10">
           <ListDetail List="Date" IsiList={Expense ? dayjs(Expense?.Date).format('ddd, DD MMMM YYYY') : ''} />
           <ListDetail List="Type" IsiList={Expense ? Expense?.Type : ''} />
-          <ListDetail List="Amount" IsiList={Expense ? Expense?.Amount : ''} />
+          <ListDetail List="Amount" IsiList={Expense ? rp(Expense?.Amount) : ''} />
           <ListDetail List="Description" IsiList={Expense ? Expense?.Description : ''} />
-          {/* <ListDetail List="Project" IsiList={Expense ? Expense?.Project : ''} /> */}
+          <ListDetail List="Project" IsiList={Expense ? Expense?.Project?.Name : ''} />
         </Grid>
       </div>
     </>
