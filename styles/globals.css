@@ -52,3 +52,7 @@
 .whiteColor {
   color: #fff;
 }
+
+input#IconRupiah {
+  padding-left: 50px;
+}
