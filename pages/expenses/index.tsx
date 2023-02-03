@@ -61,6 +61,9 @@ function ExpendPage() {
         <td className="cursor-pointer  w-72  " onClick={() => Router.push(`/expenses/${item.ID}`)}>
           {rp(item.Amount)}
         </td>
+        <td className="cursor-pointer  w-72  " onClick={() => Router.push(`/expenses/${item.ID}`)}>
+          {item.Project?.Name}
+        </td>
         <td>
           <Menu>
             <Menu.Target>
@@ -122,6 +125,7 @@ function ExpendPage() {
                 <th>Date</th>
                 <th>Type</th>
                 <th>Amount</th>
+                <th>Project</th>
                 <th />
               </tr>
             </thead>
