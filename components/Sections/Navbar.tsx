@@ -10,6 +10,7 @@ import Project from 'icons/Project';
 
 import JobReport from 'icons/JobReport';
 import Payroll from 'icons/Payroll';
+import Expenes from 'icons/Expenes';
 
 export default function NavbarComponent(props: any) {
   const sideMenus: ISidebar[] = [
@@ -74,6 +75,11 @@ export default function NavbarComponent(props: any) {
     {
       group: 'Finance',
       menus: [
+        {
+          label: 'Expenses',
+          link: '/expenses',
+          icon: (color: string) => <Expenes color={color} width="20" height="20" />,
+        },
         {
           label: 'Payroll',
           link: '/payroll',
