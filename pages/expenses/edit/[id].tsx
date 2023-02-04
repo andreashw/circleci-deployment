@@ -10,6 +10,7 @@ import { DatePicker } from '@mantine/dates';
 import { showNotification } from '@mantine/notifications';
 import { rp } from '@support/formatter';
 import { IconChevronDown } from '@tabler/icons';
+import dayjs from 'dayjs';
 import Router, { useRouter } from 'next/router';
 import { useEffect, useState, useTransition } from 'react';
 import useSWR from 'swr';
@@ -49,13 +50,19 @@ function EditExpendPage() {
   const { classes } = useStyles();
   const router = useRouter();
   const id = router.query.id as unknown as number;
+
+  const { data: Expenses } = useSWR<any>(`/api/v1/expense/${id}`);
+  const addCommas = (num: number) => num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  const removeNonNumeric = (num: any) => num.toString().replace(/[^0-9]/g, '');
   const [input, handleInput] = useInput({
-    date: '',
-    type: '',
-    desc: '',
-    price: '',
-    project: '',
+    date: Expenses ? dayjs(Expenses?.Date).toDate() : '',
+    type: Expenses ? Expenses?.Type : '',
+    desc: Expenses ? Expenses?.Description : '',
+    price: Expenses ? addCommas(removeNonNumeric(Expenses?.Amount)) : '',
+    project: Expenses ? Expenses?.ProjectId : '',
   });
+
+  const handleCurChange = (event: any) => handleInput('price', true)(addCommas(removeNonNumeric(event.target.value)));
   const doSubmit = async (e: any) => {
     e.preventDefault();
     const response = await fetcher(`/api/v1/expense/${id}`, {
@@ -63,30 +70,27 @@ function EditExpendPage() {
       body: {
         date: input.date,
         type: input.type,
-        desc: input.desc,
-        price: input.price,
-        project: input.project,
+        description: input.desc,
+        amount: Number(removeNonNumeric(input.price)),
+        project_id: Number(input.project),
       },
     });
     console.log('Response from API ', response);
     if (response) {
       showNotification({
         title: 'Success',
-        message: 'Client berhasil ditambahkan',
+        message: 'Expenses berhasil diubah',
         color: 'teal',
       });
-      router.replace('/client');
+      router.replace('/expenses');
     }
   };
 
   const [, startTransition] = useTransition();
-  const { data: provinces } = useSWR<IProvince[]>('/api/v1/provinces/');
-  const { data: cities } = useSWR<IProvince[]>(input.province_id !== '' ? `/api/v1/cities/${input.province_id}` : null);
+  const { data: type } = useSWR<any[]>('/api/v1/expense/list-types');
+  const { data: project } = useSWR<any[]>('/api/v1/projects/');
 
   const [price, setPrice] = useState('');
-  const addCommas = (num: number) => num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-  const removeNonNumeric = (num: any) => num.toString().replace(/[^0-9]/g, '');
-  const handleCurChange = (event: any) => handleInput('price', true)(addCommas(removeNonNumeric(event.target.value)));
 
   return (
     <>
@@ -120,12 +124,9 @@ function EditExpendPage() {
                   label="Type"
                   placeholder="Engine/Motor"
                   rightSection={<IconChevronDown size={14} />}
-                  data={[
-                    { value: 'react', label: 'React' },
-                    { value: 'ng', label: 'Angular' },
-                    { value: 'svelte', label: 'Svelte' },
-                    { value: 'vue', label: 'Vue' },
-                  ]}
+                  value={input?.type}
+                  data={type ? type.map((y) => ({ value: y.Value, label: y.Value })) : []}
+                  onChange={handleInput('type', true)}
                   required
                 />
               </Grid.Col>
@@ -134,7 +135,7 @@ function EditExpendPage() {
                   styles={{ input: { height: 'unset !important' } }}
                   className={classes.label}
                   label="Description"
-                  value={input.notes}
+                  value={input.desc}
                   onChange={handleInput('desc')}
                   placeholder="Description"
                   minRows={4}
@@ -156,12 +157,9 @@ function EditExpendPage() {
                   label="Project"
                   placeholder="Engine/Motor"
                   rightSection={<IconChevronDown size={14} />}
-                  data={[
-                    { value: 'react', label: 'React' },
-                    { value: 'ng', label: 'Angular' },
-                    { value: 'svelte', label: 'Svelte' },
-                    { value: 'vue', label: 'Vue' },
-                  ]}
+                  data={project ? project.map((y) => ({ value: y.ID.toString(), label: y.Name })) : []}
+                  value={input.project.toString()}
+                  onChange={handleInput('project', true)}
                   required
                 />
               </Grid.Col>
