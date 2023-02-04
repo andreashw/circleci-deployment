@@ -78,7 +78,7 @@ function AddExpendPage() {
     if (response) {
       showNotification({
         title: 'Success',
-        message: 'Client berhasil ditambahkan',
+        message: 'Expenses berhasil ditambahkan',
         color: 'teal',
       });
       router.replace('/expenses');

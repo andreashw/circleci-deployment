@@ -1,4 +1,4 @@
-import { ScrollArea, Drawer, Text, Table, Menu, Button } from '@mantine/core';
+import { ScrollArea, Drawer, Text, Table, Menu, Button, Popover } from '@mantine/core';
 import { useState } from 'react';
 import { IconDotsVertical } from '@tabler/icons';
 import useSWR from 'swr';
@@ -10,17 +10,18 @@ import { useModals } from '@mantine/modals';
 import dayjs from 'dayjs';
 import { rp } from '@support/formatter';
 import { IExpense } from '@contracts/expense-interface';
+import { showNotification } from '@mantine/notifications';
 
 function ExpendPage() {
   const modals = useModals();
   const [drawerOpened, toggleDrawer] = useState(false);
 
-  const { data: dataExpense, mutate } = useSWR('/api/v1/expense/', { suspense: false });
+  const { data: dataExpense, mutate } = useSWR('/api/v1/expense/');
 
-  const onDeleteData = async (client: IExpense) => {
-    console.log(client.ID);
+  const onDeleteData = async (expenses: IExpense) => {
+    console.log(expenses.ID);
 
-    const response: IExpense | undefined = await fetcher(`/api/v1/expense/${client.ID}`, {
+    const response: IExpense | undefined = await fetcher(`/api/v1/expense/${expenses.ID}`, {
       method: 'DELETE',
     });
     console.log('Response Delete from API ', response);
@@ -29,24 +30,36 @@ function ExpendPage() {
       mutate();
     }
   };
-  function deleteProfile(client: IExpense) {
+  function deleteProfile(expenses: IExpense) {
     console.log('====================================');
     modals.openConfirmModal({
       title: 'Delete',
       children: (
         <Text size="sm" lineClamp={2}>
-          Delete <b>{client.Date}</b> Client Data ?
+          Delete <b>{expenses.Date}</b> Client Data ?
         </Text>
       ),
       centered: true,
       labels: { confirm: 'Yes', cancel: 'No' },
       confirmProps: { className: 'bg-danger', color: 'red' },
-      onConfirm: () => onDeleteData(client),
+      onConfirm: () => onDeleteData(expenses),
     });
     console.log('====================================');
     // const response: IExpense | undefined = await fetcher('/api/v1/clients/' + id, {
     //   method: 'DELETE',
     // });
+  }
+
+  async function Delete(id: any) {
+    await fetcher(`/api/v1/expense/${id}`, { method: 'DELETE' }).then((res) => {
+      console.log(res);
+      showNotification({
+        title: 'Success',
+        message: 'Delete',
+        color: 'teal',
+      });
+      mutate();
+    });
   }
 
   const body = () =>
@@ -60,6 +73,9 @@ function ExpendPage() {
         </td>
         <td className="cursor-pointer  w-72  " onClick={() => Router.push(`/expenses/${item.ID}`)}>
           {rp(item.Amount)}
+        </td>
+        <td className="cursor-pointer  w-72  " onClick={() => Router.push(`/expenses/${item.ID}`)}>
+          <p className="w-72 text-ellipsis overflow-hidden whitespace-nowrap">{item.Description}</p>
         </td>
         <td className="cursor-pointer  w-72  " onClick={() => Router.push(`/expenses/${item.ID}`)}>
           {item.Project?.Name}
@@ -101,6 +117,30 @@ function ExpendPage() {
       </tr>
     ));
 
+  const exportXls = async () => {
+    const response: any = await fetcher(
+      '/api/v1/expense/export',
+      {
+        method: 'GET',
+      },
+      true
+    );
+
+    const blob = new Blob([response], {
+      type: 'text/plain',
+    });
+
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.style.display = 'none';
+    a.href = url;
+    // the filename you want
+    a.download = 'expenses.xlsx';
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
+
   return (
     <>
       <Drawer opened={drawerOpened} onClose={() => toggleDrawer(false)} title="Modify user" padding="xl" size="xl">
@@ -117,6 +157,27 @@ function ExpendPage() {
           </Button>
         </div>
       </div>
+      <div className="w-52 h-20">
+        <div
+          className="cursor-pointer bg-black items-center h-[36px] px-6 mr-4 rounded ml-3"
+          style={{
+            display: 'flex',
+          }}
+        >
+          <Popover withArrow>
+            <Popover.Target>
+              <Text className="text-white" weight={600} size={14}>
+                Export
+              </Text>
+            </Popover.Target>
+            <Popover.Dropdown>
+              <Text onClick={() => exportXls()} size="sm" className="cursor-pointer min-w-[54px] py-1">
+                Xls
+              </Text>
+            </Popover.Dropdown>
+          </Popover>
+        </div>
+      </div>
       {dataExpense?.length > 0 ? (
         <ScrollArea>
           <Table striped highlightOnHover>
@@ -125,6 +186,7 @@ function ExpendPage() {
                 <th>Date</th>
                 <th>Type</th>
                 <th>Amount</th>
+                <th>Description</th>
                 <th>Project</th>
                 <th />
               </tr>
