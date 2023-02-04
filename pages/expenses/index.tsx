@@ -99,7 +99,7 @@ function ExpendPage() {
             <Menu.Dropdown>
               <Menu.Label>{item.Name}</Menu.Label>
               <Menu.Item icon={<Edit2 />} onClick={() => Router.push(`/expenses/edit/${item.ID}`)}>
-                Edit Expense
+                Edit
               </Menu.Item>
               {/* <Menu.Item icon={<Send />} onClick={() => sendMessage(automobile)}>
               Send Message
@@ -109,7 +109,7 @@ function ExpendPage() {
               Copy
             </Menu.Item> */}
               <Menu.Item icon={<Trash2 />} onClick={() => deleteProfile(item)} color="red">
-                Delete Expense
+                Delete
               </Menu.Item>
             </Menu.Dropdown>
           </Menu>
