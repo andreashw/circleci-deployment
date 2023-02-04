@@ -10,6 +10,7 @@ import { DatePicker } from '@mantine/dates';
 import { showNotification } from '@mantine/notifications';
 import { rp } from '@support/formatter';
 import { IconChevronDown } from '@tabler/icons';
+import { log } from 'console';
 import dayjs from 'dayjs';
 import Router, { useRouter } from 'next/router';
 import { useEffect, useState, useTransition } from 'react';
@@ -51,7 +52,8 @@ function EditExpendPage() {
   const router = useRouter();
   const id = router.query.id as unknown as number;
 
-  const { data: Expenses } = useSWR<any>(`/api/v1/expense/${id}`);
+  const { data: Expenses, mutate } = useSWR<any>(`/api/v1/expense/${id}`);
+  console.log(Expenses.Date, 'tesdata');
   const addCommas = (num: number) => num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   const removeNonNumeric = (num: any) => num.toString().replace(/[^0-9]/g, '');
   const [input, handleInput] = useInput({
@@ -82,6 +84,7 @@ function EditExpendPage() {
         message: 'Expenses berhasil diubah',
         color: 'teal',
       });
+      mutate();
       router.replace('/expenses');
     }
   };
@@ -91,14 +94,14 @@ function EditExpendPage() {
   const { data: project } = useSWR<any[]>('/api/v1/projects/');
 
   const [price, setPrice] = useState('');
-
+  useEffect(() => {}, [router]);
   return (
     <>
       <HeadingTop
-        text="Add New Client"
+        text="Edit Expense"
         items={[
-          { title: 'Client', href: '/client' },
-          { title: 'Add New Client', href: '' },
+          { title: 'Expense', href: '/expenses' },
+          { title: 'Edit Expense', href: '' },
         ]}
       />
       <form onSubmit={doSubmit}>
