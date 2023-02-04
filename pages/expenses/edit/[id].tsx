@@ -68,7 +68,7 @@ function EditExpendPage() {
     const response = await fetcher(`/api/v1/expense/${id}`, {
       method: 'PATCH',
       body: {
-        date: input.date,
+        date: dayjs(input.date).format('YYYY-MM-DD'),
         type: input.type,
         description: input.desc,
         amount: Number(removeNonNumeric(input.price)),
