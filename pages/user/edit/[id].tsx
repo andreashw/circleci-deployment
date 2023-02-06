@@ -1,5 +1,5 @@
 import HeadingTop from '@components/TopComponents/Heading';
-import { Button, Checkbox, createStyles, Grid, PasswordInput, Text, TextInput } from '@mantine/core';
+import { Button, Checkbox, createStyles, Grid, Text, TextInput } from '@mantine/core';
 import useInput from '@hooks/useInput';
 import Router, { useRouter } from 'next/router';
 import useSWR from 'swr';
@@ -104,9 +104,9 @@ function EditUserPage() {
                 placeholder="e.g johndoe@gmail.com"
               />
             </Grid.Col>
-            <Grid.Col md={6}>
+            {/* <Grid.Col md={6}>
               <PasswordInput className="PasswordInput" label="Password" onChange={handleInput('password')} />
-            </Grid.Col>
+            </Grid.Col> */}
             <Grid.Col md={6} className="flex">
               <Checkbox
                 label="User is active"
