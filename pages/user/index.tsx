@@ -63,7 +63,7 @@ function ListUserPage() {
           </td>
         )}
         <td className="cursor-pointer" onClick={() => Router.push(`/user/${item.ID}`)}>
-          {item.Email}
+          {item.Roles}
         </td>
 
         <td className="cursor-pointer">

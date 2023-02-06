@@ -72,10 +72,10 @@ function EditUserPage() {
   return (
     <>
       <HeadingTop
-        text="Add New Users"
+        text="Edit Users"
         items={[
           { title: 'Users', href: '/user' },
-          { title: 'Add New', href: '' },
+          { title: 'Edit Users', href: '' },
         ]}
       />
       <form onSubmit={doSubmit}>

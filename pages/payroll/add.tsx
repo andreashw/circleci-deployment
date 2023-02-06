@@ -118,8 +118,10 @@ function AddPayrollPage() {
           <div className="p-6">
             <Grid gutter="xl">
               <Grid.Col md={6}>
-                <div className="flex flex-col md:flex-row">
+                <div className="flex flex-col md:flex-row items-center">
+                  <DatePicker id="enter" className="flex-col md:flex-row w-full" label="Periode" required />
                   <DatePicker
+                    className="flex-col md:flex-row w-full"
                     placeholder="Select Date"
                     value={input.start_date}
                     onChange={(v) => {
@@ -127,12 +129,12 @@ function AddPayrollPage() {
                         handleInput('start_date', true)(v);
                       });
                     }}
-                    label="Periode"
                     required
                   />
-                  <p className="hidden md:flex p-3">-</p>
+                  <span className="hidden md:flex p-3">-</span>
                   <div className="h-6 md:hidden" />
                   <DatePicker
+                    className="flex-col md:flex-row w-full"
                     value={input.end_date}
                     onChange={(v) => {
                       startTransition(() => {
