@@ -1,5 +1,5 @@
 import { ScrollArea, Drawer, Text, Table, Grid, Button } from '@mantine/core';
-import { useState, useTransition } from 'react';
+import { useEffect, useState, useTransition } from 'react';
 import useSWR from 'swr';
 import Router from 'next/router';
 import { DatePicker } from '@mantine/dates';
@@ -20,15 +20,37 @@ function AddPayrollPage() {
     end_date: '',
     status: 'New',
   });
-  const { data: dataPayroll } = useSWR(
+  const { data: dataPayroll, error: errorPayroll } = useSWR(
     input.start_date && input.end_date
       ? `/api/v1/payrolls/get-data?start_date=${dayjs(input.start_date).format('YYYY-MM-DD')}&end_date=${dayjs(
           input.end_date
         ).format('YYYY-MM-DD')}`
-      : null
+      : null,
+    {
+      suspense: false,
+    }
   );
 
-  console.log('tes', dataPayroll, input.start_date);
+  // console.log('tes', dataPayroll, input.start_date);
+  useEffect(() => {
+    console.log({ errorPayroll });
+    if (errorPayroll && errorPayroll?.data) {
+      showNotification({
+        title: 'Error',
+        message: errorPayroll.data.error,
+        color: 'red',
+      });
+    }
+    // if (input?.start_date && input?.end_date) {
+    //   if (dataPayroll?.length < 0) {
+    //     showNotification({
+    //       title: 'Error',
+    //       message: errorPayroll.data.error,
+    //       color: 'red',
+    //     });
+    //   }
+    // }
+  }, [errorPayroll]);
   const body = () =>
     dataPayroll.Payrolls.map((item: any, index: any) => (
       <tr key={index}>
@@ -96,8 +118,10 @@ function AddPayrollPage() {
           <div className="p-6">
             <Grid gutter="xl">
               <Grid.Col md={6}>
-                <div className="flex">
+                <div className="flex flex-col md:flex-row items-center">
+                  <DatePicker id="enter" className="flex-col md:flex-row w-full" label="Periode" required />
                   <DatePicker
+                    className="flex-col md:flex-row w-full"
                     placeholder="Select Date"
                     value={input.start_date}
                     onChange={(v) => {
@@ -105,11 +129,12 @@ function AddPayrollPage() {
                         handleInput('start_date', true)(v);
                       });
                     }}
-                    label="Periode"
                     required
                   />
-                  <p className="p-3">-</p>
+                  <span className="hidden md:flex p-3">-</span>
+                  <div className="h-6 md:hidden" />
                   <DatePicker
+                    className="flex-col md:flex-row w-full"
                     value={input.end_date}
                     onChange={(v) => {
                       startTransition(() => {

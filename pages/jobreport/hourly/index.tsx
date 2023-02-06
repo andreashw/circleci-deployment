@@ -322,22 +322,25 @@ export default function ReportHourly(/*props*/) {
             <div className="flex flex-col sm:flex-row pb-4 sm:pb-0">
               <SearchForm searchName="Job Report Hourly" onSubmit={btnSearch} />
               {SelectBTNBool ? (
-                <Button className="bg-black hover:bg-black px-6 mx-3" onClick={() => setSelectBTNBool(!SelectBTNBool)}>
-                  Select
-                </Button>
+                <>
+                  <Button className="bg-black hover:bg-black px-6 " onClick={() => setSelectBTNBool(!SelectBTNBool)}>
+                    Select
+                  </Button>
+                  <div id="gap" className="h-6 md:w-6" />
+                </>
               ) : (
                 <>
-                  <Button
-                    className="bg-black hover:bg-black px-6 mx-3"
-                    onClick={() => setSelectBTNBool(!SelectBTNBool)}
-                  >
+                  <Button className="bg-black hover:bg-black px-6 " onClick={() => setSelectBTNBool(!SelectBTNBool)}>
                     Cancel
                   </Button>
+
+                  <div id="gap" className="h-6 md:w-6" />
                   <Button className="bg-black hover:bg-black px-6" onClick={() => doDeleteMultiple()}>
                     Delete
                   </Button>
                 </>
               )}
+
               {SelectBTNBool && (
                 <Button className="bg-black hover:bg-black px-6" onClick={() => goToAddReport()}>
                   Add New Job Report
@@ -348,9 +351,9 @@ export default function ReportHourly(/*props*/) {
 
           <div>
             <div className="flex items-center flex-col sm:flex-row pb-4 sm:pb-0">
-              <div>
-                <div className="flex w-full">
-                  <div className="w-[178px]">
+              <div className="w-full">
+                <div className="flex-col md:flex-row flex w-full ">
+                  <div className="w-full md:w-[178px]">
                     <DatePicker
                       placeholder="Start Date"
                       value={input.start_date}
@@ -361,8 +364,9 @@ export default function ReportHourly(/*props*/) {
                       }}
                     />
                   </div>
-                  <p className="p-3">-</p>
-                  <div className="w-[178px]">
+                  <p className=" hidden md:flex p-3">-</p>
+                  <div id="gap" className="h-6 md:hidden" />
+                  <div className="w-full md:w-[178px] ">
                     <DatePicker
                       value={input.end_date}
                       onChange={(v) => {
@@ -375,12 +379,8 @@ export default function ReportHourly(/*props*/) {
                   </div>
                 </div>
               </div>
-              <div
-                className="cursor-pointer bg-black items-center h-[36px] px-6 mr-4 rounded ml-3"
-                style={{
-                  display: 'flex',
-                }}
-              >
+              <div id="gap" className="h-6 md:hidden" />
+              <div className="w-full md:w-[20%] justify-center flex cursor-pointer bg-black items-center h-[36px] px-6  rounded ">
                 <Popover withArrow>
                   <Popover.Target>
                     <Text className="text-white" weight={600} size={14}>
@@ -461,7 +461,7 @@ export default function ReportHourly(/*props*/) {
               onChange={onChangeSelectLimit}
             />
           </div>
-          <Text color="#828282" size={14}>
+          <Text color="#828282" size={14} className="hidden md:flex">
             Show {dataReportHourly?.DataPerPage} from {dataReportHourly?.TotalData} jobreport hourly
           </Text>
         </div>

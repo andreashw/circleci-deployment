@@ -30,9 +30,15 @@ export async function fetcher<T>(url: string, payload?: IPayload, blob = false):
       Cookies.remove('token');
       Router.replace('/login');
     } else if (error.response.status === 400) {
-      // throw new Error('Something Wrong');
+      throw error.response;
+    } else if (error.response.status === 404) {
+      console.log('====================================');
+      console.log(error.response);
+      console.log('====================================');
+      throw error.response;
+    } else {
       throw error.response;
     }
-    throw error;
+    throw error.response;
   }
 }

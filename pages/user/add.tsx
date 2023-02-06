@@ -91,9 +91,9 @@ function AddUserPage() {
                 placeholder="e.g johndoe@gmail.com"
               />
             </Grid.Col>
-            <Grid.Col md={6}>
+            {/* <Grid.Col md={6}>
               <PasswordInput className="PasswordInput" label="Password" onChange={handleInput('password')} />
-            </Grid.Col>
+            </Grid.Col> */}
             <Grid.Col md={6} className="flex">
               <Checkbox
                 label="User is active"

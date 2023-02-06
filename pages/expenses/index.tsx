@@ -156,26 +156,26 @@ function ExpendPage() {
             Add New Expense
           </Button>
         </div>
-      </div>
-      <div className="w-52 h-20">
-        <div
-          className="cursor-pointer bg-black items-center h-[36px] px-6 mr-4 rounded ml-3"
-          style={{
-            display: 'flex',
-          }}
-        >
-          <Popover withArrow>
-            <Popover.Target>
-              <Text className="text-white" weight={600} size={14}>
-                Export
-              </Text>
-            </Popover.Target>
-            <Popover.Dropdown>
-              <Text onClick={() => exportXls()} size="sm" className="cursor-pointer min-w-[54px] py-1">
-                Xls
-              </Text>
-            </Popover.Dropdown>
-          </Popover>
+        <div className="w-full md:w-52 h-20">
+          <div
+            className="cursor-pointer bg-black items-center justify-center h-[36px] px-6  rounded "
+            style={{
+              display: 'flex',
+            }}
+          >
+            <Popover withArrow>
+              <Popover.Target>
+                <Text className="text-white text-center" weight={600} size={14}>
+                  Export
+                </Text>
+              </Popover.Target>
+              <Popover.Dropdown>
+                <Text onClick={() => exportXls()} size="sm" className="cursor-pointer min-w-[54px] py-1">
+                  Xls
+                </Text>
+              </Popover.Dropdown>
+            </Popover>
+          </div>
         </div>
       </div>
       {dataExpense?.length > 0 ? (

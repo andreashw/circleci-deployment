@@ -100,7 +100,9 @@ export default function ReportDaily(/*props*/) {
   const body = () =>
     dataReportDailies?.Data?.map((item: IReportDaily, index: any) => (
       <tr key={index}>
-        <td onClick={() => goToDetailPage(item)}>{dayjs(item.Date).format('ddd, DD MMM YYYY')}</td>
+        <td onClick={() => goToDetailPage(item)} className="whitespace-nowrap">
+          {dayjs(item.Date).format('ddd, DD MMM YYYY')}
+        </td>
         <td onClick={() => goToDetailPage(item)}>{item.Worker}</td>
         <td onClick={() => goToDetailPage(item)}>{item.Department}</td>
       </tr>
@@ -137,9 +139,9 @@ export default function ReportDaily(/*props*/) {
 
           <div>
             <div className="flex items-center flex-col sm:flex-row pb-4 sm:pb-0">
-              <div>
-                <div className="flex w-full">
-                  <div className="w-[178px]">
+              <div className="w-full">
+                <div className="flex-col md:flex-row flex w-full ">
+                  <div className="w-full md:w-[178px]">
                     <DatePicker
                       placeholder="Start Date"
                       value={input.start_date}
@@ -150,8 +152,9 @@ export default function ReportDaily(/*props*/) {
                       }}
                     />
                   </div>
-                  <p className="p-3">-</p>
-                  <div className="w-[178px]">
+                  <p className=" hidden md:flex p-3">-</p>
+                  <div id="gap" className="h-6 md:hidden" />
+                  <div className="w-full md:w-[178px] ">
                     <DatePicker
                       value={input.end_date}
                       onChange={(v) => {
@@ -164,12 +167,9 @@ export default function ReportDaily(/*props*/) {
                   </div>
                 </div>
               </div>
-              <div
-                className="cursor-pointer bg-black items-center h-[36px] px-6 mr-4 rounded ml-3"
-                style={{
-                  display: 'flex',
-                }}
-              >
+
+              <div id="gap" className="h-6 md:hidden" />
+              <div className="w-full md:w-[20%] justify-center flex cursor-pointer bg-black items-center h-[36px] px-6  rounded ">
                 <Popover withArrow>
                   <Popover.Target>
                     <Text className="text-white" weight={600} size={14}>
@@ -190,10 +190,10 @@ export default function ReportDaily(/*props*/) {
 
       {dataReportDailies?.Data?.length > 0 ? (
         <ScrollArea>
-          <Table highlightOnHover>
+          <Table striped highlightOnHover>
             <thead>
               <tr>
-                <th className="w-80">Date</th>
+                <th className="w-80 whitespace-nowrap">Date</th>
                 <th className="w-[400px]">Worker</th>
                 <th className="w-[400px]">Department</th>
               </tr>
@@ -221,7 +221,7 @@ export default function ReportDaily(/*props*/) {
               onChange={onChangeSelectLimit}
             />
           </div>
-          <Text color="#828282" size={14}>
+          <Text color="#828282" size={14} className="hidden md:flex">
             Show {dataReportDailies?.DataPerPage} from {dataReportDailies?.TotalData} jobreport Daily
           </Text>
         </div>
