@@ -62,3 +62,6 @@ th {
 td {
   white-space: nowrap;
 }
+input#enter {
+  display: none;
+}

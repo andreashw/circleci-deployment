@@ -21,29 +21,34 @@ const RightSection = () => (
 
 export function YearRange({ label = 'label', onStartChange, onEndChange, valStart = '', valEnd = '' }: YearRangProps) {
   return (
-    <>
-      <div className="w-28 max-width-[45%] text-[14px]">{label}</div>
-      <Select
-        placeholder="Select Year"
-        rightSection={<RightSection />}
-        data={years.map((y) => ({
-          value: y.toString(),
-          label: y.toString(),
-        }))}
-        value={valStart.toString()}
-        onChange={onStartChange}
-      />
-      <span className="px-4">-</span>
-      <Select
-        placeholder="Select Year"
-        rightSection={<RightSection />}
-        data={years.map((y) => ({
-          value: y.toString(),
-          label: y.toString(),
-        }))}
-        value={valEnd.toString()}
-        onChange={onEndChange}
-      />
-    </>
+    <div className="flex-col md:flex-row items-center flex w-full">
+      <div className="w-full md:w-[110px]">
+        <div className="w-[110px] text-[14px]">{label}</div>
+      </div>
+      <div className="w-full flex-col md:flex-row flex">
+        <Select
+          placeholder="Select Year"
+          rightSection={<RightSection />}
+          data={years.map((y) => ({
+            value: y.toString(),
+            label: y.toString(),
+          }))}
+          value={valStart.toString()}
+          onChange={onStartChange}
+        />
+        <span className="hidden md:flex p-3">-</span>
+        <div className="h-6 md:hidden" />
+        <Select
+          placeholder="Select Year"
+          rightSection={<RightSection />}
+          data={years.map((y) => ({
+            value: y.toString(),
+            label: y.toString(),
+          }))}
+          value={valEnd.toString()}
+          onChange={onEndChange}
+        />
+      </div>
+    </div>
   );
 }
