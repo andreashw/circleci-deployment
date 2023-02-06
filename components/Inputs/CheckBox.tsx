@@ -23,12 +23,12 @@ export default function CheckboxList({
               {data.Group}
             </Text>
           </div>
-          <div className="flex flex-row justify-between">
+          <div className="flex flex-col md:flex-row justify-between">
             {data.Permission.map((permission) => (
               <Checkbox
                 onChange={(e) => onPermissionChange(permission, e.target.checked)}
                 checked={permissionIDs.includes(permission.ID)}
-                className="pl-2"
+                className="pl-2 pb-2"
                 disabled={disabled}
                 label={permission.Name}
                 color="gray"
