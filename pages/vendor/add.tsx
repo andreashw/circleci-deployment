@@ -130,7 +130,7 @@ function VendorPage() {
                   });
                 }}
                 value={input.country_id}
-                data={country ? country.map((y) => ({ value: y.ID.toString(), label: y.name })) : []}
+                data={country ? country.map((y) => ({ value: y.ID.toString(), label: y.Name })) : []}
               />
             </Grid.Col>
             <Grid.Col md={6}>
