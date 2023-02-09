@@ -77,13 +77,13 @@ function Application({ Component, pageProps }: { Component: any; pageProps: any 
             },
 
             // Input styling and props
-            Input: {
+            TextInput: {
               defaultProps: {
                 variant: 'filled',
               },
               classNames: {
                 wrapper: 'flex-grow',
-                input: 'border-[#ccc] mt-0 flex-grow flex bg-white rounded-[8px] h-[48px]',
+                input: 'border-[#ccc] mt-0 flex-grow flex bg-white rounded-[8px] min-h-[48px]',
                 // rightSection: 'flex w-[62px] h-100 bg-[#F5F5F5] justify-center align-center rounded-r border border-l-none'
               },
             },
@@ -92,12 +92,14 @@ function Application({ Component, pageProps }: { Component: any; pageProps: any 
             Select: {
               classNames: {
                 root: 'combobox-full',
-                input: 'bg-red',
+                input: 'border-[#ccc] mt-0 flex-grow flex bg-white rounded-[8px] min-h-[48px]',
+                rightSection: 'pointer-events-none',
               },
             },
             MultiSelect: {
               classNames: {
                 root: 'combobox-full',
+                input: 'border-[#ccc] mt-0 flex-grow flex bg-white rounded-[8px] min-h-[48px]',
               },
             },
             DatePicker: {

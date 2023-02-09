@@ -65,3 +65,6 @@ td {
 input#enter {
   display: none;
 }
+input#test {
+  height: unset;
+}
