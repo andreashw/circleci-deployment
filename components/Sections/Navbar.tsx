@@ -30,11 +30,13 @@ export default function NavbarComponent(props: any) {
             { label: 'EV', link: '#', isSubMenu: true },
           ],
         },
-
         {
           label: 'Parts',
-          link: '/part',
           icon: (color: string) => <Part color={color} width="20" height="20" />,
+          sub: [
+            { label: 'Master', link: '/part/master-part', isSubMenu: true },
+            { label: 'List', link: '/part/list-part', isSubMenu: true },
+          ],
         },
 
         {
