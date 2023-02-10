@@ -1,11 +1,13 @@
 import { fetcher } from '@api/fetcher';
 import { Dropdown } from '@components/Inputs/Dropdown';
+import { IconChevronDown } from '@tabler/icons';
+
 import HeadingTop from '@components/TopComponents/Heading';
 import useInput from '@hooks/useInput';
-import { Button, createStyles, Grid, MultiSelect, Text, TextInput } from '@mantine/core';
+import { Button, createStyles, Grid, MultiSelect, Select, Text, TextInput } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { startTransition, useEffect } from 'react';
 import useSWR from 'swr';
 
 const useStyles = createStyles(() => ({
@@ -28,40 +30,36 @@ const useStyles = createStyles(() => ({
 function EditListPartPage() {
   const { classes } = useStyles();
   const router = useRouter();
-
-  const { data: dataParts } = useSWR('/api/v1/parts/');
+  const id = router.query.id as unknown as number;
+  const { data: Part } = useSWR<any>(`/api/v1/item-part/${id}`);
 
   const [input, handleInput] = useInput({
-    name_input: '',
-    brand_input: '',
-    category: '',
-    test: '',
-    material_input: '',
-    req_pcs_input: '',
-    req_unit: 'Pcs',
-    vendor: [
-      {
-        name: '',
-      },
-    ],
-    automobile: [],
+    category: Part ? Part?.MasterPart?.Category : '',
+    part_name: Part ? Part?.MasterPart?.ID : '',
+    automobile: Part ? [Part?.ManufacturedForId] : '',
+    brand: Part ? Part?.Brand : '',
+    number: Part ? Part?.Number : '',
+    material: Part ? Part?.Material : '',
   });
+
+  const { data: dataAutomobiles } = useSWR('/api/v1/automobiles/');
+  const { data: Category } = useSWR('api/v1/item-part/part-categories');
+  const { data: Materials } = useSWR('/api/v1/item-part/part-materials');
+  const { data: PartName } = useSWR(`/api/v1/master-part/?category=${input.category}`);
 
   const doSubmit = async (e: any) => {
     e.preventDefault();
     // console.log('input ', input);
 
-    const response = await fetcher('/api/v1/parts/', {
-      method: 'POST',
+    const response = await fetcher(`/api/v1/item-part/${id}`, {
+      method: 'PATCH',
       body: {
-        name_input: input.name_input,
-        brand_input: input.brand_input,
+        brand: input.brand,
+        manufactured_for_id: input.automobile.flat(),
+        master_part_id: input.part_name,
         category: input.category,
-        material_input: input.material_input,
-        req_pcs_input: Number(input.req_pcs_input),
-        req_unit: input.req_unit,
-        vendors: input.vendor,
-        automobile: input.automobile,
+        number: Number(input.number),
+        material: input.material,
       },
     });
     console.log('Response from API ', response);
@@ -103,23 +101,23 @@ function EditListPartPage() {
                   label="Category"
                   placeholder="Select Category"
                   value={input.category}
-                  onChange={handleInput('category', true)}
-                  data={[
-                    { value: 'Body', label: 'Body' },
-                    { value: 'Drivetrain', label: 'Drivetrain' },
-                  ]}
+                  onChange={(val) =>
+                    startTransition(() => {
+                      handleInput('category', true)(val);
+                    })
+                  }
+                  data={Category?.map(({ Value, Label }: any) => ({ value: Value, label: Label })) || []}
                 />
               </Grid.Col>
               <Grid.Col md={12}>
-                <Dropdown
+                <Select
                   label="Part Name"
                   placeholder="Select Parts"
-                  value={input.category}
-                  onChange={handleInput('category', true)}
-                  data={[
-                    { value: 'Body', label: 'Body' },
-                    { value: 'Drivetrain', label: 'Drivetrain' },
-                  ]}
+                  rightSection={<IconChevronDown size={14} />}
+                  value={input.part_name}
+                  onChange={handleInput('part_name', true)}
+                  data={PartName?.map(({ Name, ID }: any) => ({ value: ID, label: Name })) || []}
+                  required
                 />
               </Grid.Col>
 
@@ -128,41 +126,48 @@ function EditListPartPage() {
                   id="test"
                   label="Manufactured For"
                   placeholder="Select Automobiles"
-                  // value={value}
-                  data={dataParts?.map(({ ID, NameInput }: any) => ({ value: ID.toString(), label: NameInput })) || []}
+                  value={input.automobile}
+                  // data={[]}
+                  data={
+                    dataAutomobiles?.map((item: any) => ({
+                      value: item.ID,
+                      label: `${item.AutomobileBrands.Name} ${item.Model} ${item.YearStart} - ${item.YearEnd}`,
+                    })) || []
+                  }
                   onChange={handleInput('automobile', true)}
                   searchable
                   nothingFound="Nothing found"
                   clearButtonLabel="Clear selection"
                   maxDropdownHeight={360}
+                  required
                 />
               </Grid.Col>
               <Grid.Col md={12}>
                 <TextInput
                   label="Brand"
                   placeholder="Enter Brand"
-                  value={input.name_input}
-                  onChange={handleInput('name_input')}
+                  value={input.brand}
+                  onChange={handleInput('brand')}
+                  required
                 />
               </Grid.Col>
               <Grid.Col md={12}>
                 <TextInput
                   label="Part Number"
                   placeholder="Enter Part Number"
-                  value={input.name_input}
-                  onChange={handleInput('name_input')}
+                  value={input.number}
+                  onChange={handleInput('number')}
+                  required
                 />
               </Grid.Col>
               <Grid.Col md={12}>
-                <Dropdown
+                <Select
                   label="Part Material"
                   placeholder="Select Material"
-                  value={input.category}
-                  onChange={handleInput('category', true)}
-                  data={[
-                    { value: 'Body', label: 'Body' },
-                    { value: 'Drivetrain', label: 'Drivetrain' },
-                  ]}
+                  value={input.material}
+                  onChange={handleInput('material', true)}
+                  data={Materials?.map(({ Value, Label }: any) => ({ value: Value, label: Label })) || []}
+                  required
                 />
               </Grid.Col>
             </Grid.Col>
