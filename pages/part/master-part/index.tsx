@@ -126,14 +126,14 @@ function MasterPartPage() {
         // setSortBy(sortBy);
         setReverseSortDirection((old) => !old);
         startTransition(() => {
-          handleInput('sortBy', true)('part_name asc');
+          handleInput('sortBy', true)('name asc');
         });
       } else {
         console.log(option, 'dsc2');
         setReverseSortDirection((old) => !old);
 
         startTransition(() => {
-          handleInput('sortBy', true)('part_name desc');
+          handleInput('sortBy', true)('name desc');
         });
       }
     }
