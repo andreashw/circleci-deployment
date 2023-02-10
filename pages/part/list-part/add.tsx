@@ -2,10 +2,10 @@ import { fetcher } from '@api/fetcher';
 import { Dropdown } from '@components/Inputs/Dropdown';
 import HeadingTop from '@components/TopComponents/Heading';
 import useInput from '@hooks/useInput';
-import { Button, createStyles, Grid, MultiSelect, Text, TextInput } from '@mantine/core';
+import { Button, createStyles, Select, Grid, MultiSelect, Text, TextInput } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { startTransition, useEffect } from 'react';
 import useSWR from 'swr';
 
 const useStyles = createStyles(() => ({
@@ -29,39 +29,33 @@ function AddListPartPage() {
   const { classes } = useStyles();
   const router = useRouter();
 
-  const { data: dataParts } = useSWR('/api/v1/parts/');
-
   const [input, handleInput] = useInput({
-    name_input: '',
-    brand_input: '',
     category: '',
-    test: '',
-    material_input: '',
-    req_pcs_input: '',
-    req_unit: 'Pcs',
-    vendor: [
-      {
-        name: '',
-      },
-    ],
+    part_name: '',
     automobile: [],
+    brand: '',
+    number: '',
+    material: '',
   });
+
+  const { data: Category } = useSWR('api/v1/item-part/part-categories');
+  const { data: Materials } = useSWR('/api/v1/item-part/part-materials');
+  const { data: PartName } = useSWR(`/api/v1/master-part/?category=${input.category}`);
+  const { data: dataAutomobiles } = useSWR('/api/v1/automobiles/');
 
   const doSubmit = async (e: any) => {
     e.preventDefault();
     // console.log('input ', input);
 
-    const response = await fetcher('/api/v1/parts/', {
+    const response = await fetcher('/api/v1/item-part/', {
       method: 'POST',
       body: {
-        name_input: input.name_input,
-        brand_input: input.brand_input,
+        brand: input.brand,
+        manufactured_for_id: input.automobile,
+        master_part_id: input.part_name,
         category: input.category,
-        material_input: input.material_input,
-        req_pcs_input: Number(input.req_pcs_input),
-        req_unit: input.req_unit,
-        vendors: input.vendor,
-        automobile: input.automobile,
+        number: Number(input.number),
+        material: input.material,
       },
     });
     console.log('Response from API ', response);
@@ -85,7 +79,7 @@ function AddListPartPage() {
       <HeadingTop
         text="Add New List Part"
         items={[
-          { title: 'Parts', href: '/part' },
+          { title: 'Parts', href: '' },
           { title: 'List Parts', href: '/part/list-part' },
           { title: 'Add New List Part', href: '' },
         ]}
@@ -103,23 +97,22 @@ function AddListPartPage() {
                   label="Category"
                   placeholder="Select Category"
                   value={input.category}
-                  onChange={handleInput('category', true)}
-                  data={[
-                    { value: 'Body', label: 'Body' },
-                    { value: 'Drivetrain', label: 'Drivetrain' },
-                  ]}
+                  onChange={(val) =>
+                    startTransition(() => {
+                      handleInput('category', true)(val);
+                    })
+                  }
+                  data={Category?.map(({ Value, Label }: any) => ({ value: Value, label: Label })) || []}
                 />
               </Grid.Col>
               <Grid.Col md={12}>
-                <Dropdown
+                <Select
                   label="Part Name"
                   placeholder="Select Parts"
-                  value={input.category}
-                  onChange={handleInput('category', true)}
-                  data={[
-                    { value: 'Body', label: 'Body' },
-                    { value: 'Drivetrain', label: 'Drivetrain' },
-                  ]}
+                  value={input.part_name}
+                  onChange={handleInput('part_name', true)}
+                  data={PartName?.map(({ Name, ID }: any) => ({ value: ID, label: Name })) || []}
+                  required
                 />
               </Grid.Col>
 
@@ -128,41 +121,48 @@ function AddListPartPage() {
                   id="test"
                   label="Manufactured For"
                   placeholder="Select Automobiles"
-                  // value={value}
-                  data={dataParts?.map(({ ID, NameInput }: any) => ({ value: ID.toString(), label: NameInput })) || []}
+                  value={input.automobile}
+                  // data={[]}
+                  data={
+                    dataAutomobiles?.map((item: any) => ({
+                      value: item.ID,
+                      label: `${item.AutomobileBrands.Name} ${item.Model} ${item.YearStart} - ${item.YearEnd}`,
+                    })) || []
+                  }
                   onChange={handleInput('automobile', true)}
                   searchable
                   nothingFound="Nothing found"
                   clearButtonLabel="Clear selection"
                   maxDropdownHeight={360}
+                  required
                 />
               </Grid.Col>
               <Grid.Col md={12}>
                 <TextInput
                   label="Brand"
                   placeholder="Enter Brand"
-                  value={input.name_input}
-                  onChange={handleInput('name_input')}
+                  value={input.brand}
+                  onChange={handleInput('brand')}
+                  required
                 />
               </Grid.Col>
               <Grid.Col md={12}>
                 <TextInput
                   label="Part Number"
                   placeholder="Enter Part Number"
-                  value={input.name_input}
-                  onChange={handleInput('name_input')}
+                  value={input.number}
+                  onChange={handleInput('number')}
+                  required
                 />
               </Grid.Col>
               <Grid.Col md={12}>
-                <Dropdown
+                <Select
                   label="Part Material"
                   placeholder="Select Material"
-                  value={input.category}
-                  onChange={handleInput('category', true)}
-                  data={[
-                    { value: 'Body', label: 'Body' },
-                    { value: 'Drivetrain', label: 'Drivetrain' },
-                  ]}
+                  value={input.material}
+                  onChange={handleInput('material', true)}
+                  data={Materials?.map(({ Value, Label }: any) => ({ value: Value, label: Label })) || []}
+                  required
                 />
               </Grid.Col>
             </Grid.Col>
