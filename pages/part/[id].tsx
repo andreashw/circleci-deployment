@@ -17,7 +17,7 @@ function PartDetailPages() {
       <HeadingTop
         text="Part"
         items={[
-          { title: 'Part', href: '/part' },
+          { title: 'Part', href: '' },
           { title: 'Details Part', href: '' },
         ]}
       />
