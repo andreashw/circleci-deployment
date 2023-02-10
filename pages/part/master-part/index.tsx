@@ -1,5 +1,4 @@
 import { ScrollArea, Drawer, Text, Table, Menu, Button } from '@mantine/core';
-import { useState } from 'react';
 import { IconDotsVertical } from '@tabler/icons';
 import useSWR from 'swr';
 import { fetcher } from '@api/fetcher';
@@ -8,17 +7,38 @@ import { Edit2, Trash2 } from 'react-feather';
 import Router from 'next/router';
 import { useModals } from '@mantine/modals';
 import { IParts } from '@contracts/parts-interface';
+import useInput from '@hooks/useInput';
+import { startTransition, useState } from 'react';
+import { Th } from '@components/Th';
 
 function MasterPartPage() {
   const modals = useModals();
   const [drawerOpened, toggleDrawer] = useState(false);
 
-  const { data: dataParts, mutate } = useSWR('/api/v1/parts/');
+  const [input, handleInput] = useInput({
+    search: '',
+    sortBy: '',
+    start_amound: '',
+    end_amound: '',
+    selectedId: '',
+    start_date: '',
+    end_date: '',
+    fillter_type: [],
+    fillter_project: [],
+  });
 
+  const { data: dataParts, mutate } = useSWR(`/api/v1/master-part/?sortBy=${input.sortBy}&search=${input.search}
+`);
+
+  function btnSearch(search: any) {
+    startTransition(() => {
+      handleInput('search', true)(search);
+    });
+  }
   const onDeleteData = async (part: IParts) => {
     console.log(part.ID);
 
-    const response: IParts | undefined = await fetcher(`/api/v1/parts/${part.ID}`, {
+    const response: IParts | undefined = await fetcher(`/api/v1/master-part/${part.ID}`, {
       method: 'DELETE',
     });
     console.log('Response Delete from API ', response);
@@ -27,13 +47,13 @@ function MasterPartPage() {
       mutate();
     }
   };
-  function deleteProfile(part: IParts) {
+  function deleteProfile(part: any) {
     console.log('====================================');
     modals.openConfirmModal({
       title: 'Delete',
       children: (
         <Text size="sm" lineClamp={2}>
-          Delete <b>{part.NameInput}</b> Part Data ?
+          Delete <b>{part.Name}</b> Part Data ?
         </Text>
       ),
       centered: true,
@@ -50,11 +70,11 @@ function MasterPartPage() {
   const body = () =>
     dataParts.map((item: any, index: any) => (
       <tr key={index}>
-        <td className="cursor-pointer" onClick={() => Router.push(`/part/${item.ID}`)}>
-          {item.NameInput}
+        <td className="cursor-pointer" onClick={() => Router.push(`/part/master-part/${item.ID}`)}>
+          {item.Name}
         </td>
-        <td className="cursor-pointer " onClick={() => Router.push(`/part/${item.ID}`)}>
-          {item.BrandInput}
+        <td className="cursor-pointer " onClick={() => Router.push(`/part/master-part/${item.ID}`)}>
+          {item.Category}
         </td>
         <td>
           <Menu>
@@ -93,6 +113,48 @@ function MasterPartPage() {
       </tr>
     ));
 
+  const [sortBy, setSortBy] = useState<any>(null);
+  const [reverseSortDirection, setReverseSortDirection] = useState(false);
+
+  function Urutkan(option: string) {
+    console.log(option, reverseSortDirection);
+    console.log(sortBy === option);
+    setSortBy(option);
+    if (option === 'PartName') {
+      if (reverseSortDirection === true) {
+        console.log(option, 'asc1');
+        // setSortBy(sortBy);
+        setReverseSortDirection((old) => !old);
+        startTransition(() => {
+          handleInput('sortBy', true)('part_name asc');
+        });
+      } else {
+        console.log(option, 'dsc2');
+        setReverseSortDirection((old) => !old);
+
+        startTransition(() => {
+          handleInput('sortBy', true)('part_name desc');
+        });
+      }
+    }
+
+    if (option === 'Category') {
+      if (reverseSortDirection === true) {
+        console.log(option, 'asc3');
+        setReverseSortDirection((old) => !old);
+        startTransition(() => {
+          handleInput('sortBy', true)('category asc');
+        });
+      } else {
+        console.log(option, 'dsc4');
+        setReverseSortDirection((old) => !old);
+        startTransition(() => {
+          handleInput('sortBy', true)('category desc');
+        });
+      }
+    }
+  }
+
   return (
     <>
       <Drawer opened={drawerOpened} onClose={() => toggleDrawer(false)} title="Modify user" padding="xl" size="xl">
@@ -103,7 +165,7 @@ function MasterPartPage() {
           Master Parts
         </Text>
         <div className="flex flex-col sm:flex-row pb-4 sm:pb-0">
-          <SearchForm />
+          <SearchForm searchName="Master Part" onSubmit={btnSearch} />
           <Button className="bg-black hover:bg-black px-6" onClick={() => Router.push('./master-part/add')}>
             Add New Master Parts
           </Button>
@@ -114,8 +176,12 @@ function MasterPartPage() {
           <Table draggable="false" striped highlightOnHover>
             <thead>
               <tr>
-                <th>Part Name</th>
-                <th>Category</th>
+                <Th sorted={sortBy === 'PartName'} onSort={() => Urutkan('PartName')} reversed={reverseSortDirection}>
+                  Part Name
+                </Th>
+                <Th sorted={sortBy === 'Category'} onSort={() => Urutkan('Category')} reversed={reverseSortDirection}>
+                  Category
+                </Th>
                 <th />
               </tr>
             </thead>
