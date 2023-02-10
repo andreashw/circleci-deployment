@@ -5,6 +5,7 @@ import { Button, createStyles, Grid, Select, Text, TextInput } from '@mantine/co
 import { showNotification } from '@mantine/notifications';
 import { IconChevronDown } from '@tabler/icons';
 import { useRouter } from 'next/router';
+import useSWR from 'swr';
 
 const useStyles = createStyles(() => ({
   label: {
@@ -26,53 +27,48 @@ function AddMasterPartPage() {
 
   const [input, handleInput] = useInput({
     name_input: '',
-    brand_input: '',
     category: '',
-    material_input: '',
-    req_pcs_input: '',
-    req_unit: 'Pcs',
-    vendor: [
-      {
-        name: '',
-      },
-    ],
-    automobile: [],
   });
 
   const doSubmit = async (e: any) => {
     e.preventDefault();
     // console.log('input ', input);
 
-    const response = await fetcher('/api/v1/parts/', {
+    await fetcher('/api/v1/master-part/', {
       method: 'POST',
       body: {
-        name_input: input.name_input,
-        brand_input: input.brand_input,
+        name: input.name_input,
         category: input.category,
-        material_input: input.material_input,
-        req_pcs_input: Number(input.req_pcs_input),
-        req_unit: input.req_unit,
-        vendors: input.vendor,
-        automobile: input.automobile,
       },
-    });
-    console.log('Response from API ', response);
-    if (response) {
-      showNotification({
-        title: 'Success',
-        message: 'Part berhasil ditambahkan',
-        color: 'teal',
+    })
+      .then((res) => {
+        console.log(res);
+
+        showNotification({
+          title: 'Success',
+          message: 'Master Part berhasil ditambahkan',
+          color: 'teal',
+        });
+        router.replace('/part/master-part');
+      })
+      .catch((err) => {
+        console.log(err);
+        showNotification({
+          title: 'error',
+          message: err?.data?.error?.Data?.Message,
+          color: 'red',
+        });
       });
-      router.replace('/part');
-    }
   };
+
+  const { data: category } = useSWR<any[]>('/api/v1/expense/list-types');
 
   return (
     <>
       <HeadingTop
         text="Add New Master Part"
         items={[
-          { title: 'Parts', href: '/part' },
+          { title: 'Parts', href: '' },
           { title: 'Master Parts', href: '/part/master-part' },
           { title: 'Add New Master Part', href: '' },
         ]}
@@ -92,10 +88,8 @@ function AddMasterPartPage() {
                   rightSection={<IconChevronDown size={14} />}
                   value={input.category}
                   onChange={handleInput('category', true)}
-                  data={[
-                    { value: 'Body', label: 'Body' },
-                    { value: 'Drivetrain', label: 'Drivetrain' },
-                  ]}
+                  data={category ? category.map((y) => ({ value: y.Value, label: y.Value })) : []}
+                  required
                 />
               </Grid.Col>
               <Grid.Col md={12}>
@@ -104,6 +98,7 @@ function AddMasterPartPage() {
                   placeholder="e.g Shockbreaker Ohlins"
                   value={input.name_input}
                   onChange={handleInput('name_input')}
+                  required
                 />
               </Grid.Col>
             </Grid.Col>

@@ -5,6 +5,7 @@ import { Button, createStyles, Grid, Select, Text, TextInput } from '@mantine/co
 import { showNotification } from '@mantine/notifications';
 import { IconChevronDown } from '@tabler/icons';
 import { useRouter } from 'next/router';
+import useSWR from 'swr';
 
 const useStyles = createStyles(() => ({
   label: {
@@ -24,36 +25,25 @@ function EditMasterPartPage() {
   const { classes } = useStyles();
   const router = useRouter();
 
+  const id = router.query.id as unknown as number;
+  const { data: Part } = useSWR<any>(`/api/v1/master-part/${id}`);
+
+  const { data: category } = useSWR<any[]>('/api/v1/expense/list-types');
+
   const [input, handleInput] = useInput({
-    name_input: '',
-    brand_input: '',
-    category: '',
-    material_input: '',
-    req_pcs_input: '',
-    req_unit: 'Pcs',
-    vendor: [
-      {
-        name: '',
-      },
-    ],
-    automobile: [],
+    name_input: Part ? Part?.Name : '',
+    category: Part ? Part.Category : '',
   });
 
   const doSubmit = async (e: any) => {
     e.preventDefault();
     // console.log('input ', input);
 
-    const response = await fetcher('/api/v1/parts/', {
-      method: 'POST',
+    const response = await fetcher(`/api/v1/master-part/${id}`, {
+      method: 'PATCH',
       body: {
-        name_input: input.name_input,
-        brand_input: input.brand_input,
+        name: input.name_input,
         category: input.category,
-        material_input: input.material_input,
-        req_pcs_input: Number(input.req_pcs_input),
-        req_unit: input.req_unit,
-        vendors: input.vendor,
-        automobile: input.automobile,
       },
     });
     console.log('Response from API ', response);
@@ -63,7 +53,7 @@ function EditMasterPartPage() {
         message: 'Part berhasil ditambahkan',
         color: 'teal',
       });
-      router.replace('/part');
+      router.replace('/part/master-part');
     }
   };
 
@@ -72,7 +62,7 @@ function EditMasterPartPage() {
       <HeadingTop
         text="Edit Master Part"
         items={[
-          { title: 'Parts', href: '/part' },
+          { title: 'Parts', href: '' },
           { title: 'Master Parts', href: '/part/master-part' },
           { title: 'Edit Master Part', href: '' },
         ]}
@@ -92,10 +82,8 @@ function EditMasterPartPage() {
                   rightSection={<IconChevronDown size={14} />}
                   value={input.category}
                   onChange={handleInput('category', true)}
-                  data={[
-                    { value: 'Body', label: 'Body' },
-                    { value: 'Drivetrain', label: 'Drivetrain' },
-                  ]}
+                  data={category ? category.map((y) => ({ value: y.Value, label: y.Value })) : []}
+                  required
                 />
               </Grid.Col>
               <Grid.Col md={12}>
@@ -104,6 +92,7 @@ function EditMasterPartPage() {
                   placeholder="e.g Shockbreaker Ohlins"
                   value={input.name_input}
                   onChange={handleInput('name_input')}
+                  required
                 />
               </Grid.Col>
             </Grid.Col>
