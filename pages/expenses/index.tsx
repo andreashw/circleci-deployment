@@ -227,7 +227,37 @@ function ExpendPage() {
         console.log(option, 'dsc4');
         setReverseSortDirection((old) => !old);
         startTransition(() => {
-          handleInput('type', true)('project_id dessc');
+          handleInput('type', true)('project_id desc');
+        });
+      }
+    }
+    if (option === 'Date') {
+      if (reverseSortDirection === true) {
+        console.log(option, 'asc3');
+        setReverseSortDirection((old) => !old);
+        startTransition(() => {
+          handleInput('type', true)('date asc');
+        });
+      } else {
+        console.log(option, 'dsc4');
+        setReverseSortDirection((old) => !old);
+        startTransition(() => {
+          handleInput('type', true)('date desc');
+        });
+      }
+    }
+    if (option === 'Amount') {
+      if (reverseSortDirection === true) {
+        console.log(option, 'asc3');
+        setReverseSortDirection((old) => !old);
+        startTransition(() => {
+          handleInput('type', true)('amount asc');
+        });
+      } else {
+        console.log(option, 'dsc4');
+        setReverseSortDirection((old) => !old);
+        startTransition(() => {
+          handleInput('type', true)('amount desc');
         });
       }
     }
@@ -361,11 +391,15 @@ function ExpendPage() {
                     </Tooltip>
                   </th>
                 )}
-                <th>Date</th>
+                <Th sorted={sortBy === 'Date'} onSort={() => Urutkan('Date')} reversed={reverseSortDirection}>
+                  Date
+                </Th>
                 <Th sorted={sortBy === 'Type'} onSort={() => Urutkan('Type')} reversed={reverseSortDirection}>
                   Type
                 </Th>
-                <th>Amount</th>
+                <Th sorted={sortBy === 'Amount'} onSort={() => Urutkan('Amount')} reversed={reverseSortDirection}>
+                  Amount
+                </Th>
                 <th>Description</th>
                 <Th sorted={sortBy === 'Project'} onSort={() => Urutkan('Project')} reversed={reverseSortDirection}>
                   Project

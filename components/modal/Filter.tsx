@@ -31,7 +31,7 @@ function ModalFilter({ opened, handleClosed, title, input, handleInput }: Filter
   return (
     <Modal opened={opened} onClose={handleClosed} title={title}>
       {/* Modal content */}
-      <Label label="BY Date" />
+      <Label label="By Date" />
       <div className="flex flex-row items-center pt-[12px] pb-4">
         <DatePicker
           placeholder="Start Date"
@@ -55,7 +55,7 @@ function ModalFilter({ opened, handleClosed, title, input, handleInput }: Filter
           }
         />
       </div>
-      <Label label="Amount" />
+      <Label label="By Amount" />
       <div className="flex flex-row items-center pt-[12px] pb-4">
         <TextInput
           placeholder="start amound"
