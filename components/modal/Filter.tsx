@@ -78,7 +78,7 @@ function ModalFilter({ opened, handleClosed, title, input, handleInput }: Filter
         />
       </div>
 
-      <Label label="By Type" />
+      <Label label="By Project" />
       <div className="pt-[12px] pb-4">
         {project?.map((item, i) => (
           <Checkbox
