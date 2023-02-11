@@ -435,7 +435,7 @@ export function Th({ sorted, reversed, children, onSort }: ThProps) {
   const Icon = sorted ? (reversed ? IconChevronUp : IconChevronDown) : IconSelector;
   return (
     <th className="">
-      <UnstyledButton onClick={onSort} className="w-[80px] max-w-[80px]">
+      <UnstyledButton onClick={onSort} className=" min-w-[80px]">
         <Group position="apart">
           <Text weight={500} size="sm">
             {children}
