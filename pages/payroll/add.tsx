@@ -119,7 +119,9 @@ function AddPayrollPage() {
             <Grid gutter="xl">
               <Grid.Col md={6}>
                 <div className="flex flex-col md:flex-row items-center">
-                  <DatePicker id="enter" className="flex-col md:flex-row w-full" label="Periode" required />
+                  <p className="flex justify-start items-center w-full md:w-[110px] flex-shrink-0 max-width-[45%] font-normal text-[14px]">
+                    Periode
+                  </p>
                   <DatePicker
                     className="flex-col md:flex-row w-full"
                     placeholder="Select Date"
