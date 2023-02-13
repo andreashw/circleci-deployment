@@ -142,7 +142,7 @@ function AddExpendPage() {
                   id="IconRupiah"
                   label="Amount"
                   placeholder="e.g 15.000"
-                  icon={<LeftSection label="Rp" />}
+                  icon={<RightSection label="Rp" />}
                   value={input.price}
                   onChange={handleCurChange}
                   required

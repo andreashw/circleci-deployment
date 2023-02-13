@@ -14,17 +14,12 @@ interface DropdownProps {
   placeholder?: string;
 }
 
-const RightSection = () => (
-  <div className="flex bg-inactive h-full rounded-r-md px-4">
-    <IconChevronDown className="self-center" size={14} />
-  </div>
-);
 export function Dropdown({ label = 'label', data, value, onChange, placeholder }: DropdownProps) {
   return (
     <Select
       label={label}
       placeholder={placeholder || label}
-      rightSection={<RightSection />}
+      rightSection={<IconChevronDown size={14} />}
       value={value}
       data={data}
       onChange={onChange}

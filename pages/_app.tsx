@@ -85,6 +85,13 @@ function Application({ Component, pageProps }: { Component: any; pageProps: any 
                 wrapper: 'flex-grow',
                 input: 'border-[#ccc] mt-0 flex-grow flex bg-white rounded-[8px] min-h-[48px]',
                 // rightSection: 'flex w-[62px] h-100 bg-[#F5F5F5] justify-center align-center rounded-r border border-l-none'
+                rightSection: 'rounded-r-md',
+                icon: 'rounded-l-md bg-red',
+              },
+              // var(--c-inactive)
+              styles: {
+                rightSection: { background: 'var(--c-inactive)', width: '48px', border: '1px solid #ccc' },
+                icon: { background: 'var(--c-inactive)', width: '48px', border: '1px solid #ccc' },
               },
             },
 
