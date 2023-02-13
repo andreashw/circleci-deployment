@@ -46,9 +46,15 @@ function ExpendPage() {
     fillter_type: [],
     fillter_project: [],
   });
+  const setStart_Date = `${parseInt(dayjs(Date.now()).format('YYYY'), 10) - 1}-${dayjs(Date.now()).format('MM-DD')}`;
+
+  const setEnd_Date = `${parseInt(dayjs(Date.now()).format('YYYY'), 10) + 1}-${dayjs(Date.now()).format('MM-DD')}`;
+
   const { data: dataExpense, mutate } = useSWR(
-    `/api/v1/expense/?startDate=${input.start_date ? dayjs(input.start_date).format('YYYY-MM-DD') : ''}&endDate=${
-      input.end_date ? dayjs(input.end_date).format('YYYY-MM-DD') : ''
+    `/api/v1/expense/?startDate=${
+      input.start_date ? dayjs(input.start_date).format('YYYY-MM-DD') : setStart_Date
+    }&endDate=${
+      input.end_date ? dayjs(input.end_date).format('YYYY-MM-DD') : setEnd_Date
     }&project=${input.fillter_project.flat()}&startAmount=${input.start_amound}&endAmount=${input.end_amound}&sortBy=${
       input.type
     }&search=${input.search}&types=${input.fillter_type.flat()}`
