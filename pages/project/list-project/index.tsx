@@ -9,7 +9,7 @@ import Router from 'next/router';
 import { useModals } from '@mantine/modals';
 import { IProject } from '@contracts/project-interface';
 
-function ProjectPage() {
+function ListProjectPage() {
   const modals = useModals();
   const [drawerOpened, toggleDrawer] = useState(false);
 
@@ -53,20 +53,20 @@ function ProjectPage() {
   const body = () =>
     dataVendor.map((item: any, index: any) => (
       <tr key={index}>
-        <td className="cursor-pointer w-2/12" onClick={() => Router.push(`/project/${item.ID}`)}>
+        <td className="cursor-pointer w-2/12" onClick={() => Router.push(`/project/list-project/${item.ID}`)}>
           {item.Name}
         </td>
-        <td className="cursor-pointer " onClick={() => Router.push(`/project/${item.ID}`)}>
+        <td className="cursor-pointer " onClick={() => Router.push(`/project/list-project/${item.ID}`)}>
           {item.Client.Name}
         </td>
-        <td className="cursor-pointer w-2/12 " onClick={() => Router.push(`/project/${item.ID}`)}>
+        <td className="cursor-pointer w-2/12 " onClick={() => Router.push(`/project/list-project/${item.ID}`)}>
           {item.PIC.Name}
         </td>
-        <td className="cursor-pointer " onClick={() => Router.push(`/project/${item.ID}`)}>
+        <td className="cursor-pointer " onClick={() => Router.push(`/project/list-project/${item.ID}`)}>
           {item.Automobile.Model} - {item.Automobile.year_start}
         </td>
 
-        <td className="cursor-pointer w-2/12" onClick={() => Router.push(`/project/${item.ID}`)}>
+        <td className="cursor-pointer w-2/12" onClick={() => Router.push(`/project/list-project/${item.ID}`)}>
           {item.PowerType}
         </td>
         <td>
@@ -87,7 +87,7 @@ function ProjectPage() {
             </Menu.Target>
             <Menu.Dropdown>
               <Menu.Label>{item.name}</Menu.Label>
-              <Menu.Item icon={<Edit2 />} onClick={() => Router.push(`/project/edit/${item.ID}`)}>
+              <Menu.Item icon={<Edit2 />} onClick={() => Router.push(`/project/list-project/edit/${item.ID}`)}>
                 Edit Project
               </Menu.Item>
               {/* <Menu.Item icon={<Send />} onClick={() => sendMessage(automobile)}>
@@ -117,7 +117,7 @@ function ProjectPage() {
         </Text>
         <div className="flex flex-col sm:flex-row pb-4 sm:pb-0">
           <SearchForm />
-          <Button className="bg-black hover:bg-black px-6" onClick={() => Router.push('/project/add')}>
+          <Button className="bg-black hover:bg-black px-6" onClick={() => Router.push('/project/list-project/add')}>
             Add New Project
           </Button>
         </div>
@@ -153,4 +153,4 @@ function ProjectPage() {
   );
 }
 
-export default ProjectPage;
+export default ListProjectPage;

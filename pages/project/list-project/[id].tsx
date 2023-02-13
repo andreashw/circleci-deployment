@@ -15,7 +15,8 @@ function DetailProjectPage() {
       <HeadingTop
         text="Project"
         items={[
-          { title: 'Project', href: '/project' },
+          { title: 'Project', href: '' },
+          { title: 'List Project', href: '/project/list-project' },
           { title: 'Details Project', href: '' },
         ]}
       />
