@@ -227,13 +227,13 @@ function ExpendPage() {
         console.log(option, 'asc3');
         setReverseSortDirection((old) => !old);
         startTransition(() => {
-          handleInput('type', true)('project_id asc');
+          handleInput('type', true)('Project.name asc');
         });
       } else {
         console.log(option, 'dsc4');
         setReverseSortDirection((old) => !old);
         startTransition(() => {
-          handleInput('type', true)('project_id desc');
+          handleInput('type', true)('Project.name desc');
         });
       }
     }
@@ -442,7 +442,7 @@ export function Th({ sorted, reversed, children, onSort }: ThProps) {
   return (
     <th className="">
       <UnstyledButton onClick={onSort} className=" min-w-[80px]">
-        <Group position="apart">
+        <Group position="apart" className="flex-row flex flex-nowrap">
           <Text weight={500} size="sm">
             {children}
           </Text>

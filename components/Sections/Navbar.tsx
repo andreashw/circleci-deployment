@@ -61,8 +61,11 @@ export default function NavbarComponent(props: any) {
       menus: [
         {
           label: 'Projects',
-          link: '/project',
           icon: (color: string) => <Project color={color} width="20" height="20" />,
+          sub: [
+            { label: 'Part Diagnose', link: '/project/part-diagnose', isSubMenu: true },
+            { label: 'List', link: '/project/list-project', isSubMenu: true },
+          ],
         },
         {
           label: 'Job Report',
