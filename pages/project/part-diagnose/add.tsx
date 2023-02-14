@@ -1,12 +1,12 @@
 import { fetcher } from '@api/fetcher';
 import { RightSection } from '@components/Inputs/RightSection';
 import HeadingTop from '@components/TopComponents/Heading';
-import { IProvince } from '@contracts/client-interface';
 import useInput from '@hooks/useInput';
 import { Button, createStyles, Grid, Image, Select, Text, Textarea, TextInput } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
 import { IconChevronDown } from '@tabler/icons';
 import Router from 'next/router';
+import { startTransition, useRef } from 'react';
 import useSWR from 'swr';
 
 const useStyles = createStyles(() => ({
@@ -28,18 +28,25 @@ const useStyles = createStyles(() => ({
 }));
 function ProjectAddPage() {
   const { classes } = useStyles();
-
-  const { data: dataClient } = useSWR<IProvince[]>('/api/v1/projects/clients/');
+  const upRef = useRef<any>(null);
 
   const [input, handleInput] = useInput({
-    name: '',
-    pic_id: '',
-    client_id: '',
-    automobile_id: '',
+    project: '',
+    category: '',
+    part_name: '',
+    qty: '',
+    condition: '',
+    action: '',
+    storage: '',
     notes: '',
-    engine_id: '',
-    power_type: 'EV',
+    img: [],
+    imgFile: [],
   });
+
+  const { data: Project } = useSWR('/api/v1/projects/');
+  const { data: Category } = useSWR('/api/v1/item-part/part-categories');
+  const { data: PartName } = useSWR(`/api/v1/master-part/?category=${input.category}`);
+
   const doSubmit = async (e: any) => {
     e.preventDefault();
     const response = await fetcher('/api/v1/projects/', {
@@ -64,14 +71,23 @@ function ProjectAddPage() {
       Router.replace('/project');
     }
   };
-  const dataImages = [
-    {
-      src: 'https://images.unsplash.com/photo-1598928506311-c55ded91a20c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=720&q=80',
-    },
-    {
-      src: 'https://images.unsplash.com/photo-1567767292278-a4f21aa2d36e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=720&q=80',
-    },
-  ];
+
+  function handleImageSChange(e: any) {
+    if (e.target.files.length) {
+      const newFiles: File[] = [];
+      const newPrevs: string[] = [];
+      for (let i = 0; i < e.target.files.length; i++) {
+        const file = e.target.files[i] as File;
+        const url = URL.createObjectURL(file);
+        newFiles.push(file);
+        newPrevs.push(url);
+      }
+      startTransition(() => {
+        handleInput('img', true)([...input.img, ...newPrevs]);
+        handleInput('imgFile', true)([...input.imgFile, ...newFiles]);
+      });
+    }
+  }
   return (
     <>
       <HeadingTop
@@ -93,12 +109,12 @@ function ProjectAddPage() {
             <div className="w-full md:w-1/2">
               <Grid.Col md={12}>
                 <Select
-                  label="Client"
-                  placeholder="Select Client"
-                  value={input.client_id.toString()}
-                  onChange={handleInput('client_id', true)}
+                  label="Project"
+                  placeholder="Select Project"
+                  value={input.project.toString()}
+                  onChange={handleInput('project', true)}
                   rightSection={<IconChevronDown size={14} />}
-                  data={dataClient ? dataClient.map((y: any) => ({ value: y.Id.toString(), label: y.Name })) : []}
+                  data={Project ? Project.map((y: any) => ({ value: y.ID.toString(), label: y.Name })) : []}
                 />
               </Grid.Col>
             </div>
@@ -110,63 +126,83 @@ function ProjectAddPage() {
             <div className="w-full md:w-1/2">
               <Grid.Col md={12}>
                 <Select
-                  label="Client"
-                  placeholder="Select Client"
-                  value={input.client_id.toString()}
-                  onChange={handleInput('client_id', true)}
+                  label="Category"
+                  placeholder="Select Category"
+                  value={input.category.toString()}
+                  onChange={(val) =>
+                    startTransition(() => {
+                      handleInput('category', true)(val);
+                      handleInput('part_name', true)('');
+                    })
+                  }
                   rightSection={<IconChevronDown size={14} />}
-                  data={dataClient ? dataClient.map((y: any) => ({ value: y.Id.toString(), label: y.Name })) : []}
+                  data={Category ? Category.map((y: any) => ({ value: y.Value, label: y.Label })) : []}
                 />
               </Grid.Col>
 
               <Grid.Col md={12}>
                 <Select
-                  label="Client"
-                  placeholder="Select Client"
-                  value={input.client_id.toString()}
-                  onChange={handleInput('client_id', true)}
+                  label="Part Name"
+                  placeholder="Select Part Name"
+                  value={input.part_name.toString()}
+                  onChange={handleInput('part_name', true)}
                   rightSection={<IconChevronDown size={14} />}
-                  data={dataClient ? dataClient.map((y: any) => ({ value: y.Id.toString(), label: y.Name })) : []}
+                  data={PartName ? PartName.map((y: any) => ({ value: y.ID.toString(), label: y.Name })) : []}
+                  searchable
+                  nothingFound="No options"
+                  creatable
+                  getCreateLabel={(query) => `+ Create ${query}`}
+                  onCreate={() => {
+                    window.open('/expenses');
+                    return 'tes';
+                  }}
                 />
               </Grid.Col>
 
               <Grid.Col md={12}>
                 <TextInput
-                  label="PIC"
-                  placeholder="Select PIC"
-                  value={input.pic_id.toString()}
-                  onChange={handleInput('pic_id', true)}
+                  label="Quantity"
+                  placeholder="e.g 78"
+                  value={input.qty.toString()}
+                  onChange={handleInput('qty')}
                   rightSection={<RightSection label="Pcs" />}
                 />
               </Grid.Col>
               <Grid.Col md={12}>
                 <Select
-                  label="Client"
-                  placeholder="Select Client"
-                  value={input.client_id.toString()}
-                  onChange={handleInput('client_id', true)}
+                  label="Condition"
+                  placeholder="Select Condition"
+                  value={input.condition.toString()}
+                  onChange={handleInput('condition', true)}
                   rightSection={<IconChevronDown size={14} />}
-                  data={dataClient ? dataClient.map((y: any) => ({ value: y.Id.toString(), label: y.Name })) : []}
+                  data={[
+                    { label: 'Good', value: 'Good' },
+                    { label: 'Bad', value: 'Bad' },
+                  ]}
                 />
               </Grid.Col>
 
               <Grid.Col md={12}>
                 <Select
-                  label="Client"
-                  placeholder="Select Client"
-                  value={input.client_id.toString()}
-                  onChange={handleInput('client_id', true)}
+                  label="Action"
+                  placeholder="Select Action"
+                  value={input.action.toString()}
+                  onChange={handleInput('action', true)}
                   rightSection={<IconChevronDown size={14} />}
-                  data={dataClient ? dataClient.map((y: any) => ({ value: y.Id.toString(), label: y.Name })) : []}
+                  data={[
+                    { label: 'Use', value: 'Use' },
+                    { label: 'Restore', value: 'Restore' },
+                    { label: 'Purchase', value: 'Purchase' },
+                  ]}
                 />
               </Grid.Col>
 
               <Grid.Col md={12}>
                 <TextInput
-                  label="PIC"
-                  placeholder="Select PIC"
-                  value={input.pic_id.toString()}
-                  onChange={handleInput('pic_id', true)}
+                  label="Storage Location"
+                  placeholder="e.g Rak/03"
+                  value={input.storage.toString()}
+                  onChange={handleInput('storage', true)}
                 />
               </Grid.Col>
 
@@ -183,7 +219,7 @@ function ProjectAddPage() {
               </Grid.Col>
               <div className="pl-[12px] md:pl-[122px]">
                 <div className="flex  flex-row flex-wrap -mx-2">
-                  {dataImages.map((item: any, index: any) => (
+                  {input?.img?.map((item: any, index: any) => (
                     <div key={index} className="p-2 relative">
                       <div className=" absolute top-2 cursor-pointer right-2 z-10 bg-white rounded-full">
                         <Image
@@ -194,11 +230,18 @@ function ProjectAddPage() {
                           height={24}
                         />
                       </div>
-                      <Image radius="md" src={item.src} width={80} height={80} />
+                      <Image radius="md" src={item} width={80} height={80} />
                     </div>
                   ))}
-                  {dataImages.length < 3 && (
-                    <div className="p-2 cursor-pointer">
+                  {input?.img?.length < 3 && (
+                    <div className="p-2 cursor-pointer" onClick={() => upRef.current.click()}>
+                      <input
+                        type="file"
+                        id="imgupload"
+                        ref={upRef}
+                        style={{ display: 'none' }}
+                        onChange={handleImageSChange}
+                      />
                       <Image
                         radius="md"
                         className="border-2 border-[#828282] rounded-md"
