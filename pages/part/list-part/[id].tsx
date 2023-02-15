@@ -29,14 +29,12 @@ function ListPartDetailPages() {
           <ListDetail List="Category" IsiList={Part ? Part?.MasterPart?.Category : ''} />
           <ListDetail List="Brand" IsiList={Part ? Part?.Brand : ''} />
           <ListDetail List="Part Material" IsiList={Part ? Part?.Material : ''} />
-          <ListDetail
-            List="Manufactured For"
-            IsiList={
-              Part
-                ? `${Part?.ManufacturedFor?.AutomobileBrands.Name} ${Part?.ManufacturedFor?.Model} ${Part?.ManufacturedFor?.YearStart} - ${Part?.ManufacturedFor?.YearEnd}`
-                : ''
-            }
-          />
+          {Part?.ManufacturedFor.map((x: any, i: any) => (
+            <ListDetail
+              List={i === 0 ? 'Manufactured For' : ''}
+              IsiList={`${x.AutomobileBrands?.Name} ${x?.Model} ${x?.YearStart} - ${x?.YearEnd}`}
+            />
+          ))}
           <ListDetail List="Part Number" IsiList={Part ? Part?.Number : ''} />
         </Grid>
       </div>

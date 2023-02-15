@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-shadow */
 import { ScrollArea, Drawer, Text, Table, Menu, Button, Select, Pagination } from '@mantine/core';
 import { startTransition, useState } from 'react';
 import { IconDotsVertical } from '@tabler/icons';
@@ -80,10 +81,10 @@ function ListPartPage() {
     dataParts.Data.map((item: any, index: any) => (
       <tr key={index}>
         <td className="cursor-pointer w-2/12" onClick={() => Router.push(`/part/list-part/${item.ID}`)}>
-          {item.MasterPartName}
+          {item.MasterPart.Name}
         </td>
         <td className="cursor-pointer w-2/12" onClick={() => Router.push(`/part/list-part/${item.ID}`)}>
-          {item.Category}
+          {item.MasterPart.Category}
         </td>
         <td className="cursor-pointer w-2/12" onClick={() => Router.push(`/part/list-part/${item.ID}`)}>
           {item.Brand}
@@ -92,7 +93,9 @@ function ListPartPage() {
           {item.Material}
         </td>
         <td className="cursor-pointer " onClick={() => Router.push(`/part/list-part/${item.ID}`)}>
-          {item.ManufacturedForName}
+          {item.ManufacturedFor.map((item: any) => (
+            <div>{`${item.AutomobileBrands.Name} ${item.Model} ${item.YearStart} - ${item.YearEnd}`}</div>
+          ))}
         </td>
         <td className="cursor-pointer " onClick={() => Router.push(`/part/list-part/${item.ID}`)}>
           {item.Number}

@@ -7,7 +7,7 @@ import useInput from '@hooks/useInput';
 import { Button, createStyles, Grid, MultiSelect, Select, Text, TextInput } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
 import { useRouter } from 'next/router';
-import { startTransition, useEffect } from 'react';
+import { startTransition } from 'react';
 import useSWR from 'swr';
 
 const useStyles = createStyles(() => ({
@@ -36,7 +36,7 @@ function EditListPartPage() {
   const [input, handleInput] = useInput({
     category: Part ? Part?.MasterPart?.Category : '',
     part_name: Part ? Part?.MasterPart?.ID : '',
-    automobile: Part ? [Part?.ManufacturedForId] : '',
+    automobile: Part ? Part?.ManufacturedFor.map((x: any) => x.ID) : [],
     brand: Part ? Part?.Brand : '',
     number: Part ? Part?.Number : '',
     material: Part ? Part?.Material : '',
@@ -55,7 +55,7 @@ function EditListPartPage() {
       method: 'PATCH',
       body: {
         brand: input.brand,
-        manufactured_for_id: input.automobile.flat(),
+        manufactured_for_id: input.automobile,
         master_part_id: input.part_name,
         category: input.category,
         number: Number(input.number),
@@ -69,14 +69,9 @@ function EditListPartPage() {
         message: 'Part berhasil ditambahkan',
         color: 'teal',
       });
-      router.replace('/part');
+      router.replace('/part/list-part');
     }
   };
-  useEffect(() => {
-    // const test = document.querySelector('#test-label')?.nextElementSibling?.childNodes[1].firstChild.text;
-
-    console.log(test);
-  }, [router]);
 
   return (
     <>
@@ -104,6 +99,7 @@ function EditListPartPage() {
                   onChange={(val) =>
                     startTransition(() => {
                       handleInput('category', true)(val);
+                      handleInput('part_name', true)('');
                     })
                   }
                   data={Category?.map(({ Value, Label }: any) => ({ value: Value, label: Label })) || []}
@@ -117,6 +113,8 @@ function EditListPartPage() {
                   value={input.part_name}
                   onChange={handleInput('part_name', true)}
                   data={PartName?.map(({ Name, ID }: any) => ({ value: ID, label: Name })) || []}
+                  searchable
+                  nothingFound="No options"
                   required
                 />
               </Grid.Col>

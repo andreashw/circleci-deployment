@@ -65,7 +65,7 @@ function AddListPartPage() {
         message: 'Part berhasil ditambahkan',
         color: 'teal',
       });
-      router.replace('/part');
+      router.replace('/part/list-part');
     }
   };
   useEffect(() => {
