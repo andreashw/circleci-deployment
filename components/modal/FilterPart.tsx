@@ -126,9 +126,6 @@ function ModalFilterPart({ opened, handleClosed, title, input, handleInput }: Fi
         </div>
       </div>
 
-      <Button className="bg-black hover:bg-black px-6" onClick={handleClosed}>
-        Apply
-      </Button>
       <Button
         className="bg-white hover:bg-white text-black px-6"
         onClick={() =>
@@ -144,6 +141,9 @@ function ModalFilterPart({ opened, handleClosed, title, input, handleInput }: Fi
         }
       >
         Reset
+      </Button>
+      <Button className="bg-black hover:bg-black px-6" onClick={handleClosed}>
+        Apply
       </Button>
     </Modal>
   );

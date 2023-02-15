@@ -5,6 +5,7 @@ import { IconDotsVertical } from '@tabler/icons';
 import useSWR from 'swr';
 import { fetcher } from '@api/fetcher';
 import SearchForm from '@components/Forms/Search';
+import { Edit2, Trash2 } from 'react-feather';
 import Router from 'next/router';
 import { useModals } from '@mantine/modals';
 import { IParts } from '@contracts/parts-interface';
@@ -56,6 +57,7 @@ function ListPartPage() {
       mutate();
     }
   };
+
   function deleteProfile(part: any) {
     console.log('====================================');
     modals.openConfirmModal({
@@ -117,7 +119,9 @@ function ListPartPage() {
             </Menu.Target>
             <Menu.Dropdown>
               <Menu.Label>{item.NameInput}</Menu.Label>
-              <Menu.Item onClick={() => Router.push(`/part/list-part/edit/${item.ID}`)}>Edit</Menu.Item>
+              <Menu.Item icon={<Edit2 />} onClick={() => Router.push(`/part/list-part/edit/${item.ID}`)}>
+                Edit
+              </Menu.Item>
               {/* <Menu.Item icon={<Send />} onClick={() => sendMessage(automobile)}>
               Send Message
             </Menu.Item>
@@ -125,7 +129,7 @@ function ListPartPage() {
             <Menu.Item icon={<Save />} onClick={() => copyProfile(automobile)}>
               Copy
             </Menu.Item> */}
-              <Menu.Item onClick={() => deleteProfile(item)} color="red">
+              <Menu.Item icon={<Trash2 />} onClick={() => deleteProfile(item)} color="red">
                 Delete
               </Menu.Item>
             </Menu.Dropdown>
