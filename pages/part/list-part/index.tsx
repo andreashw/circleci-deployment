@@ -5,7 +5,6 @@ import { IconDotsVertical } from '@tabler/icons';
 import useSWR from 'swr';
 import { fetcher } from '@api/fetcher';
 import SearchForm from '@components/Forms/Search';
-import { Edit2, Trash2 } from 'react-feather';
 import Router from 'next/router';
 import { useModals } from '@mantine/modals';
 import { IParts } from '@contracts/parts-interface';
@@ -28,7 +27,7 @@ function ListPartPage() {
     category: [],
     brand: '',
     page: 1,
-    limit: '6',
+    limit: '100',
   });
 
   const { data: dataParts, mutate } = useSWR(
@@ -63,7 +62,7 @@ function ListPartPage() {
       title: 'Delete',
       children: (
         <Text size="sm" lineClamp={2}>
-          Delete <b>{part.MasterPartName}</b> Part Data ?
+          Delete <b>{part.Brand}</b> Part Data ?
         </Text>
       ),
       centered: true,
@@ -118,9 +117,7 @@ function ListPartPage() {
             </Menu.Target>
             <Menu.Dropdown>
               <Menu.Label>{item.NameInput}</Menu.Label>
-              <Menu.Item icon={<Edit2 />} onClick={() => Router.push(`/part/list-part/edit/${item.ID}`)}>
-                Edit
-              </Menu.Item>
+              <Menu.Item onClick={() => Router.push(`/part/list-part/edit/${item.ID}`)}>Edit</Menu.Item>
               {/* <Menu.Item icon={<Send />} onClick={() => sendMessage(automobile)}>
               Send Message
             </Menu.Item>
@@ -128,7 +125,7 @@ function ListPartPage() {
             <Menu.Item icon={<Save />} onClick={() => copyProfile(automobile)}>
               Copy
             </Menu.Item> */}
-              <Menu.Item icon={<Trash2 />} onClick={() => deleteProfile(item)} color="red">
+              <Menu.Item onClick={() => deleteProfile(item)} color="red">
                 Delete
               </Menu.Item>
             </Menu.Dropdown>
@@ -261,7 +258,7 @@ function ListPartPage() {
           </Button>
         </div>
         <div className="w-full md:w-[386px] flex-row flex h-20">
-          <Button className="bg-black hover:bg-black w-1/2 px-6" onClick={() => setOpened(true)}>
+          <Button className="bg-black hover:bg-black w-full md:w-1/2 px-6" onClick={() => setOpened(true)}>
             Filter
           </Button>
         </div>
@@ -314,7 +311,7 @@ function ListPartPage() {
             />
           </div>
           <Text color="#828282" size={14} className="hidden md:flex">
-            Show {dataParts?.DataPerPage} from {dataParts?.TotalData} jobreport Daily
+            Show {dataParts?.DataPerPage} from {dataParts?.TotalData} List Parts
           </Text>
         </div>
         <Pagination page={dataParts?.CurrentPage} onChange={setPage} total={dataParts?.TotalPage} />

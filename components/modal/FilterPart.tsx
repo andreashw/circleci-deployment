@@ -127,7 +127,7 @@ function ModalFilterPart({ opened, handleClosed, title, input, handleInput }: Fi
       </div>
 
       <Button className="bg-black hover:bg-black px-6" onClick={handleClosed}>
-        Filter
+        Apply
       </Button>
       <Button
         className="bg-white hover:bg-white text-black px-6"

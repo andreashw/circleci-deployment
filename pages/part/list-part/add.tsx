@@ -112,6 +112,8 @@ function AddListPartPage() {
                   value={input.part_name}
                   onChange={handleInput('part_name', true)}
                   data={PartName?.map(({ Name, ID }: any) => ({ value: ID, label: Name })) || []}
+                  searchable
+                  nothingFound="Nothing found"
                   required
                 />
               </Grid.Col>
