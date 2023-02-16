@@ -3,6 +3,7 @@ import { Modal, TextInput, Button, Checkbox } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
 import useSWR from 'swr';
 import { startTransition, useState } from 'react';
+import useInput from '@hooks/useInput';
 
 function Label({ label = '' }) {
   return (
@@ -17,20 +18,32 @@ interface FilterProps {
   handleInput: any;
   opened: boolean;
   title: string;
-  handleClosed(): void;
+  setOpened: any;
 }
-function ModalFilterPart({ opened, handleClosed, title, input, handleInput }: FilterProps) {
-  const [idSpec, setIdspec] = useState<any>([]);
+function ModalFilterPart({ opened, setOpened, title, input, handleInput }: FilterProps) {
   const { data: material } = useSWR<any[]>('/api/v1/item-part/part-materials');
   const { data: category } = useSWR<any[]>('/api/v1/item-part/part-categories');
   const { data: automobile } = useSWR<any[]>('/api/v1/automobiles/');
-  console.log(idSpec);
+
+  const [inputKebalik, handleInputKebalik] = useInput({
+    search: '',
+    sortBy: '',
+    start_amound: '',
+    end_amound: '',
+    selectedId: '',
+    manufacturedFor: '',
+    material: [],
+    category: [],
+    brand: '',
+    page: 1,
+    limit: '100',
+  });
 
   const addCommas = (num: number) => num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   const removeNonNumeric = (num: any) => num.toString().replace(/[^0-9]/g, '');
 
   return (
-    <Modal opened={opened} onClose={handleClosed} title={title}>
+    <Modal opened={opened} onClose={() => setOpened(false)} title={title}>
       {/* Modal content */}
 
       <Label label="Brand" />
@@ -41,7 +54,7 @@ function ModalFilterPart({ opened, handleClosed, title, input, handleInput }: Fi
             value={addCommas(input.brand)}
             onChange={(val) =>
               startTransition(() => {
-                handleInput('brand', true)(val.target.value);
+                handleInputKebalik('brand', true)(val.target.value);
               })
             }
           />
@@ -55,19 +68,22 @@ function ModalFilterPart({ opened, handleClosed, title, input, handleInput }: Fi
               key={i}
               className="pb-2"
               onChange={(e) => {
-                if (input.category.includes(item?.Value)) {
+                if (inputKebalik.category.includes(item?.Value)) {
                   startTransition(() => {
-                    handleInput('category', true)(input.category?.filter((id: any) => id !== item?.Value));
+                    handleInputKebalik(
+                      'category',
+                      true
+                    )(inputKebalik.category?.filter((id: any) => id !== item?.Value));
                   });
                   // setIdspec(idSpec.filter((id: any) => id !== item?.Value));
                 } else {
                   startTransition(() => {
-                    handleInput('category', true)([...input.category, item.Value]);
+                    handleInputKebalik('category', true)([...inputKebalik.category, item.Value]);
                   });
                   // setIdspec([...idSpec, item.Value]);
                 }
               }}
-              checked={input.category.includes(item.Value)}
+              checked={inputKebalik.category.includes(item.Value)}
               label={item?.Value}
             />
           ))}
@@ -81,19 +97,22 @@ function ModalFilterPart({ opened, handleClosed, title, input, handleInput }: Fi
               key={i}
               className="pb-2"
               onChange={(e) => {
-                if (input.material.includes(item?.Value)) {
+                if (inputKebalik.material.includes(item?.Value)) {
                   startTransition(() => {
-                    handleInput('material', true)(input.material?.filter((id: any) => id !== item?.Value));
+                    handleInputKebalik(
+                      'material',
+                      true
+                    )(inputKebalik.material?.filter((id: any) => id !== item?.Value));
                   });
                   // setIdspec(idSpec.filter((id: any) => id !== item?.Value));
                 } else {
                   startTransition(() => {
-                    handleInput('material', true)([...input.material, item.Value]);
+                    handleInputKebalik('material', true)([...inputKebalik.material, item.Value]);
                   });
                   // setIdspec([...idSpec, item.Value]);
                 }
               }}
-              checked={input.material.includes(item.Value)}
+              checked={inputKebalik.material.includes(item.Value)}
               label={item?.Value}
             />
           ))}
@@ -107,19 +126,22 @@ function ModalFilterPart({ opened, handleClosed, title, input, handleInput }: Fi
               key={i}
               className="pb-2"
               onChange={(e) => {
-                if (input.manufacturedFor.includes(item?.ID)) {
+                if (inputKebalik.manufacturedFor.includes(item?.ID)) {
                   startTransition(() => {
-                    handleInput('manufacturedFor', true)(input.manufacturedFor?.filter((id: any) => id !== item?.ID));
+                    handleInputKebalik(
+                      'manufacturedFor',
+                      true
+                    )(inputKebalik.manufacturedFor?.filter((id: any) => id !== item?.ID));
                   });
                   // setIdspec(idSpec.filter((id: any) => id !== item?.ID));
                 } else {
                   startTransition(() => {
-                    handleInput('manufacturedFor', true)([...input.manufacturedFor, item.ID]);
+                    handleInputKebalik('manufacturedFor', true)([...inputKebalik.manufacturedFor, item.ID]);
                   });
                   // setIdspec([...idSpec, item.ID]);
                 }
               }}
-              checked={input.manufacturedFor.includes(item.ID)}
+              checked={inputKebalik.manufacturedFor.includes(item.ID)}
               label={`${item?.AutomobileBrands.Name}`}
             />
           ))}
@@ -137,12 +159,27 @@ function ModalFilterPart({ opened, handleClosed, title, input, handleInput }: Fi
             handleInput('search', true)('');
             handleInput('start_amound', true)('');
             handleInput('end_amound', true)('');
+            setOpened(false);
           })
         }
       >
         Reset
       </Button>
-      <Button className="bg-black hover:bg-black px-6" onClick={handleClosed}>
+      <Button
+        className="bg-black hover:bg-black px-6"
+        onClick={() =>
+          startTransition(() => {
+            handleInput('material', true)(inputKebalik.material);
+            handleInput('category', true)(inputKebalik.category);
+            handleInput('start_date', true)(inputKebalik.start_date);
+            handleInput('end_date', true)(inputKebalik.end_date);
+            handleInput('search', true)(inputKebalik.search);
+            handleInput('start_amound', true)(inputKebalik.start_amound);
+            handleInput('end_amound', true)(inputKebalik.end_amound);
+            setOpened(false);
+          })
+        }
+      >
         Apply
       </Button>
     </Modal>

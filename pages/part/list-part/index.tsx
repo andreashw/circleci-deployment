@@ -252,7 +252,7 @@ function ListPartPage() {
           <SearchForm searchName="List Part" onSubmit={btnSearch} />
           <ModalFilterPart
             opened={opened}
-            handleClosed={() => setOpened(false)}
+            setOpened={setOpened}
             input={input}
             handleInput={handleInput}
             title="Filter List Part"
