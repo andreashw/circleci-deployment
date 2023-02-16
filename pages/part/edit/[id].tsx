@@ -118,7 +118,7 @@ function EditPartPage() {
       <HeadingTop
         text="Edit Part"
         items={[
-          { title: 'Parts', href: '/part' },
+          { title: 'Parts', href: '' },
           { title: 'Edit Part', href: '' },
         ]}
       />
