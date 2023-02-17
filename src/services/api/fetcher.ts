@@ -8,7 +8,7 @@ export interface IPayload {
   params?: object;
 }
 
-export async function fetcher<T>(url: string, payload?: IPayload, blob = false): Promise<T> {
+export async function fetcher<T>(url: string, payload?: IPayload, formdata: boolean = false, blob = false): Promise<T> {
   const token = Cookies.get('token');
   try {
     const fetchData = await axios({
@@ -19,6 +19,7 @@ export async function fetcher<T>(url: string, payload?: IPayload, blob = false):
       params: payload?.params,
       headers: {
         Authorization: `Bearer ${token}`,
+        'Content-Type': formdata ? 'multipart/form-data' : '',
       },
       responseType: blob ? 'blob' : 'json',
     });

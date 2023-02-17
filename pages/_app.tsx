@@ -77,7 +77,16 @@ function Application({ Component, pageProps }: { Component: any; pageProps: any 
             },
 
             // Input styling and props
-            TextInput: {
+            Textarea: {
+              defaultProps: {
+                variant: 'filled',
+              },
+              classNames: {
+                wrapper: 'flex-grow',
+                input: 'border-[#ccc] mt-0 flex-grow flex bg-white rounded-[8px] ',
+              },
+            },
+            Input: {
               defaultProps: {
                 variant: 'filled',
               },

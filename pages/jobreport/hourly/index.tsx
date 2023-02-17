@@ -266,9 +266,10 @@ export default function ReportHourly(/*props*/) {
         </td>
         <td
           onClick={() => router.push(`/jobreport/hourly/${item.ID}`)}
-          style={{ color: item.Paid === true ? '#828282' : 'black' }}
+          style={{ color: item.Paid === true ? '#828282' : 'black', width: '30%' }}
+          className="w-3/12"
         >
-          {item.Task}
+          <p className="max-w-sm text-ellipsis overflow-hidden">{item.Task}</p>
         </td>
         <td>
           {item.Paid === true ? (
@@ -434,7 +435,7 @@ export default function ReportHourly(/*props*/) {
                 <th className="w-[120px]">Project</th>
                 <th>Department</th>
                 <th>Hour</th>
-                <th>Task</th>
+                <th className="w-[120px]">Task</th>
                 <th />
               </tr>
             </thead>

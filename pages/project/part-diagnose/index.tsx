@@ -24,7 +24,7 @@ function PartDiagnosePage() {
   const onDeleteData = async (project: IProject) => {
     console.log(project.ID);
 
-    const response: IProject | undefined = await fetcher(`/api/v1/projects/${project.ID}`, {
+    const response: IProject | undefined = await fetcher(`/api/v1/project-part/${project.ID}`, {
       method: 'DELETE',
     });
     console.log('Response Delete from API ', response);
@@ -74,21 +74,30 @@ function PartDiagnosePage() {
             />
           </td>
         )}
-        <td className="cursor-pointer w-2/12" onClick={() => Router.push(`/project/list-project/${item.ID}`)}>
-          {item.Name}
+        <td className="cursor-pointer w-2/12" onClick={() => Router.push(`/project/part-diagnose/${item.ID}`)}>
+          {item.Project.Name}
         </td>
-        <td className="cursor-pointer " onClick={() => Router.push(`/project/list-project/${item.ID}`)}>
-          {item.Client.Name}
+        <td className="cursor-pointer " onClick={() => Router.push(`/project/part-diagnose/${item.ID}`)}>
+          {item.Part.MasterPart.Category}
         </td>
-        <td className="cursor-pointer w-2/12 " onClick={() => Router.push(`/project/list-project/${item.ID}`)}>
-          {item.PIC.Name}
+        <td className="cursor-pointer w-2/12 " onClick={() => Router.push(`/project/part-diagnose/${item.ID}`)}>
+          {item.Part.MasterPart.Name}- {item.Part.Brand}
         </td>
-        <td className="cursor-pointer " onClick={() => Router.push(`/project/list-project/${item.ID}`)}>
-          {item.Automobile.Model} - {item.Automobile.year_start}
+        <td className="cursor-pointer " onClick={() => Router.push(`/project/part-diagnose/${item.ID}`)}>
+          {item.Quantity}
         </td>
 
-        <td className="cursor-pointer w-2/12" onClick={() => Router.push(`/project/list-project/${item.ID}`)}>
-          {item.PowerType}
+        <td className="cursor-pointer w-2/12" onClick={() => Router.push(`/project/part-diagnose/${item.ID}`)}>
+          {item.Condition}
+        </td>
+        <td className="cursor-pointer w-2/12" onClick={() => Router.push(`/project/part-diagnose/${item.ID}`)}>
+          {item.Action}
+        </td>
+        <td className="cursor-pointer w-2/12" onClick={() => Router.push(`/project/part-diagnose/${item.ID}`)}>
+          {item.StorageLocation}
+        </td>
+        <td className="cursor-pointer w-2/12" onClick={() => Router.push(`/project/part-diagnose/${item.ID}`)}>
+          {item.Note}
         </td>
         <td>
           <Menu>
@@ -108,7 +117,7 @@ function PartDiagnosePage() {
             </Menu.Target>
             <Menu.Dropdown>
               <Menu.Label>{item.name}</Menu.Label>
-              <Menu.Item icon={<Edit2 />} onClick={() => Router.push(`/project/list-project/edit/${item.ID}`)}>
+              <Menu.Item icon={<Edit2 />} onClick={() => Router.push(`/project/part-diagnose/edit/${item.ID}`)}>
                 Edit Project
               </Menu.Item>
               {/* <Menu.Item icon={<Send />} onClick={() => sendMessage(automobile)}>

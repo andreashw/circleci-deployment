@@ -5,7 +5,7 @@ import useInput from '@hooks/useInput';
 import { Button, createStyles, Grid, Image, Select, Text, Textarea, TextInput } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
 import { IconChevronDown } from '@tabler/icons';
-import Router from 'next/router';
+import Router, { useRouter } from 'next/router';
 import { startTransition, useRef } from 'react';
 import useSWR from 'swr';
 
@@ -26,20 +26,23 @@ const useStyles = createStyles(() => ({
     height: '56px',
   },
 }));
-function ProjectAddPage() {
+function ProjectEditPage() {
   const { classes } = useStyles();
   const upRef = useRef<any>(null);
+  const router = useRouter();
+  const id = router.query.id as unknown as number;
+  const { data: DataPartProject } = useSWR<any>(`/api/v1/project-part/${id}`);
 
   const [input, handleInput] = useInput({
-    project: '',
-    category: '',
-    part_name: '',
-    qty: '',
-    condition: '',
-    action: '',
-    storage: '',
-    notes: '',
-    img: [],
+    project: DataPartProject?.ProjectId,
+    category: DataPartProject?.Part?.MasterPart?.Category,
+    part_name: DataPartProject?.Part?.MasterPart?.ID,
+    qty: DataPartProject?.Quantity,
+    condition: DataPartProject?.Condition.toLowerCase(),
+    action: DataPartProject?.Action.toLowerCase(),
+    storage: DataPartProject?.StorageLocation,
+    notes: DataPartProject?.Note,
+    img: DataPartProject?.ProjectPartImages,
     imgFile: [],
   });
 
@@ -50,9 +53,9 @@ function ProjectAddPage() {
   const doSubmit = async (e: any) => {
     e.preventDefault();
     const response = await fetcher(
-      '/api/v1/project-part/',
+      `/api/v1/project-part/${id}`,
       {
-        method: 'POST',
+        method: 'PATCH',
         body: {
           project_id: Number(input.project),
           part_id: Number(input.part_name),
@@ -62,7 +65,7 @@ function ProjectAddPage() {
           note: input.notes,
           storage_location: input.storage,
           // delete_images: 'tes',
-          images: input.imgFile,
+          images: input.img,
         },
       },
       true
@@ -74,7 +77,7 @@ function ProjectAddPage() {
         message: 'Project berhasil ditambahkan',
         color: 'teal',
       });
-      Router.replace('/project/part-diagnose');
+      Router.replace('/project');
     }
   };
   console.log('====================================');
@@ -299,4 +302,4 @@ function ProjectAddPage() {
   );
 }
 
-export default ProjectAddPage;
+export default ProjectEditPage;
