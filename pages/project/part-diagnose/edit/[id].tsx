@@ -8,6 +8,11 @@ import { IconChevronDown } from '@tabler/icons';
 import Router, { useRouter } from 'next/router';
 import { startTransition, useRef } from 'react';
 import useSWR from 'swr';
+import { Url } from 'url';
+
+interface Images {
+	Url: string;
+}
 
 const useStyles = createStyles(() => ({
   label: {
@@ -104,12 +109,12 @@ function ProjectEditPage() {
   function handleImageSChange(e: any) {
     if (e.target.files.length) {
       const newFiles: File[] = [];
-      const newPrevs: string[] = [];
+      const newPrevs: Images[] = [];
       for (let i = 0; i < e.target.files.length; i++) {
         const file = e.target.files[i] as File;
-        const url = URL.createObjectURL(file);
+        const url = URL.createObjectURL(file);		
         newFiles.push(file);
-        newPrevs.push({ Url: url.toString() });
+        newPrevs.push({Url: url});
       }
       startTransition(() => {
         handleInput('img', true)([...input.img, ...newPrevs]);
