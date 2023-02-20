@@ -1,4 +1,4 @@
-import { ScrollArea, Drawer, Text, Table, Menu, Button, Checkbox, Tooltip } from '@mantine/core';
+import { ScrollArea, Drawer, Text, Table, Menu, Button, Checkbox, Tooltip, Pagination } from '@mantine/core';
 import { startTransition, useState } from 'react';
 import { IconDotsVertical } from '@tabler/icons';
 import useSWR from 'swr';
@@ -10,12 +10,24 @@ import { useModals } from '@mantine/modals';
 import { IProject } from '@contracts/project-interface';
 import { Th } from 'pages/expenses';
 import useInput from '@hooks/useInput';
+import { showNotification } from '@mantine/notifications';
 
 function PartDiagnosePage() {
   const modals = useModals();
   const [drawerOpened, toggleDrawer] = useState(false);
-
-  const { data: dataVendor, mutate } = useSWR('/api/v1/project-part/');
+  const [input, handleInput] = useInput({
+    search: '',
+    type: '',
+    start_amound: '',
+    end_amound: '',
+    selectedId: '',
+    start_date: '',
+    end_date: '',
+    fillter_type: [],
+    fillter_project: [],
+    page: 1,
+  });
+  const { data: dataVendor, mutate } = useSWR(`/api/v1/project-part/?page=${input.page}`);
 
   const [idSpec, setIdspec] = useState<any>([]);
   const [SelectBTNBool, setSelectBTNBool] = useState(true);
@@ -30,9 +42,15 @@ function PartDiagnosePage() {
     console.log('Response Delete from API ', response);
     if (response) {
       // Router.reload();
+      showNotification({
+        title: 'Success',
+        message: 'Delete Success',
+        color: 'teal',
+      });
       mutate();
     }
   };
+
   function deleteProfile(project: IProject) {
     console.log('====================================');
     modals.openConfirmModal({
@@ -136,18 +154,11 @@ function PartDiagnosePage() {
       </tr>
     ));
 
-  const [input, handleInput] = useInput({
-    search: '',
-    type: '',
-    start_amound: '',
-    end_amound: '',
-    selectedId: '',
-    start_date: '',
-    end_date: '',
-    fillter_type: [],
-    fillter_project: [],
-  });
-
+  function setPage(page: any) {
+    startTransition(() => {
+      handleInput('page', true)(page);
+    });
+  }
   function btnSearch(search: any) {
     startTransition(() => {
       console.log('====================================');
@@ -395,12 +406,12 @@ function PartDiagnosePage() {
           Tidak ada data.
         </Text>
       )}
-      {/* <div className="flex justify-between my-5 p-6">
+      <div className="flex justify-between my-5 p-6">
         <Text color="#828282" size={14}>
-          Show 10 from 1020 Project
+          Show {dataVendor?.DataPerPage} from {dataVendor?.TotalData} Project
         </Text>
-        <Pagination page={activePage} onChange={setPage} total={10} />
-      </div> */}
+        <Pagination page={dataVendor?.CurrentPage} onChange={setPage} total={dataVendor?.TotalPage} />
+      </div>
     </>
   );
 }

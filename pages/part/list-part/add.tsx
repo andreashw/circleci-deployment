@@ -2,8 +2,9 @@ import { fetcher } from '@api/fetcher';
 import { Dropdown } from '@components/Inputs/Dropdown';
 import HeadingTop from '@components/TopComponents/Heading';
 import useInput from '@hooks/useInput';
-import { Button, createStyles, Select, Grid, MultiSelect, Text, TextInput } from '@mantine/core';
+import { Button, createStyles, Select, Grid, MultiSelect, Text, TextInput, NumberInput } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
+import { IconChevronDown } from '@tabler/icons';
 import { useRouter } from 'next/router';
 import { startTransition, useEffect } from 'react';
 import useSWR from 'swr';
@@ -109,6 +110,7 @@ function AddListPartPage() {
                 <Select
                   label="Part Name"
                   placeholder="Select Parts"
+                  rightSection={<IconChevronDown size={14} />}
                   value={input.part_name}
                   onChange={handleInput('part_name', true)}
                   data={PartName?.map(({ Name, ID }: any) => ({ value: ID, label: Name })) || []}
@@ -123,6 +125,7 @@ function AddListPartPage() {
                   id="test"
                   label="Manufactured For"
                   placeholder="Select Automobiles"
+                  rightSection={<IconChevronDown size={14} />}
                   value={input.automobile}
                   // data={[]}
                   data={
@@ -149,11 +152,11 @@ function AddListPartPage() {
                 />
               </Grid.Col>
               <Grid.Col md={12}>
-                <TextInput
+                <NumberInput
                   label="Part Number"
                   placeholder="Enter Part Number"
                   value={input.number}
-                  onChange={handleInput('number')}
+                  onChange={handleInput('number', true)}
                   required
                 />
               </Grid.Col>
@@ -161,6 +164,7 @@ function AddListPartPage() {
                 <Select
                   label="Part Material"
                   placeholder="Select Material"
+                  rightSection={<IconChevronDown size={14} />}
                   value={input.material}
                   onChange={handleInput('material', true)}
                   data={Materials?.map(({ Value, Label }: any) => ({ value: Value, label: Label })) || []}

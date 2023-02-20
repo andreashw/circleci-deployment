@@ -4,7 +4,7 @@ import { IconChevronDown } from '@tabler/icons';
 
 import HeadingTop from '@components/TopComponents/Heading';
 import useInput from '@hooks/useInput';
-import { Button, createStyles, Grid, MultiSelect, Select, Text, TextInput } from '@mantine/core';
+import { Button, createStyles, Grid, MultiSelect, Select, Text, TextInput, NumberInput } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
 import { useRouter } from 'next/router';
 import { startTransition } from 'react';
@@ -150,11 +150,11 @@ function EditListPartPage() {
                 />
               </Grid.Col>
               <Grid.Col md={12}>
-                <TextInput
+                <NumberInput
                   label="Part Number"
                   placeholder="Enter Part Number"
                   value={input.number}
-                  onChange={handleInput('number')}
+                  onChange={handleInput('number', true)}
                   required
                 />
               </Grid.Col>

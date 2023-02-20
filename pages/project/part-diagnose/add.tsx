@@ -2,7 +2,7 @@ import { fetcher } from '@api/fetcher';
 import { RightSection } from '@components/Inputs/RightSection';
 import HeadingTop from '@components/TopComponents/Heading';
 import useInput from '@hooks/useInput';
-import { Button, createStyles, Grid, Image, Select, Text, Textarea, TextInput } from '@mantine/core';
+import { Button, createStyles, Grid, Image, Select, Text, Textarea, TextInput, NumberInput } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
 import { IconChevronDown } from '@tabler/icons';
 import Router from 'next/router';
@@ -62,10 +62,9 @@ function ProjectAddPage() {
           note: input.notes,
           storage_location: input.storage,
           // delete_images: 'tes',
-          images: input.imgFile,
+          images: input.imgFile?.[0],
         },
       },
-      true,
       true
     )
       .then((res) => {
@@ -77,7 +76,7 @@ function ProjectAddPage() {
           message: 'Project berhasil ditambahkan',
           color: 'teal',
         });
-        // Router.replace('/project');
+        Router.replace('/project/part-diagnose');
       })
       .catch((err) => {
         console.log('tes');
@@ -198,11 +197,11 @@ function ProjectAddPage() {
               </Grid.Col>
 
               <Grid.Col md={12}>
-                <TextInput
+                <NumberInput
                   label="Quantity"
                   placeholder="e.g 78"
                   value={input.qty.toString()}
-                  onChange={handleInput('qty')}
+                  onChange={handleInput('qty', true)}
                   rightSection={<RightSection label="Pcs" />}
                 />
               </Grid.Col>
@@ -272,7 +271,7 @@ function ProjectAddPage() {
                       <Image radius="md" src={item} width={80} height={80} />
                     </div>
                   ))}
-                  {input?.img?.length < 3 && (
+                  {input?.img?.length < 1 && (
                     <div className="p-2 cursor-pointer" onClick={() => upRef.current.click()}>
                       <input
                         type="file"
