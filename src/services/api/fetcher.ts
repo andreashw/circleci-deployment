@@ -32,6 +32,8 @@ export async function fetcher<T>(url: string, payload?: IPayload, formdata: bool
       Router.replace('/login');
     } else if (error.response.status === 400) {
       throw error.response;
+    } else if (error.response.status === 500) {
+      throw error.response;
     } else if (error.response.status === 404) {
       console.log('====================================');
       console.log(error.response);

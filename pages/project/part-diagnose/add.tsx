@@ -49,7 +49,7 @@ function ProjectAddPage() {
 
   const doSubmit = async (e: any) => {
     e.preventDefault();
-    const response = await fetcher(
+    await fetcher(
       '/api/v1/project-part/',
       {
         method: 'POST',
@@ -65,17 +65,30 @@ function ProjectAddPage() {
           images: input.imgFile,
         },
       },
+      true,
       true
-    );
-
-    if (response) {
-      showNotification({
-        title: 'Success',
-        message: 'Project berhasil ditambahkan',
-        color: 'teal',
+    )
+      .then((res) => {
+        console.log('====================================');
+        console.log(res);
+        console.log('====================================');
+        showNotification({
+          title: 'Success',
+          message: 'Project berhasil ditambahkan',
+          color: 'teal',
+        });
+        // Router.replace('/project');
+      })
+      .catch((err) => {
+        console.log('tes');
+        console.log(err);
+        showNotification({
+          title: 'ERROR',
+          message: err.data.error?.Message,
+          color: 'red',
+        });
+        console.log('====================================');
       });
-      Router.replace('/project/part-diagnose');
-    }
   };
   console.log('====================================');
   console.log(input);

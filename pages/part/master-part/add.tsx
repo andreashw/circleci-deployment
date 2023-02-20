@@ -61,7 +61,7 @@ function AddMasterPartPage() {
       });
   };
 
-  const { data: category } = useSWR<any[]>('/api/v1/expense/list-types');
+  const { data: category } = useSWR<any[]>('/api/v1/item-part/part-categories');
 
   return (
     <>
