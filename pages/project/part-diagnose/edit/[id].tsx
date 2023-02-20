@@ -36,7 +36,7 @@ function ProjectEditPage() {
   const [input, handleInput] = useInput({
     project: DataPartProject?.ProjectId,
     category: DataPartProject?.Part?.MasterPart?.Category,
-    part_name: DataPartProject?.Part?.MasterPartId,
+    part_name: DataPartProject?.Part?.ID,
     qty: DataPartProject?.Quantity,
     condition: DataPartProject?.Condition.toLowerCase(),
     action: DataPartProject?.Action.toLowerCase(),
@@ -86,7 +86,7 @@ function ProjectEditPage() {
         console.log(err);
         showNotification({
           title: 'ERROR',
-          message: err.data.error.Message,
+          message: err?.data?.error?.Message,
           color: 'red',
         });
         console.log('====================================');
@@ -117,6 +117,9 @@ function ProjectEditPage() {
       });
     }
   }
+  console.log('====================================');
+  console.log(input);
+  console.log('====================================');
   return (
     <>
       <HeadingTop
@@ -181,7 +184,7 @@ function ProjectEditPage() {
                   }}
                   rightSection={<IconChevronDown size={14} />}
                   data={
-                    PartName && input.category
+                    PartName
                       ? PartName.map((y: any) => ({
                           value: y.ID.toString(),
                           label: `${y.MasterPart.Name}-${y.Brand}`,
