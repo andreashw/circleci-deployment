@@ -65,7 +65,7 @@ function ProjectEditPage() {
           note: input.notes,
           storage_location: input.storage,
           // delete_images: 'tes',
-          images: input.imgFile,
+          images: input.imgFile?.[0],
         },
       },
       true

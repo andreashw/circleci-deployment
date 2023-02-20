@@ -200,7 +200,7 @@ function ProjectAddPage() {
                 <NumberInput
                   label="Quantity"
                   placeholder="e.g 78"
-                  value={input.qty.toString()}
+                  value={input.qty}
                   onChange={handleInput('qty', true)}
                   rightSection={<RightSection label="Pcs" />}
                 />
