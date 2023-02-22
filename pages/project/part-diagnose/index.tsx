@@ -11,23 +11,23 @@ import { IProject } from '@contracts/project-interface';
 import { Th } from 'pages/expenses';
 import useInput from '@hooks/useInput';
 import { showNotification } from '@mantine/notifications';
+import ModalFilterPartDiagnose from '@components/modal/FilterPartDiagnose';
 
 function PartDiagnosePage() {
   const modals = useModals();
   const [drawerOpened, toggleDrawer] = useState(false);
   const [input, handleInput] = useInput({
     search: '',
-    type: '',
-    start_amound: '',
-    end_amound: '',
-    selectedId: '',
-    start_date: '',
-    end_date: '',
-    fillter_type: [],
-    fillter_project: [],
+    sortBy: '',
+    category: '',
+    automobile: '',
+    action: '',
+    condition: '',
     page: 1,
   });
-  const { data: dataVendor, mutate } = useSWR(`/api/v1/project-part/?page=${input.page}`);
+  const { data: dataVendor, mutate } = useSWR(
+    `/api/v1/project-part/?page=${input.page}&sortBy=${input.sortBy}&action=${input.action}&condition=${input.condition}&projectName=${input.automobile}&search=${input.search}&category=${input.category}`
+  );
 
   const [idSpec, setIdspec] = useState<any>([]);
   const [SelectBTNBool, setSelectBTNBool] = useState(true);
@@ -181,14 +181,14 @@ function PartDiagnosePage() {
         // setSortBy(sortBy);
         setReverseSortDirection((old) => !old);
         startTransition(() => {
-          handleInput('sortBy', true)('name asc');
+          handleInput('sortBy', true)('Project.name asc');
         });
       } else {
         console.log(option, 'dsc2');
         setReverseSortDirection((old) => !old);
 
         startTransition(() => {
-          handleInput('sortBy', true)('name desc');
+          handleInput('sortBy', true)('Project.name desc');
         });
       }
     }
@@ -213,13 +213,13 @@ function PartDiagnosePage() {
         console.log(option, 'asc3');
         setReverseSortDirection((old) => !old);
         startTransition(() => {
-          handleInput('sortBy', true)('part_name asc');
+          handleInput('sortBy', true)('MasterPart.name asc');
         });
       } else {
         console.log(option, 'dsc4');
         setReverseSortDirection((old) => !old);
         startTransition(() => {
-          handleInput('sortBy', true)('part_name desc');
+          handleInput('sortBy', true)('MasterPart.name desc');
         });
       }
     }
@@ -228,13 +228,13 @@ function PartDiagnosePage() {
         console.log(option, 'asc3');
         setReverseSortDirection((old) => !old);
         startTransition(() => {
-          handleInput('sortBy', true)('qty asc');
+          handleInput('sortBy', true)('quantity asc');
         });
       } else {
         console.log(option, 'dsc4');
         setReverseSortDirection((old) => !old);
         startTransition(() => {
-          handleInput('sortBy', true)('qty desc');
+          handleInput('sortBy', true)('quantity desc');
         });
       }
     }
@@ -243,13 +243,13 @@ function PartDiagnosePage() {
         console.log(option, 'asc3');
         setReverseSortDirection((old) => !old);
         startTransition(() => {
-          handleInput('sortBy', true)('condition asc');
+          handleInput('sortBy', true)('project_parts.condition asc');
         });
       } else {
         console.log(option, 'dsc4');
         setReverseSortDirection((old) => !old);
         startTransition(() => {
-          handleInput('sortBy', true)('condition desc');
+          handleInput('sortBy', true)('project_parts.condition desc');
         });
       }
     }
@@ -273,13 +273,13 @@ function PartDiagnosePage() {
         console.log(option, 'asc3');
         setReverseSortDirection((old) => !old);
         startTransition(() => {
-          handleInput('sortBy', true)('storage asc');
+          handleInput('sortBy', true)('storage_location asc');
         });
       } else {
         console.log(option, 'dsc4');
         setReverseSortDirection((old) => !old);
         startTransition(() => {
-          handleInput('sortBy', true)('storage desc');
+          handleInput('sortBy', true)('storage_location desc');
         });
       }
     }
@@ -288,17 +288,19 @@ function PartDiagnosePage() {
         console.log(option, 'asc3');
         setReverseSortDirection((old) => !old);
         startTransition(() => {
-          handleInput('sortBy', true)('notes asc');
+          handleInput('sortBy', true)('note asc');
         });
       } else {
         console.log(option, 'dsc4');
         setReverseSortDirection((old) => !old);
         startTransition(() => {
-          handleInput('sortBy', true)('notes desc');
+          handleInput('sortBy', true)('note desc');
         });
       }
     }
   }
+
+  const [opened, setOpened] = useState(false);
 
   return (
     <>
@@ -311,6 +313,13 @@ function PartDiagnosePage() {
         </Text>
         <div className="flex flex-col sm:flex-row pb-4 sm:pb-0">
           <SearchForm searchName="Expenses" onSubmit={btnSearch} />
+          <ModalFilterPartDiagnose
+            opened={opened}
+            setOpened={setOpened}
+            input={input}
+            handleInput={handleInput}
+            title="Filter List Part"
+          />
           {SelectBTNBool ? (
             <>
               <Button className="bg-black hover:bg-black px-6 " onClick={() => setSelectBTNBool(!SelectBTNBool)}>
@@ -339,6 +348,12 @@ function PartDiagnosePage() {
               Add New Part Diagnose
             </Button>
           )}
+        </div>
+
+        <div className="w-full md:w-[386px] flex-row flex h-20">
+          <Button className="bg-black hover:bg-black w-full md:w-1/2 px-6" onClick={() => setOpened(true)}>
+            Filter
+          </Button>
         </div>
       </div>
       {dataVendor.length > 0 ? (

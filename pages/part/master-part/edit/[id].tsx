@@ -28,7 +28,7 @@ function EditMasterPartPage() {
   const id = router.query.id as unknown as number;
   const { data: Part } = useSWR<any>(`/api/v1/master-part/${id}`);
 
-  const { data: category } = useSWR<any[]>('/api/v1/expense/list-types');
+  const { data: category } = useSWR<any[]>('/api/v1/item-part/part-categories');
 
   const [input, handleInput] = useInput({
     name_input: Part ? Part?.Name : '',

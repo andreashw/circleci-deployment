@@ -8,6 +8,7 @@ import { IconChevronDown } from '@tabler/icons';
 import Router from 'next/router';
 import { startTransition, useRef } from 'react';
 import useSWR from 'swr';
+// import imageCompression from 'browser-image-compression';
 
 const useStyles = createStyles(() => ({
   label: {
@@ -49,24 +50,25 @@ function ProjectAddPage() {
 
   const doSubmit = async (e: any) => {
     e.preventDefault();
-    await fetcher(
-      '/api/v1/project-part/',
-      {
-        method: 'POST',
-        body: {
-          project_id: Number(input.project),
-          part_id: Number(input.part_name),
-          action: input.action,
-          condition: input.condition,
-          quantity: Number(input.qty),
-          note: input.notes,
-          storage_location: input.storage,
-          // delete_images: 'tes',
-          images: input.imgFile?.[0],
-        },
-      },
-      true
-    )
+    const formData = new FormData();
+    formData.append('project_id', input.project);
+    formData.append('part_id', input.part_name);
+    formData.append('action', input.action);
+    formData.append('condition', input.condition);
+    formData.append('storage_location', input.storage);
+    formData.append('quantity', input.qty);
+    formData.append('note', input.notes);
+
+    await Promise.all(
+      input.imgFile.map(async (i: any) => {
+        formData.append('images', i);
+        console.log(i);
+      })
+    );
+    await fetcher('/api/v1/project-part/', {
+      method: 'POST',
+      body: formData,
+    })
       .then((res) => {
         console.log('====================================');
         console.log(res);
@@ -95,6 +97,7 @@ function ProjectAddPage() {
   function BTNDeleteImg(item: '') {
     startTransition(() => {
       handleInput('img', true)(input.img.filter((x: any, i: any) => i !== item));
+      handleInput('imgFile', true)(input.imgFile.filter((x: any, i: any) => i !== item));
     });
   }
 
@@ -240,6 +243,7 @@ function ProjectAddPage() {
                   placeholder="e.g Rak/03"
                   value={input.storage.toString()}
                   onChange={handleInput('storage')}
+                  required
                 />
               </Grid.Col>
 
@@ -271,7 +275,7 @@ function ProjectAddPage() {
                       <Image radius="md" src={item} width={80} height={80} />
                     </div>
                   ))}
-                  {input?.img?.length < 1 && (
+                  {input?.img?.length < 3 && (
                     <div className="p-2 cursor-pointer" onClick={() => upRef.current.click()}>
                       <input
                         type="file"

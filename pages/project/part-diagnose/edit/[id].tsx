@@ -8,10 +8,9 @@ import { IconChevronDown } from '@tabler/icons';
 import Router, { useRouter } from 'next/router';
 import { startTransition, useRef } from 'react';
 import useSWR from 'swr';
-import { Url } from 'url';
 
 interface Images {
-	Url: string;
+  Url: string;
 }
 
 const useStyles = createStyles(() => ({
@@ -49,6 +48,7 @@ function ProjectEditPage() {
     notes: DataPartProject?.Note,
     img: DataPartProject?.ProjectPartImages,
     imgFile: [],
+    imgDelete: [],
   });
 
   const { data: Project } = useSWR('/api/v1/projects/');
@@ -57,24 +57,25 @@ function ProjectEditPage() {
 
   const doSubmit = async (e: any) => {
     e.preventDefault();
-    await fetcher(
-      `/api/v1/project-part/${id}`,
-      {
-        method: 'PATCH',
-        body: {
-          project_id: Number(input.project),
-          part_id: Number(input.part_name),
-          action: input.action,
-          condition: input.condition,
-          quantity: Number(input.qty),
-          note: input.notes,
-          storage_location: input.storage,
-          // delete_images: 'tes',
-          images: input.imgFile?.[0],
-        },
-      },
-      true
-    )
+    const formData = new FormData();
+    formData.append('project_id', input.project);
+    formData.append('part_id', input.part_name);
+    formData.append('action', input.action);
+    formData.append('condition', input.condition);
+    formData.append('storage_location', input.storage);
+    formData.append('quantity', input.qty);
+    formData.append('delete_images', input.imgDelete.flat());
+    formData.append('note', input.notes);
+    await Promise.all(
+      input.imgFile.map(async (i: any) => {
+        formData.append('images', i);
+        console.log(i);
+      })
+    );
+    await fetcher(`/api/v1/project-part/${id}`, {
+      method: 'PATCH',
+      body: formData,
+    })
       .then((res) => {
         console.log('====================================');
         console.log(res);
@@ -100,10 +101,16 @@ function ProjectEditPage() {
   console.log('====================================');
   console.log(input);
   console.log('====================================');
-  function BTNDeleteImg(item: '') {
-    startTransition(() => {
+
+  async function BTNDeleteImg(item: '', ID: any) {
+    if (ID) {
+      handleInput('imgDelete', true)([...input.imgDelete, input.img.filter((x: any) => x.ID === ID)?.[0].Key]);
       handleInput('img', true)(input.img.filter((x: any, i: any) => i !== item));
-    });
+    } else {
+      startTransition(() => {
+        handleInput('img', true)(input.img.filter((x: any, i: any) => i !== item));
+      });
+    }
   }
 
   function handleImageSChange(e: any) {
@@ -112,9 +119,9 @@ function ProjectEditPage() {
       const newPrevs: Images[] = [];
       for (let i = 0; i < e.target.files.length; i++) {
         const file = e.target.files[i] as File;
-        const url = URL.createObjectURL(file);		
+        const url = URL.createObjectURL(file);
         newFiles.push(file);
-        newPrevs.push({Url: url});
+        newPrevs.push({ Url: url });
       }
       startTransition(() => {
         handleInput('img', true)([...input.img, ...newPrevs]);
@@ -251,6 +258,7 @@ function ProjectEditPage() {
                   placeholder="e.g Rak/03"
                   value={input.storage.toString()}
                   onChange={handleInput('storage')}
+                  required
                 />
               </Grid.Col>
 
@@ -271,7 +279,7 @@ function ProjectEditPage() {
                     <div key={index} className="p-2 relative">
                       <div className=" absolute top-2 cursor-pointer right-2 z-10 bg-white rounded-full">
                         <Image
-                          onClick={() => BTNDeleteImg(index)}
+                          onClick={() => BTNDeleteImg(index, item?.ID)}
                           radius="md"
                           className="border-2 border-danger rounded-full"
                           src="/icon_delete_img.svg"
@@ -282,7 +290,7 @@ function ProjectEditPage() {
                       <Image radius="md" src={item?.Url} width={80} height={80} />
                     </div>
                   ))}
-                  {input?.img?.length < 1 && (
+                  {input?.img?.length < 3 && (
                     <div className="p-2 cursor-pointer" onClick={() => upRef.current.click()}>
                       <input
                         type="file"
