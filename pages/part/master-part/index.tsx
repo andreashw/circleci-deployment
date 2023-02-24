@@ -1,4 +1,4 @@
-import { ScrollArea, Drawer, Text, Table, Menu, Button } from '@mantine/core';
+import { ScrollArea, Drawer, Text, Table, Menu, Button, Checkbox, Tooltip, Pagination, Select } from '@mantine/core';
 import { IconDotsVertical } from '@tabler/icons';
 import useSWR from 'swr';
 import { fetcher } from '@api/fetcher';
@@ -10,6 +10,7 @@ import { IParts } from '@contracts/parts-interface';
 import useInput from '@hooks/useInput';
 import { startTransition, useState } from 'react';
 import { Th } from '@components/Th';
+import { showNotification } from '@mantine/notifications';
 
 function MasterPartPage() {
   const modals = useModals();
@@ -25,10 +26,16 @@ function MasterPartPage() {
     end_date: '',
     fillter_type: [],
     fillter_project: [],
+    page: 1,
+    limit: '100',
   });
 
-  const { data: dataParts, mutate } = useSWR(`/api/v1/master-part/?sortBy=${input.sortBy}&search=${input.search}
+  const { data: dataParts, mutate } =
+    useSWR(`/api/v1/master-part/?sortBy=${input.sortBy}&page=${input.page}&limit=${input.limit}&search=${input.search}
 `);
+  const [idSpec, setIdspec] = useState<any>([]);
+  const [SelectBTNBool, setSelectBTNBool] = useState(true);
+  const [checkedBTNBool, setCheckedBTNBool] = useState(false);
 
   function btnSearch(search: any) {
     startTransition(() => {
@@ -47,6 +54,33 @@ function MasterPartPage() {
       mutate();
     }
   };
+
+  const doDeleteMultiple = async () => {
+    await fetcher('/api/v1/master-part/mass', {
+      method: 'DELETE',
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
+      body: { ids: idSpec },
+    })
+      .then((res: any) => {
+        showNotification({
+          title: 'Success',
+          message: res?.Message,
+          color: 'teal',
+        });
+        setCheckedBTNBool(false);
+        setIdspec([]);
+        setSelectBTNBool(!SelectBTNBool);
+        mutate();
+      })
+      .catch((err) => {
+        showNotification({
+          title: 'Error',
+          message: err?.Message,
+          color: 'red',
+        });
+      });
+  };
+
   function deleteProfile(part: any) {
     console.log('====================================');
     modals.openConfirmModal({
@@ -67,9 +101,36 @@ function MasterPartPage() {
     // });
   }
 
+  function setPage(page: any) {
+    startTransition(() => {
+      handleInput('page', true)(page);
+    });
+  }
+  function onChangeSelectLimit(limit: any) {
+    handleInput('page', true)('1');
+    startTransition(() => {
+      handleInput('limit', true)(limit);
+    });
+  }
+
   const body = () =>
-    dataParts.map((item: any, index: any) => (
+    dataParts?.Data?.map((item: any, index: any) => (
       <tr key={index}>
+        {!SelectBTNBool && (
+          <td className="w-8">
+            <Checkbox
+              // eslint-disable-next-line @typescript-eslint/no-unused-vars
+              onChange={(e) => {
+                if (idSpec.includes(item?.ID)) {
+                  setIdspec(idSpec.filter((id: number) => id !== item?.ID));
+                } else {
+                  setIdspec([...idSpec, item.ID]);
+                }
+              }}
+              checked={idSpec.includes(item.ID)}
+            />
+          </td>
+        )}
         <td className="cursor-pointer" onClick={() => Router.push(`/part/master-part/${item.ID}`)}>
           {item.Name}
         </td>
@@ -166,16 +227,62 @@ function MasterPartPage() {
         </Text>
         <div className="flex flex-col sm:flex-row pb-4 sm:pb-0">
           <SearchForm searchName="Master Part" onSubmit={btnSearch} />
-          <Button className="bg-black hover:bg-black px-6" onClick={() => Router.push('./master-part/add')}>
-            Add New Master Parts
-          </Button>
+          {SelectBTNBool ? (
+            <>
+              <Button className="bg-black hover:bg-black px-6 " onClick={() => setSelectBTNBool(!SelectBTNBool)}>
+                Select
+              </Button>
+              <div id="gap" className="h-6 md:w-6" />
+            </>
+          ) : (
+            <>
+              <Button className="bg-black hover:bg-black px-6 " onClick={() => setSelectBTNBool(!SelectBTNBool)}>
+                Cancel
+              </Button>
+              <div id="gap" className="h-6 md:w-6" />
+              <Button
+                className="bg-black hover:bg-black px-6"
+                onClick={() => {
+                  doDeleteMultiple();
+                }}
+              >
+                Delete
+              </Button>
+            </>
+          )}
+          {SelectBTNBool && (
+            <Button className="bg-black hover:bg-black px-6" onClick={() => Router.push('./master-part/add')}>
+              Add New Master Parts
+            </Button>
+          )}
         </div>
       </div>
-      {dataParts.length > 0 ? (
+      {dataParts?.Data?.length > 0 ? (
         <ScrollArea>
           <Table draggable="false" striped highlightOnHover>
             <thead>
               <tr>
+                {!SelectBTNBool && (
+                  <th className="w-8">
+                    <Tooltip label="Select All">
+                      <Checkbox
+                        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                        onChange={(e) => {
+                          const currentPageIds = dataParts?.Data?.map((x: any) => x.ID);
+                          if (checkedBTNBool) {
+                            setIdspec((prev: any) => prev.filter((id: any) => !currentPageIds.includes(id)));
+                            setCheckedBTNBool(!checkedBTNBool);
+                          } else {
+                            setIdspec((prev: any) => [...prev, ...currentPageIds]);
+
+                            setCheckedBTNBool(!checkedBTNBool);
+                          }
+                        }}
+                        checked={checkedBTNBool}
+                      />
+                    </Tooltip>
+                  </th>
+                )}
                 <Th sorted={sortBy === 'PartName'} onSort={() => Urutkan('PartName')} reversed={reverseSortDirection}>
                   Part Name
                 </Th>
@@ -193,12 +300,26 @@ function MasterPartPage() {
           Tidak ada data.
         </Text>
       )}
-      {/* <div className="flex justify-between my-5 p-6">
-        <Text color="#828282" size={14}>
-          Show 10 from 1020 parts
-        </Text>
-        <Pagination page={activePage} onChange={setPage} total={10} />
-      </div> */}
+      <div className="flex justify-between my-5 p-6">
+        <div className="flex-row flex items-center">
+          <div className="w-28 mr-8">
+            <Select
+              // rightSection={<RightSection />}
+              value={input?.limit}
+              data={[
+                { value: '100', label: '100' },
+                { value: '500', label: '500' },
+                { value: '1000', label: '1000' },
+              ]}
+              onChange={onChangeSelectLimit}
+            />
+          </div>
+          <Text color="#828282" size={14} className="hidden md:flex">
+            Show {dataParts?.DataPerPage} from {dataParts?.TotalData} List Parts
+          </Text>
+        </div>
+        <Pagination page={dataParts?.CurrentPage} onChange={setPage} total={dataParts?.TotalPage} />
+      </div>
     </>
   );
 }

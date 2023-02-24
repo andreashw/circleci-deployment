@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-shadow */
-import { ScrollArea, Drawer, Text, Table, Menu, Button, Select, Pagination } from '@mantine/core';
+import { ScrollArea, Drawer, Text, Table, Menu, Button, Select, Pagination, Tooltip, Checkbox } from '@mantine/core';
 import { startTransition, useState } from 'react';
 import { IconDotsVertical } from '@tabler/icons';
 import useSWR from 'swr';
@@ -12,6 +12,7 @@ import { IParts } from '@contracts/parts-interface';
 import useInput from '@hooks/useInput';
 import { Th } from '@components/Th';
 import ModalFilterPart from '@components/modal/FilterPart';
+import { showNotification } from '@mantine/notifications';
 
 function ListPartPage() {
   const modals = useModals();
@@ -38,6 +39,10 @@ function ListPartPage() {
       input.manufacturedFor
     }`
   );
+
+  const [idSpec, setIdspec] = useState<any>([]);
+  const [SelectBTNBool, setSelectBTNBool] = useState(true);
+  const [checkedBTNBool, setCheckedBTNBool] = useState(false);
 
   function btnSearch(search: any) {
     startTransition(() => {
@@ -81,6 +86,21 @@ function ListPartPage() {
   const body = () =>
     dataParts.Data.map((item: any, index: any) => (
       <tr key={index}>
+        {!SelectBTNBool && (
+          <td className="w-8">
+            <Checkbox
+              // eslint-disable-next-line @typescript-eslint/no-unused-vars
+              onChange={(e) => {
+                if (idSpec.includes(item?.ID)) {
+                  setIdspec(idSpec.filter((id: number) => id !== item?.ID));
+                } else {
+                  setIdspec([...idSpec, item.ID]);
+                }
+              }}
+              checked={idSpec.includes(item.ID)}
+            />
+          </td>
+        )}
         <td className="cursor-pointer w-2/12" onClick={() => Router.push(`/part/list-part/${item.ID}`)}>
           {item.MasterPart.Name}
         </td>
@@ -137,6 +157,32 @@ function ListPartPage() {
         </td>
       </tr>
     ));
+
+  const doDeleteMultiple = async () => {
+    await fetcher('/api/v1/item-part/mass', {
+      method: 'DELETE',
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
+      body: { ids: idSpec },
+    })
+      .then((res: any) => {
+        showNotification({
+          title: 'Success',
+          message: res?.Message,
+          color: 'teal',
+        });
+        setCheckedBTNBool(false);
+        setIdspec([]);
+        setSelectBTNBool(!SelectBTNBool);
+        mutate();
+      })
+      .catch((err) => {
+        showNotification({
+          title: 'Error',
+          message: err?.Message,
+          color: 'red',
+        });
+      });
+  };
 
   const [sortBy, setSortBy] = useState<any>(null);
   const [reverseSortDirection, setReverseSortDirection] = useState(false);
@@ -256,10 +302,35 @@ function ListPartPage() {
             input={input}
             handleInput={handleInput}
             title="Filter List Part"
-          />
-          <Button className="bg-black hover:bg-black px-6" onClick={() => Router.push('./list-part/add')}>
-            Add New List Parts
-          </Button>
+          />{' '}
+          {SelectBTNBool ? (
+            <>
+              <Button className="bg-black hover:bg-black px-6 " onClick={() => setSelectBTNBool(!SelectBTNBool)}>
+                Select
+              </Button>
+              <div id="gap" className="h-6 md:w-6" />
+            </>
+          ) : (
+            <>
+              <Button className="bg-black hover:bg-black px-6 " onClick={() => setSelectBTNBool(!SelectBTNBool)}>
+                Cancel
+              </Button>
+              <div id="gap" className="h-6 md:w-6" />
+              <Button
+                className="bg-black hover:bg-black px-6"
+                onClick={() => {
+                  doDeleteMultiple();
+                }}
+              >
+                Delete
+              </Button>
+            </>
+          )}
+          {SelectBTNBool && (
+            <Button className="bg-black hover:bg-black px-6" onClick={() => Router.push('./list-part/add')}>
+              Add New List Parts
+            </Button>
+          )}
         </div>
         <div className="w-full md:w-[386px] flex-row flex h-20">
           <Button className="bg-black hover:bg-black w-full md:w-1/2 px-6" onClick={() => setOpened(true)}>
@@ -272,6 +343,28 @@ function ListPartPage() {
           <Table draggable="false" striped highlightOnHover>
             <thead>
               <tr>
+                {' '}
+                {!SelectBTNBool && (
+                  <th className="w-8">
+                    <Tooltip label="Select All">
+                      <Checkbox
+                        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                        onChange={(e) => {
+                          const currentPageIds = dataParts?.Data.map((x: any) => x.ID);
+                          if (checkedBTNBool) {
+                            setIdspec((prev: any) => prev.filter((id: any) => !currentPageIds.includes(id)));
+                            setCheckedBTNBool(!checkedBTNBool);
+                          } else {
+                            setIdspec((prev: any) => [...prev, ...currentPageIds]);
+
+                            setCheckedBTNBool(!checkedBTNBool);
+                          }
+                        }}
+                        checked={checkedBTNBool}
+                      />
+                    </Tooltip>
+                  </th>
+                )}
                 <Th sorted={sortBy === 'PartName'} onSort={() => Urutkan('PartName')} reversed={reverseSortDirection}>
                   Part Name
                 </Th>
@@ -320,12 +413,6 @@ function ListPartPage() {
         </div>
         <Pagination page={dataParts?.CurrentPage} onChange={setPage} total={dataParts?.TotalPage} />
       </div>
-      {/* <div className="flex justify-between my-5 p-6">
-        <Text color="#828282" size={14}>
-          Show 10 from 1020 parts
-        </Text>
-        <Pagination page={activePage} onChange={setPage} total={10} />
-      </div> */}
     </>
   );
 }
