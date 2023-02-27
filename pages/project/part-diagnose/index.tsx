@@ -1,4 +1,4 @@
-import { ScrollArea, Drawer, Text, Table, Menu, Button, Checkbox, Tooltip, Pagination } from '@mantine/core';
+import { ScrollArea, Drawer, Text, Table, Menu, Button, Checkbox, Tooltip, Pagination, Select } from '@mantine/core';
 import { startTransition, useState } from 'react';
 import { IconDotsVertical } from '@tabler/icons';
 import useSWR from 'swr';
@@ -24,10 +24,13 @@ function PartDiagnosePage() {
     action: '',
     condition: '',
     page: 1,
+    limit: '100',
   });
   const { data: dataVendor, mutate } = useSWR(
-    `/api/v1/project-part/?page=${input.page}&sortBy=${input.sortBy}&action=${input.action}&condition=${input.condition}&projectName=${input.automobile}&search=${input.search}&category=${input.category}`
+    `/api/v1/project-part/?page=${input.page}&limit=${input.limit}&sortBy=${input.sortBy}&action=${input.action}&condition=${input.condition}&projectName=${input.automobile}&search=${input.search}&category=${input.category}`
   );
+
+  const { data: automobile } = useSWR<any[]>('/api/v1/projects/');
 
   const [idSpec, setIdspec] = useState<any>([]);
   const [SelectBTNBool, setSelectBTNBool] = useState(true);
@@ -75,7 +78,7 @@ function PartDiagnosePage() {
   console.log('====================================');
 
   const body = () =>
-    dataVendor.map((item: any, index: any) => (
+    dataVendor?.Data.map((item: any, index: any) => (
       <tr key={index}>
         {!SelectBTNBool && (
           <td className="w-8">
@@ -93,7 +96,8 @@ function PartDiagnosePage() {
           </td>
         )}
         <td className="cursor-pointer w-2/12" onClick={() => Router.push(`/project/part-diagnose/${item.ID}`)}>
-          {item.Project.Name}
+          {automobile?.filter((x) => x.ID === item.ProjectId)?.[0].Name}
+          {/* {item.Project.Name} */}
         </td>
         <td className="cursor-pointer " onClick={() => Router.push(`/project/part-diagnose/${item.ID}`)}>
           {item.Part.MasterPart.Category}
@@ -159,6 +163,14 @@ function PartDiagnosePage() {
       handleInput('page', true)(page);
     });
   }
+
+  function onChangeSelectLimit(limit: any) {
+    handleInput('page', true)('1');
+    startTransition(() => {
+      handleInput('limit', true)(limit);
+    });
+  }
+
   function btnSearch(search: any) {
     startTransition(() => {
       console.log('====================================');
@@ -300,6 +312,32 @@ function PartDiagnosePage() {
     }
   }
 
+  const doDeleteMultiple = async () => {
+    await fetcher('/api/v1/project-part/mass', {
+      method: 'DELETE',
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
+      body: { ids: idSpec },
+    })
+      .then((res: any) => {
+        showNotification({
+          title: 'Success',
+          message: res?.Message,
+          color: 'teal',
+        });
+        setCheckedBTNBool(false);
+        setIdspec([]);
+        setSelectBTNBool(!SelectBTNBool);
+        mutate();
+      })
+      .catch((err) => {
+        showNotification({
+          title: 'Error',
+          message: err?.Message,
+          color: 'red',
+        });
+      });
+  };
+
   const [opened, setOpened] = useState(false);
 
   return (
@@ -336,7 +374,7 @@ function PartDiagnosePage() {
               <Button
                 className="bg-black hover:bg-black px-6"
                 onClick={() => {
-                  // doDeleteMultiple();
+                  doDeleteMultiple();
                 }}
               >
                 Delete
@@ -356,7 +394,7 @@ function PartDiagnosePage() {
           </Button>
         </div>
       </div>
-      {dataVendor.length > 0 ? (
+      {dataVendor?.Data.length > 0 ? (
         <ScrollArea>
           <Table striped highlightOnHover>
             <thead>
@@ -367,7 +405,7 @@ function PartDiagnosePage() {
                       <Checkbox
                         // eslint-disable-next-line @typescript-eslint/no-unused-vars
                         onChange={(e) => {
-                          const currentPageIds = dataVendor.map((x: any) => x.ID);
+                          const currentPageIds = dataVendor?.Data.map((x: any) => x.ID);
                           if (checkedBTNBool) {
                             setIdspec((prev: any) => prev.filter((id: any) => !currentPageIds.includes(id)));
                             setCheckedBTNBool(!checkedBTNBool);
@@ -422,9 +460,23 @@ function PartDiagnosePage() {
         </Text>
       )}
       <div className="flex justify-between my-5 p-6">
-        <Text color="#828282" size={14}>
-          Show {dataVendor?.DataPerPage} from {dataVendor?.TotalData} Project
-        </Text>
+        <div className="flex-row flex items-center">
+          <div className="w-28 mr-8">
+            <Select
+              // rightSection={<RightSection />}
+              value={input?.limit}
+              data={[
+                { value: '100', label: '100' },
+                { value: '500', label: '500' },
+                { value: '1000', label: '1000' },
+              ]}
+              onChange={onChangeSelectLimit}
+            />
+          </div>
+          <Text color="#828282" size={14}>
+            Show {dataVendor?.DataPerPage} from {dataVendor?.TotalData} Project
+          </Text>
+        </div>
         <Pagination page={dataVendor?.CurrentPage} onChange={setPage} total={dataVendor?.TotalPage} />
       </div>
     </>
