@@ -45,14 +45,22 @@ function MasterPartPage() {
   const onDeleteData = async (part: IParts) => {
     console.log(part.ID);
 
-    const response: IParts | undefined = await fetcher(`/api/v1/master-part/${part.ID}`, {
+    await fetcher(`/api/v1/master-part/${part.ID}`, {
       method: 'DELETE',
-    });
-    console.log('Response Delete from API ', response);
-    if (response) {
-      // Router.reload();
-      mutate();
-    }
+    })
+      .then((res) => {
+        console.log('====================================');
+        console.log(res);
+        console.log('====================================');
+        mutate();
+      })
+      .catch((err) => {
+        showNotification({
+          title: 'Error',
+          message: err?.data?.error,
+          color: 'red',
+        });
+      });
   };
 
   const doDeleteMultiple = async () => {

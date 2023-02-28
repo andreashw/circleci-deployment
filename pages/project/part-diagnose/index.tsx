@@ -54,13 +54,17 @@ function PartDiagnosePage() {
     }
   };
 
-  function deleteProfile(project: IProject) {
+  function deleteProfile(project: any) {
     console.log('====================================');
     modals.openConfirmModal({
       title: 'Delete',
       children: (
         <Text size="sm" lineClamp={2}>
-          Delete <b>{project.Name}</b> Project Data ?
+          Delete{' '}
+          <b>
+            {project?.Part.MasterPart.Name}- {project?.Part.Brand}
+          </b>{' '}
+          Project Data ?
         </Text>
       ),
       centered: true,
