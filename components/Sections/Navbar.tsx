@@ -81,6 +81,11 @@ export default function NavbarComponent(props: any) {
       group: 'Finance',
       menus: [
         {
+          label: 'Incomes',
+          link: '/incomes',
+          icon: (color: string) => <Expenes color={color} width="20" height="20" />,
+        },
+        {
           label: 'Expenses',
           link: '/expenses',
           icon: (color: string) => <Expenes color={color} width="20" height="20" />,
