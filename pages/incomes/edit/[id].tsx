@@ -71,7 +71,7 @@ function EditExpendPage() {
       method: 'PATCH',
       body: {
         date: dayjs(input.date).format('YYYY-MM-DD'),
-        category_id: input.category,
+        category_id: Number(input.category),
         description: input.desc,
         amount: Number(removeNonNumeric(input.price)),
         project_id: Number(input.project),
