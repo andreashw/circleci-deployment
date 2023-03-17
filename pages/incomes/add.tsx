@@ -54,7 +54,7 @@ function AddExpendPage() {
     price: '',
     project: '',
   });
-  const addCommas = (num: number) => num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  const addCommas = (num: number) => num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
   const removeNonNumeric = (num: any) => num.toString().replace(/[^0-9]/g, '');
   const handleCurChange = (event: any) => handleInput('price', true)(addCommas(removeNonNumeric(event.target.value)));
   const doSubmit = async (e: any) => {

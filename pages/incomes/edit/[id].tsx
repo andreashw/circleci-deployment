@@ -54,7 +54,7 @@ function EditExpendPage() {
 
   const { data: Incomes, mutate } = useSWR<any>(`/api/v1/income/${id}`);
   console.log(Incomes.Date, 'tesdata');
-  const addCommas = (num: number) => num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  const addCommas = (num: number) => num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
   const removeNonNumeric = (num: any) => num.toString().replace(/[^0-9]/g, '');
   const [input, handleInput] = useInput({
     date: Incomes ? dayjs(Incomes[0]?.Date).toDate() : '',
