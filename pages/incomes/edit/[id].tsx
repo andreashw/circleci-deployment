@@ -141,7 +141,7 @@ function EditExpendPage() {
                   rightSection={<IconChevronDown size={14} />}
                   data={category ? category.map((y: any) => ({ value: y.ID.toString(), label: y.Name })) : []}
                   value={input.category.toString()}
-                  onChange={handleInput('project', true)}
+                  onChange={handleInput('category', true)}
                   required
                 />
               </Grid.Col>
