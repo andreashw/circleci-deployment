@@ -84,7 +84,7 @@ export default function Automobile(/*props*/) {
         <div className="flex flex-col sm:flex-row pb-4 sm:pb-0">
           <SearchForm searchName="Automobile" />
           <Button className="bg-black hover:bg-black px-6" onClick={() => Router.push('/automobile/add')}>
-            Add New Automobile
+            Add New Entry
           </Button>
         </div>
       </div>

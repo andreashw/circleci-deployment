@@ -216,7 +216,7 @@ function ExpendPage() {
           <SearchForm searchName="Incomes" onSubmit={btnSearch} />
 
           <Button className="bg-black hover:bg-black px-6" onClick={() => Router.push('/incomes/add')}>
-            Add New Income
+            Add New Entry
           </Button>
         </div>
         <div className="w-full md:w-[386px] flex-row flex">

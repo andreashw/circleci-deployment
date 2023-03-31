@@ -344,7 +344,7 @@ export default function ReportHourly(/*props*/) {
 
               {SelectBTNBool && (
                 <Button className="bg-black hover:bg-black px-6" onClick={() => goToAddReport()}>
-                  Add New Job Report
+                  Add New Entry
                 </Button>
               )}
             </div>

@@ -118,7 +118,7 @@ function ListProjectPage() {
         <div className="flex flex-col sm:flex-row pb-4 sm:pb-0">
           <SearchForm />
           <Button className="bg-black hover:bg-black px-6" onClick={() => Router.push('/project/list-project/add')}>
-            Add New Project
+            Add New Entry
           </Button>
         </div>
       </div>

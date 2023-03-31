@@ -112,7 +112,7 @@ function PartsPage() {
         <div className="flex flex-col sm:flex-row pb-4 sm:pb-0">
           <SearchForm />
           <Button className="bg-black hover:bg-black px-6" onClick={() => Router.push('/part/add')}>
-            Add New Parts
+            Add New Entry
           </Button>
         </div>
       </div>

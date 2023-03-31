@@ -118,10 +118,10 @@ function AddPartPage() {
   return (
     <>
       <HeadingTop
-        text="Add New Part"
+        text="Add New Entry"
         items={[
           { title: 'Parts', href: '' },
-          { title: 'Add New Part', href: '' },
+          { title: 'Add New Entry', href: '' },
         ]}
       />
 

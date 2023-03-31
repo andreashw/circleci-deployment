@@ -260,7 +260,7 @@ function MasterPartPage() {
           )}
           {SelectBTNBool && (
             <Button className="bg-black hover:bg-black px-6" onClick={() => Router.push('./master-part/add')}>
-              Add New Master Parts
+              Add New Entry
             </Button>
           )}
         </div>

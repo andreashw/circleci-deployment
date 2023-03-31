@@ -44,10 +44,10 @@ function AddEngineerPage() {
   return (
     <>
       <HeadingTop
-        text="Add New Engineers"
+        text="Add New Entry"
         items={[
           { title: 'Engineers', href: '/engineer' },
-          { title: 'Add New Engineers', href: '#' },
+          { title: 'Add New Entry', href: '#' },
         ]}
       />
 

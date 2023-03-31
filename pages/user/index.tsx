@@ -115,7 +115,7 @@ function ListUserPage() {
         <div className="flex flex-col sm:flex-row pb-4 sm:pb-0">
           <SearchForm searchName="Users" />
           <Button className="bg-black hover:bg-black px-6" onClick={() => Router.push('/user/add')}>
-            Add New User
+            Add New Entry
           </Button>
         </div>
       </div>

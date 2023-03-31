@@ -4,6 +4,7 @@ import RegionSelect from '@components/Inputs/RegionSelect';
 import { LeftSection, RightSection } from '@components/Inputs/RightSection';
 import HeadingTop from '@components/TopComponents/Heading';
 import { IClient, IProvince } from '@contracts/client-interface';
+import { IDepartment } from '@contracts/department-interface';
 import useInput from '@hooks/useInput';
 import { Button, createStyles, Grid, Select, Text, Textarea, TextInput, NumberInput } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
@@ -54,11 +55,13 @@ function EditExpendPage() {
 
   const { data: Expenses, mutate } = useSWR<any>(`/api/v1/expense/${id}`);
   console.log(Expenses.Date, 'tesdata');
-  const addCommas = (num: number) => num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  const addCommas = (num: number) => num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
   const removeNonNumeric = (num: any) => num.toString().replace(/[^0-9]/g, '');
   const [input, handleInput] = useInput({
     date: Expenses ? dayjs(Expenses?.Date).toDate() : '',
     type: Expenses ? Expenses?.Type : '',
+    category: Expenses ? Expenses?.Category : '',
+    department: Expenses ? Expenses?.DepartmentId : '',
     desc: Expenses ? Expenses?.Description : '',
     price: Expenses ? addCommas(removeNonNumeric(Expenses?.Amount)) : '',
     project: Expenses ? Expenses?.ProjectId : '',
@@ -72,6 +75,8 @@ function EditExpendPage() {
       body: {
         date: dayjs(input.date).format('YYYY-MM-DD'),
         type: input.type,
+        category: input.category,
+        department_id: Number(input.department),
         description: input.desc,
         amount: Number(removeNonNumeric(input.price)),
         project_id: Number(input.project),
@@ -90,7 +95,9 @@ function EditExpendPage() {
   };
 
   const [, startTransition] = useTransition();
-  const { data: type } = useSWR<any[]>('/api/v1/expense/list-types');
+  const { data: type } = useSWR<any[]>('/api/v1/expense-type/');
+  const { data: category } = useSWR<any[]>('/api/v1/expense-category/');
+  const { data: department } = useSWR<IDepartment[]>('/api/v1/department/');
   const { data: project } = useSWR<any[]>('/api/v1/projects/');
 
   const [price, setPrice] = useState('');
@@ -125,11 +132,33 @@ function EditExpendPage() {
               <Grid.Col md={12}>
                 <Select
                   label="Type"
-                  placeholder="Engine/Motor"
+                  placeholder="Type"
                   rightSection={<IconChevronDown size={14} />}
-                  value={input?.type}
-                  data={type ? type.map((y) => ({ value: y.Value, label: y.Value })) : []}
+                  value={input.type.toString()}
+                  data={type ? type.map((y) => ({ value: y.Name, label: y.Name })) : []}
                   onChange={handleInput('type', true)}
+                  required
+                />
+              </Grid.Col>
+              <Grid.Col md={12}>
+                <Select
+                  label="Category"
+                  placeholder="Category"
+                  rightSection={<IconChevronDown size={14} />}
+                  value={input.category.toString()}
+                  data={category ? category.map((y) => ({ value: y.Name, label: y.Name })) : []}
+                  onChange={handleInput('category', true)}
+                  required
+                />
+              </Grid.Col>
+              <Grid.Col md={12}>
+                <Select
+                  label="Department"
+                  placeholder="Department"
+                  rightSection={<IconChevronDown size={14} />}
+                  value={input?.department.toString()}
+                  data={department ? department.map((y) => ({ value: y.ID.toString(), label: y.Name })) : []}
+                  onChange={handleInput('department', true)}
                   required
                 />
               </Grid.Col>

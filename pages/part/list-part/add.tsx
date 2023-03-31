@@ -41,7 +41,9 @@ function AddListPartPage() {
 
   const { data: Category } = useSWR('api/v1/item-part/part-categories');
   const { data: Materials } = useSWR('/api/v1/item-part/part-materials');
-  const { data: {Data: PartName }} = useSWR(`/api/v1/master-part/?category=${input.category}`);
+  const {
+    data: { Data: PartName },
+  } = useSWR(`/api/v1/master-part/?category=${input.category}`);
   const { data: dataAutomobiles } = useSWR('/api/v1/automobiles/');
 
   const doSubmit = async (e: any) => {
@@ -78,11 +80,11 @@ function AddListPartPage() {
   return (
     <>
       <HeadingTop
-        text="Add New List Part"
+        text="Add New Entry"
         items={[
           { title: 'Parts', href: '' },
           { title: 'List Parts', href: '/part/list-part' },
-          { title: 'Add New List Part', href: '' },
+          { title: 'Add New Entry', href: '' },
         ]}
       />
 

@@ -127,6 +127,12 @@ function ExpendPage() {
         <td className="cursor-pointer w-2/12" onClick={() => Router.push(`/expenses/${item.ID}`)}>
           {item.Type}
         </td>
+        <td className="cursor-pointer w-2/12" onClick={() => Router.push(`/expenses/${item.ID}`)}>
+          {item.Category}
+        </td>
+        <td className="cursor-pointer w-2/12" onClick={() => Router.push(`/expenses/${item.ID}`)}>
+          {item.Department?.Name}
+        </td>
         <td className="cursor-pointer  w-72  " onClick={() => Router.push(`/expenses/${item.ID}`)}>
           {rp(item.Amount)}
         </td>
@@ -338,9 +344,29 @@ function ExpendPage() {
             </>
           )}
           {SelectBTNBool && (
-            <Button className="bg-black hover:bg-black px-6" onClick={() => Router.push('/expenses/add')}>
-              Add New Expense
-            </Button>
+            <>
+              <Button
+                className="bg-black hover:bg-black px-6"
+                onClick={() =>
+                  startTransition(() => {
+                    handleInput('fillter_type', true)([]);
+                    handleInput('fillter_project', true)([]);
+                    handleInput('start_date', true)('');
+                    handleInput('end_date', true)('');
+                    handleInput('type', true)('');
+                    handleInput('search', true)('');
+                    handleInput('start_amound', true)('');
+                    handleInput('end_amound', true)('');
+                  })
+                }
+              >
+                Newest
+              </Button>
+              <div id="gap" className="h-6 md:w-6" />
+              <Button className="bg-black hover:bg-black px-6" onClick={() => Router.push('/expenses/add')}>
+                Add New Entry
+              </Button>
+            </>
           )}
         </div>
         <div className="w-full md:w-[386px] flex-row flex">
@@ -402,6 +428,16 @@ function ExpendPage() {
                 </Th>
                 <Th sorted={sortBy === 'Type'} onSort={() => Urutkan('Type')} reversed={reverseSortDirection}>
                   Type
+                </Th>
+                <Th sorted={sortBy === 'Category'} onSort={() => Urutkan('Category')} reversed={reverseSortDirection}>
+                  Category
+                </Th>
+                <Th
+                  sorted={sortBy === 'Department'}
+                  onSort={() => Urutkan('Department')}
+                  reversed={reverseSortDirection}
+                >
+                  Department
                 </Th>
                 <Th sorted={sortBy === 'Amount'} onSort={() => Urutkan('Amount')} reversed={reverseSortDirection}>
                   Amount

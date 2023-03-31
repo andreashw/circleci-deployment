@@ -94,7 +94,7 @@ function ListRolePage() {
         <div className="flex flex-col sm:flex-row pb-4 sm:pb-0">
           <SearchForm searchName="Role" />
           <Button className="bg-black hover:bg-black px-6" onClick={() => Router.push('/role/add')}>
-            Add New Role
+            Add New Entry
           </Button>
         </div>
       </div>

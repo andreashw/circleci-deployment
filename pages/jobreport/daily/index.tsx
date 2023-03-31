@@ -132,7 +132,7 @@ export default function ReportDaily(/*props*/) {
               <SearchForm searchName="Job Report Hourly" onSubmit={btnSearch} />
 
               <Button className="bg-black hover:bg-black px-6" onClick={() => goToAddReport()}>
-                Add New Job Report
+                Add New Entry
               </Button>
             </div>
           </div>

@@ -387,7 +387,7 @@ function PartDiagnosePage() {
           )}
           {SelectBTNBool && (
             <Button className="bg-black hover:bg-black px-6" onClick={() => Router.push('/project/part-diagnose/add')}>
-              Add New Part Diagnose
+              Add New Entry
             </Button>
           )}
         </div>

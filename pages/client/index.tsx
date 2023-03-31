@@ -113,7 +113,7 @@ function Clients() {
         <div className="flex flex-col sm:flex-row pb-4 sm:pb-0">
           <SearchForm searchName="Automobile" />
           <Button className="bg-black hover:bg-black px-6" onClick={() => Router.push('/client/add')}>
-            Add New Clients
+            Add New Entry
           </Button>
         </div>
       </div>

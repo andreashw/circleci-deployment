@@ -141,7 +141,7 @@ function PayrollPage() {
           )}
           {SelectBTNBool && (
             <Button className="bg-black hover:bg-black px-6" onClick={() => Router.push('/payroll/add')}>
-              Add New Payroll
+              Add New Entry
             </Button>
           )}
         </div>

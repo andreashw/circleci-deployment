@@ -336,7 +336,7 @@ function ListPartPage() {
           )}
           {SelectBTNBool && (
             <Button className="bg-black hover:bg-black px-6" onClick={() => Router.push('./list-part/add')}>
-              Add New List Parts
+              Add New Entry
             </Button>
           )}
         </div>

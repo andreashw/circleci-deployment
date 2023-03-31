@@ -1,5 +1,5 @@
 import HeadingTop from '@components/TopComponents/Heading';
-import { Button, Checkbox, createStyles, Grid, PasswordInput, Text, TextInput } from '@mantine/core';
+import { Button, Checkbox, createStyles, Grid, Text, TextInput } from '@mantine/core';
 import useInput from '@hooks/useInput';
 import Router from 'next/router';
 import useSWR from 'swr';
@@ -60,16 +60,16 @@ function AddUserPage() {
   return (
     <>
       <HeadingTop
-        text="Add New Users"
+        text="Add New Entry"
         items={[
           { title: 'Users', href: '/user' },
-          { title: 'Add New', href: '' },
+          { title: 'Add New Entry', href: '' },
         ]}
       />
       <form onSubmit={doSubmit}>
         <div className="p-6">
           <Text className="mt-[1rem] mb-[1rem] text-[20px]" weight={700}>
-            Add New
+            Add New Entry
           </Text>
 
           <Grid gutter="xl" className="mb-[48px]">

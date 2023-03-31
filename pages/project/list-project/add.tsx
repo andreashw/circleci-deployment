@@ -69,11 +69,11 @@ function ProjectAddPage() {
   return (
     <>
       <HeadingTop
-        text="Add New Project"
+        text="Add New Entry"
         items={[
           { title: 'Project', href: '' },
           { title: 'List Project', href: '/project/list-project' },
-          { title: 'Add New Project', href: '#' },
+          { title: 'Add New Entry', href: '#' },
         ]}
       />
 

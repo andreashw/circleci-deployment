@@ -68,10 +68,10 @@ function VendorPage() {
   return (
     <>
       <HeadingTop
-        text="Add New Vendor"
+        text="Add New Entry"
         items={[
           { title: 'Vendor', href: '/vendor' },
-          { title: 'Add New Vendor', href: '' },
+          { title: 'Add New Entry', href: '' },
         ]}
       />
       <form onSubmit={doSubmit}>

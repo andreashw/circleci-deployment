@@ -72,10 +72,10 @@ function EditPayrollPage() {
         {/* <EditUserForm data={selectedProfileData} submitForm={onSubmitEditForm} /> */}
       </Drawer>
       <HeadingTop
-        text="Add New Payroll"
+        text="Add New Entry"
         items={[
           { title: 'Payroll', href: '/payroll' },
-          { title: 'Add New Payroll', href: '' },
+          { title: 'Add New Entry', href: '' },
         ]}
       />
       <form onSubmit={doSubmit}>

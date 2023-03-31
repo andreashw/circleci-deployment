@@ -89,10 +89,10 @@ function AddExpendPage() {
   return (
     <>
       <HeadingTop
-        text="Add New Income"
+        text="Add New Entry"
         items={[
           { title: 'Income', href: '/incomes' },
-          { title: 'Add New Income', href: '' },
+          { title: 'Add New Entry', href: '' },
         ]}
       />
       <form onSubmit={doSubmit}>

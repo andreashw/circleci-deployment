@@ -66,11 +66,11 @@ function AddMasterPartPage() {
   return (
     <>
       <HeadingTop
-        text="Add New Master Part"
+        text="Add New Entry"
         items={[
           { title: 'Parts', href: '' },
           { title: 'Master Parts', href: '/part/master-part' },
-          { title: 'Add New Master Part', href: '' },
+          { title: 'Add New Entry', href: '' },
         ]}
       />
 

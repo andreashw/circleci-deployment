@@ -27,6 +27,8 @@ function DetilexpensePage() {
         <Grid gutter="xl" className="mb-10">
           <ListDetail List="Date" IsiList={Expense ? dayjs(Expense?.Date).format('ddd, DD MMMM YYYY') : ''} />
           <ListDetail List="Type" IsiList={Expense ? Expense?.Type : ''} />
+          <ListDetail List="Category" IsiList={Expense ? Expense?.Category : ''} />
+          <ListDetail List="Department" IsiList={Expense ? Expense?.Department?.Name : ''} />
           <ListDetail List="Amount" IsiList={Expense ? rp(Expense?.Amount) : ''} />
           <ListDetail List="Description" IsiList={Expense ? Expense?.Description : ''} />
           <ListDetail List="Project" IsiList={Expense ? Expense?.Project?.Name : ''} />

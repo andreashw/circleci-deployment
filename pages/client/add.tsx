@@ -76,10 +76,10 @@ function ClientsPage() {
   return (
     <>
       <HeadingTop
-        text="Add New Client"
+        text="Add New Entry"
         items={[
           { title: 'Client', href: '/client' },
-          { title: 'Add New Client', href: '' },
+          { title: 'Add New Entry', href: '' },
         ]}
       />
       <form onSubmit={doSubmit}>

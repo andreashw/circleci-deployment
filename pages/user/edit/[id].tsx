@@ -81,7 +81,7 @@ function EditUserPage() {
       <form onSubmit={doSubmit}>
         <div className="p-6">
           <Text className="mt-[1rem] mb-[1rem] text-[20px]" weight={700}>
-            Add New
+            Edit Users
           </Text>
 
           <Grid gutter="xl" className="mb-[48px]">

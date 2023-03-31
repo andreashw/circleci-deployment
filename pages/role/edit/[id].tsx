@@ -101,10 +101,10 @@ function EditRolePage() {
   return (
     <>
       <HeadingTop
-        text="Add New Roles"
+        text="Add New Entry"
         items={[
           { title: 'Role', href: '/role' },
-          { title: 'Add New Roles', href: '' },
+          { title: 'Add New Entry', href: '' },
         ]}
       />
       <form onSubmit={doSubmit}>
