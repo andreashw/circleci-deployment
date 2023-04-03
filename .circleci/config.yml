@@ -1,15 +1,10 @@
 version: 2.1
 
-orbs:
-  ssh: circleci/ssh@1.0.3
-
 jobs:
-  deploy:
+  Copy:
     docker:
-      - image: circleci/python:3.8.0
-    working_directory: /var/www/circlecitest
-    steps:
-      - ssh/with-known-hosts:
+      - image: cimg/base:latest
+        auth:
           user: $SERVER_USERNAME
           host: $SERVER_HOST
           port: $SERVER_PORT
@@ -17,33 +12,23 @@ jobs:
           script: |
             cd /var/www/circlecitest
             cp adas.txt test.txt
-
-  # deploy:
-  #   docker:
-  #     - image: circleci/python:3.8.0
-  #   working_directory: ~/my-project
-  #   steps:
-  #     - ssh/with-known-hosts:
-  #         user: $SSH_USER
-  #         host: $SSH_HOST
-  #         port: $SSH_PORT
-  #         key: $SSH_PRIVATE_KEY
-  #         script: |
-  #           cd ~/my-project
-  #           git pull origin master
-  #           pip install -r requirements.txt
-  #           python manage.py migrate
-  #           sudo service apache2 restart
+    # steps:
+    #   - ssh/with-known-hosts:
+    #       user: $SERVER_USERNAME
+    #       host: $SERVER_HOST
+    #       port: $SERVER_PORT
+    #       key: $SERVER_PRIVATE_KEY
+    #       script: |
+    #         cd /var/www/circlecitest
+    #         cp adas.txt test.txt
 
 workflows:
   version: 2
   build-and-deploy:
     jobs:
       # - build
-      - deploy:
-          requires:
-            - build
+      - Copy:
           filters:
             branches:
               only:
-                - master
+                - development
