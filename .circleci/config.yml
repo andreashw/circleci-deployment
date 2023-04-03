@@ -1,37 +1,49 @@
 version: 2.1
 
+orbs:
+  ssh: circleci/ssh@1.0.3
+
 jobs:
-  build-and-deploy:
+  deploy:
     docker:
-      - image: circleci/node:16-browsers
-
-    working_directory: ~/repo
-
+      - image: circleci/python:3.8.0
+    working_directory: /var/www/circlecitest
     steps:
-      # - run:
-      #     name: prep_deploy_dev
-      #     command: 
+      - ssh/with-known-hosts:
+          user: $SERVER_USERNAME
+          host: $SERVER_HOST
+          port: $SERVER_PORT
+          key: $SERVER_PRIVATE_KEY
+          script: |
+            cd /var/www/circlecitest
+            cp adas.txt test.txt
 
-      - run:
-          name: 
-          command: yarn install
+  # deploy:
+  #   docker:
+  #     - image: circleci/python:3.8.0
+  #   working_directory: ~/my-project
+  #   steps:
+  #     - ssh/with-known-hosts:
+  #         user: $SSH_USER
+  #         host: $SSH_HOST
+  #         port: $SSH_PORT
+  #         key: $SSH_PRIVATE_KEY
+  #         script: |
+  #           cd ~/my-project
+  #           git pull origin master
+  #           pip install -r requirements.txt
+  #           python manage.py migrate
+  #           sudo service apache2 restart
 
-      - run:
-          name: Build
-          command: yarn build
-
-      - run:
-          name: Deploy to server
-          command: |
-            ssh -i ~/.ssh/viper.pem -r -P $SERVER_PORT mkdir testfolder $SERVER_USERNAME@$SERVER_HOST:/var/www
-            
-    environment:
-      SERVER_HOST: $SERVER_HOST
-      SERVER_PORT: $SERVER_PORT
-      SERVER_USERNAME: $SERVER_USERNAME
-      SERVER_PASSWORD: $SERVER_PASSWORD
-
-    filters:
-      branches:
-        only:
-          - development
+workflows:
+  version: 2
+  build-and-deploy:
+    jobs:
+      # - build
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - master
