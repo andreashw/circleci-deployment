@@ -1,0 +1,37 @@
+version: 2.1
+
+jobs:
+  build-and-deploy:
+    docker:
+      - image: circleci/node:16-browsers
+
+    working_directory: ~/repo
+
+    steps:
+      # - run:
+      #     name: prep_deploy_dev
+      #     command: 
+
+      - run:
+          name: 
+          command: yarn install
+
+      - run:
+          name: Build
+          command: yarn build
+
+      - run:
+          name: Deploy to server
+          command: |
+            ssh -i ~/.ssh/viper.pem -r -P $SERVER_PORT mkdir testfolder $SERVER_USERNAME@$SERVER_HOST:/var/www
+            
+    environment:
+      SERVER_HOST: $SERVER_HOST
+      SERVER_PORT: $SERVER_PORT
+      SERVER_USERNAME: $SERVER_USERNAME
+      SERVER_PASSWORD: $SERVER_PASSWORD
+
+    filters:
+      branches:
+        only:
+          - development
